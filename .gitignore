@@ -310,8 +310,4 @@ $RECYCLE.BIN/
 # End of https://www.toptal.com/developers/gitignore/api/windows,linux,macos,visualstudiocode,intellij,eclipse,vuejs,vue,git
 
 # API Keys and Configuration
-# src/config.js
-
-# 환경 변수 관련 파일
-.env.local
-.env.*.local
+src/config.js
