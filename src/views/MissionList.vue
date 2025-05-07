@@ -192,7 +192,7 @@ export default {
 .quest-list {
   flex: 1;
   padding: var(--spacing-md);
-  padding-bottom: 80px; /* 네비게이션 바 위치 고려 */
+  padding-bottom: 300px; /* 네비게이션 바 위치 고려하여 큰 여백 추가 */
 }
 
 .location-header {
@@ -258,34 +258,23 @@ export default {
 }
 
 .quest-card {
-  background: var(--bg-primary);
+  background-color: var(--bg-primary);
   border-radius: var(--radius-md);
-  padding: var(--spacing-lg);
+  padding: var(--spacing-md);
   margin-bottom: var(--spacing-md);
   box-shadow: var(--shadow-sm);
-  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
-  position: relative;
-  overflow: hidden;
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+  border-left: 4px solid var(--primary);
 }
 
-.quest-card:active {
-  transform: translateY(2px);
-  box-shadow: var(--shadow-sm);
+.quest-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
 }
 
 .quest-card.completed {
-  background-color: var(--bg-tertiary);
-}
-
-.quest-card.completed::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 4px;
-  height: 100%;
-  background: var(--primary);
-  border-radius: 4px 0 0 4px;
+  border-left: 4px solid var(--success);
+  opacity: 0.9;
 }
 
 .quest-title {
@@ -452,5 +441,11 @@ export default {
   .progress-container {
     padding: var(--spacing-md) var(--spacing-lg) 0;
   }
+}
+
+/* 여백 공간 추가 */
+.bottom-space {
+  height: 300px;
+  width: 100%;
 }
 </style> 

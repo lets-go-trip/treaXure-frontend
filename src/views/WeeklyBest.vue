@@ -218,5 +218,449 @@ export default {
 </script>
 
 <style scoped>
-/* 스타일은 전역 CSS에서 처리 */
+.weekly-best {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: var(--bg-secondary);
+  position: relative;
+  overflow: hidden;
+}
+
+/* 헤더 스타일 */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 60px;
+  min-height: 60px;
+  padding: 0 var(--spacing-md);
+  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  box-shadow: var(--shadow-sm);
+  flex-shrink: 0;
+}
+
+.header-back, .header-action {
+  width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: none;
+  border: none;
+  border-radius: 50%;
+  color: var(--text-medium);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.icon-btn:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.icon-btn:active {
+  transform: scale(0.95);
+}
+
+/* 스크롤 가능한 컨텐츠 영역 */
+.scrollable-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  height: calc(100% - 60px);
+  scrollbar-width: thin;
+  padding-bottom: 120px; /* 하단 여백 더 크게 증가 */
+}
+
+/* 날짜 선택기 스타일 */
+.date-selector {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-md);
+  background-color: var(--bg-primary);
+  margin-bottom: var(--spacing-md);
+  box-shadow: var(--shadow-sm);
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+
+.date-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: none;
+  border: none;
+  color: var(--primary);
+  cursor: pointer;
+  border-radius: 50%;
+  transition: all var(--transition-fast);
+}
+
+.date-nav:hover {
+  background-color: var(--bg-tertiary);
+}
+
+.date-nav:active {
+  transform: scale(0.95);
+}
+
+.date-display {
+  font-weight: 600;
+  font-size: 16px;
+  padding: 0 var(--spacing-lg);
+  color: var(--text-dark);
+}
+
+/* 컨텐츠 영역 스타일 */
+.best-content {
+  padding: 0 var(--spacing-md);
+  padding-bottom: 350px; /* 매우 큰 하단 여백 */
+}
+
+.bottom-space {
+  height: 300px; /* 더 큰 하단 여백 */
+  width: 100%;
+}
+
+/* 베스트 사진 공통 스타일 */
+.best-photo {
+  background-color: var(--bg-primary);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  position: relative;
+  margin-bottom: var(--spacing-md);
+  box-shadow: var(--shadow-md);
+  transition: transform var(--transition-normal);
+}
+
+.best-photo:hover {
+  transform: translateY(-3px);
+}
+
+.rank-badge {
+  position: absolute;
+  top: var(--spacing-sm);
+  left: var(--spacing-sm);
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: white;
+  font-weight: 600;
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 12px;
+  z-index: 2;
+  box-shadow: var(--shadow-sm);
+}
+
+.photo-image {
+  width: 100%;
+  height: 240px;
+  background-color: var(--bg-tertiary);
+  position: relative;
+  overflow: hidden;
+}
+
+.best-photo.second .photo-image,
+.best-photo.third .photo-image {
+  height: 180px;
+}
+
+.photo-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition-normal);
+}
+
+.photo-image img:hover {
+  transform: scale(1.05);
+}
+
+.empty-image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg-tertiary);
+  color: var(--text-light);
+  font-size: 16px;
+}
+
+/* 사진 정보 영역 */
+.photo-info {
+  padding: var(--spacing-md);
+}
+
+.photo-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-sm);
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  margin-right: var(--spacing-xs);
+  flex: 1;
+}
+
+.best-photo.first .user-info {
+  flex-direction: row;
+  align-items: center;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-right: var(--spacing-sm);
+  box-shadow: var(--shadow-sm);
+}
+
+.user-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.user-name {
+  font-weight: 600;
+  color: var(--text-dark);
+  font-size: 15px;
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.photo-location {
+  font-size: 12px;
+  color: var(--text-medium);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.like-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: var(--text-medium);
+  cursor: pointer;
+  padding: var(--spacing-xs);
+  border-radius: 16px;
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.like-button.liked {
+  color: #E74C3C;
+}
+
+.like-button:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.like-button span {
+  margin-left: 4px;
+  font-weight: 500;
+}
+
+.like-button.small {
+  font-size: 12px;
+  padding: 4px 8px;
+}
+
+.photo-desc, .photo-desc-short {
+  color: var(--text-medium);
+  font-size: 14px;
+  line-height: 1.5;
+  margin-bottom: var(--spacing-md);
+}
+
+.photo-desc-short {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 13px;
+  margin-bottom: 0;
+}
+
+/* 액션 바 스타일 */
+.action-bar {
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
+.btn-interact {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg-tertiary);
+  color: var(--text-medium);
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.btn-interact svg {
+  margin-right: 4px;
+}
+
+.btn-interact:hover {
+  background-color: rgba(79, 108, 255, 0.1);
+  color: var(--primary);
+}
+
+.btn-interact:active {
+  transform: scale(0.98);
+}
+
+/* 2, 3위 사진 컨테이너 */
+.runners-up {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+}
+
+.runners-up .best-photo {
+  margin-bottom: 0;
+}
+
+.runners-up .photo-info {
+  padding: var(--spacing-sm) var(--spacing-md);
+}
+
+/* 투표 섹션 - 더 많은 여백과 높은 z-index */
+.vote-section {
+  margin-top: var(--spacing-xl);
+  margin-bottom: calc(var(--spacing-xl) * 2);
+  position: relative;
+  z-index: 5; /* 네비게이션 바보다는 낮게 설정 */
+}
+
+/* 투표 정보 섹션 */
+.vote-info {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  border-radius: var(--radius-md);
+  padding: var(--spacing-lg);
+  color: white;
+  box-shadow: var(--shadow-md);
+  position: relative;
+  z-index: 5; /* 네비게이션 바보다는 낮게 설정 */
+}
+
+.vote-header h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: var(--spacing-md);
+}
+
+.vote-stats {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-lg);
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.vote-count, .time-left {
+  display: flex;
+  align-items: center;
+}
+
+.vote-count svg, .time-left svg {
+  margin-right: 4px;
+}
+
+.vote-action {
+  display: flex;
+  justify-content: center;
+  padding: var(--spacing-sm) 0;
+}
+
+.btn-primary {
+  background-color: white;
+  color: var(--primary);
+  font-weight: 600;
+  padding: 14px 28px;
+  border-radius: var(--radius-sm);
+  border: none;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  z-index: 6; /* 투표 섹션보다는 위에 있어야 함 */
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+/* 반응형 스타일 */
+@media (max-width: 480px) {
+  .runners-up {
+    grid-template-columns: 1fr;
+  }
+  
+  .best-content {
+    padding-bottom: 400px; /* 모바일에서 더 큰 하단 여백 */
+  }
+  
+  .bottom-space {
+    height: 350px; /* 모바일에서 더 큰 하단 여백 */
+  }
+}
+
+@media (min-width: 768px) {
+  .best-photo.first {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+  }
+  
+  .best-photo.first .photo-image {
+    height: 100%;
+  }
+  
+  .photo-image img {
+    height: 100%;
+  }
+}
 </style> 

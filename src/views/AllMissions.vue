@@ -49,60 +49,66 @@
       </div>
     </div>
     
-    <!-- 미션 목록 컨테이너 -->
-    <div class="missions-container">
-      <!-- 각 장소 그룹 -->
-      <div 
-        v-for="(location, locationIndex) in filteredLocations" 
-        :key="locationIndex" 
-        class="location-group">
-        
-        <!-- 장소 헤더 -->
+    <!-- 스크롤 가능한 컨텐츠 영역 -->
+    <div class="scrollable-content">
+      <!-- 미션 목록 컨테이너 -->
+      <div class="missions-container">
+        <!-- 각 장소 그룹 -->
         <div 
-          class="location-header" 
-          :class="{ collapsed: location.collapsed }"
-          @click="toggleLocation(locationIndex)">
-          <div class="location-image">
-            <img :src="location.imageUrl" :alt="location.name">
-          </div>
-          <div class="location-details">
-            <h3>{{ location.name }} <span class="location-stats">{{ location.completedCount }}/{{ location.totalCount }}</span></h3>
-            <p>{{ location.address }}</p>
-          </div>
-          <div class="toggle-icon" :class="{ collapsed: location.collapsed }">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M16.59 8.59L12 13.17L7.41 8.59L6 10L12 16L18 10L16.59 8.59Z" fill="currentColor"/>
-            </svg>
-          </div>
-        </div>
-        
-        <!-- 미션 리스트 -->
-        <div 
-          class="mission-list" 
-          v-show="!location.collapsed">
+          v-for="(location, locationIndex) in filteredLocations" 
+          :key="locationIndex" 
+          class="location-group">
+          
+          <!-- 장소 헤더 -->
           <div 
-            v-for="(mission, missionIndex) in filteredMissions(location.missions)" 
-            :key="missionIndex" 
-            class="quest-card" 
-            :class="{ completed: mission.completed }">
-            <div class="quest-title">{{ mission.title }}</div>
-            <div class="quest-desc">{{ mission.description }}</div>
-            <div class="quest-footer">
-              <div class="coin-reward">
-                <div class="coin-icon">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20Z" fill="#FFD700"/>
-                    <path d="M12 7L14.39 11.79L19.5 12.26L15.75 15.9L16.8 21L12 18.27L7.2 21L8.25 15.9L4.5 12.26L9.61 11.79L12 7Z" fill="#FFD700"/>
-                  </svg>
+            class="location-header" 
+            :class="{ collapsed: location.collapsed }"
+            @click="toggleLocation(locationIndex)">
+            <div class="location-image">
+              <img :src="location.imageUrl" :alt="location.name">
+            </div>
+            <div class="location-details">
+              <h3>{{ location.name }} <span class="location-stats">{{ location.completedCount }}/{{ location.totalCount }}</span></h3>
+              <p>{{ location.address }}</p>
+            </div>
+            <div class="toggle-icon" :class="{ collapsed: location.collapsed }">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M16.59 8.59L12 13.17L7.41 8.59L6 10L12 16L18 10L16.59 8.59Z" fill="currentColor"/>
+              </svg>
+            </div>
+          </div>
+          
+          <!-- 미션 리스트 -->
+          <div 
+            class="mission-list" 
+            v-show="!location.collapsed">
+            <div 
+              v-for="(mission, missionIndex) in filteredMissions(location.missions)" 
+              :key="missionIndex" 
+              class="quest-card" 
+              :class="{ completed: mission.completed }">
+              <div class="quest-title">{{ mission.title }}</div>
+              <div class="quest-desc">{{ mission.description }}</div>
+              <div class="quest-footer">
+                <div class="coin-reward">
+                  <div class="coin-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20Z" fill="#FFD700"/>
+                      <path d="M12 7L14.39 11.79L19.5 12.26L15.75 15.9L16.8 21L12 18.27L7.2 21L8.25 15.9L4.5 12.26L9.61 11.79L12 7Z" fill="#FFD700"/>
+                    </svg>
+                  </div>
+                  {{ mission.points }} 포인트
                 </div>
-                {{ mission.points }} 포인트
+                <div v-if="mission.completed" class="badge completed">완료</div>
+                <router-link v-else :to="'/mission-detail/' + mission.id" class="btn-small">도전하기</router-link>
               </div>
-              <div v-if="mission.completed" class="badge completed">완료</div>
-              <router-link v-else :to="'/mission-detail/' + mission.id" class="btn-small">도전하기</router-link>
             </div>
           </div>
         </div>
       </div>
+      
+      <!-- 하단 여백 -->
+      <div class="bottom-space"></div>
     </div>
   </div>
 </template>
@@ -259,26 +265,32 @@ export default {
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 100vh; /* 뷰포트 높이로 고정 */
+  min-height: 100vh; /* 최소 뷰포트 높이로 변경 */
   position: relative;
   background-color: var(--bg-secondary);
+  overflow-y: auto; /* 스크롤 추가 */
 }
 
 .filter-bar {
   display: flex;
-  justify-content: space-between;
+  flex-wrap: wrap;
   align-items: center;
+  justify-content: space-between;
   padding: var(--spacing-md);
   background-color: var(--bg-primary);
-  border-bottom: 1px solid var(--border-color);
+  margin-bottom: var(--spacing-md);
+  box-shadow: var(--shadow-sm);
   position: sticky;
   top: 60px;
-  z-index: 8;
+  z-index: 5;
+  gap: var(--spacing-sm);
 }
 
 .filter-chips {
   display: flex;
+  flex-wrap: wrap;
   gap: var(--spacing-sm);
+  flex: 1;
 }
 
 .chip {
@@ -378,11 +390,8 @@ export default {
 }
 
 .missions-container {
-  flex: 1;
-  padding: var(--spacing-md);
-  padding-bottom: 80px; /* 네비게이션 바 위치 고려 */
-  overflow-y: auto; /* 스크롤 가능하도록 설정 */
-  -webkit-overflow-scrolling: touch; /* iOS에서 부드러운 스크롤 */
+  padding: 0 var(--spacing-md);
+  padding-bottom: 300px; /* 하단 여백 증가 */
 }
 
 .location-group {
@@ -566,5 +575,36 @@ export default {
   .filter-bar {
     padding: var(--spacing-md) var(--spacing-lg);
   }
+}
+
+/* 반응형 스타일 */
+@media (max-width: 480px) {
+  .filter-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-md);
+  }
+  
+  .sort-dropdown {
+    width: 100%;
+  }
+  
+  .sort-select {
+    width: 100%;
+  }
+}
+
+/* scrollable-content 클래스 추가 */
+.scrollable-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* 하단 여백 */
+.bottom-space {
+  height: 300px; /* 충분한 하단 여백 */
+  width: 100%;
 }
 </style> 

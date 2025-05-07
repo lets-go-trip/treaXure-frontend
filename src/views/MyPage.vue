@@ -273,19 +273,18 @@ export default {
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
-  -webkit-overflow-scrolling: touch; /* 모바일 디바이스에서 스크롤 개선 */
-  /* 100% 높이에서 헤더 빼기 */
+  -webkit-overflow-scrolling: touch;
   height: calc(100% - 60px);
-  /* 스크롤바 관련 */
   scrollbar-width: thin;
+  padding-bottom: 120px; /* 하단 여백 더 크게 증가 */
 }
 
 /* 페이지 콘텐츠 */
 .page-content {
   display: flex;
   flex-direction: column;
-  padding: var(--spacing-md);
-  padding-bottom: calc(120px); /* 충분한 하단 여백 */
+  padding: 0 var(--spacing-md);
+  padding-bottom: 350px; /* 매우 큰 하단 여백 */
   gap: var(--spacing-lg);
 }
 
@@ -525,6 +524,15 @@ export default {
   border-radius: 50%;
   margin-right: var(--spacing-md);
   color: var(--primary);
+  flex-shrink: 0;
+  position: relative;
+}
+
+.ranking-icon svg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .ranking-details {
@@ -623,6 +631,15 @@ export default {
   background-color: rgba(79, 108, 255, 0.1);
   margin-right: var(--spacing-md);
   color: var(--primary);
+  flex-shrink: 0;
+  position: relative;
+}
+
+.settings-icon svg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .settings-title {
@@ -662,7 +679,7 @@ export default {
 }
 
 .bottom-space {
-  height: 100px;
+  height: 300px; /* 더 큰 하단 여백 */
   width: 100%;
 }
 </style> 
