@@ -20,13 +20,27 @@ export default {
 .app-container {
   display: flex;
   flex-direction: column;
-  width: 360px;
-  height: 640px;
-  margin: 30px auto;
+  width: 100%;
+  max-width: 480px;
+  min-height: 100vh;
+  margin: 0 auto;
   background: var(--bg-primary);
-  border-radius: 28px;
-  box-shadow: var(--shadow-lg);
   position: relative;
   overflow: hidden;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+@media (min-width: 769px) {
+  .app-container {
+    margin: 20px auto;
+    min-height: calc(100vh - 40px);
+  }
+}
+
+@media (min-height: 900px) {
+  .app-container {
+    max-height: 90vh;
+  }
 }
 </style> 

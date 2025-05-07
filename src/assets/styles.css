@@ -38,10 +38,14 @@
 }
 
 body {
-    background-color: var(--bg-primary);
+    background-color: #e0e0e0; /* 더 뚜렷한 배경색 변경 */
     color: var(--text-dark);
     font-size: 15px;
     line-height: 1.5;
+    min-height: 100vh; /* 최소 높이 추가 */
+    display: flex; /* 컨테이너를 가운데 정렬하기 위해 flex 추가 */
+    flex-direction: column; /* 세로 방향 정렬 */
+    justify-content: flex-start; /* 내용물을 위에서부터 배치 */
 }
 
 /* 공통 컴포넌트 */
@@ -125,6 +129,14 @@ body {
     overflow-y: auto;
     padding-bottom: 80px; /* 하단 네비게이션바 높이에 맞게 조정 */
     -webkit-overflow-scrolling: touch; /* 모바일 스크롤 부드럽게 */
+    position: relative; /* 위치 지정 */
+    width: 100%; /* 전체 너비 */
+}
+
+@media (min-width: 769px) {
+    .mypage, .quest-screen, .all-missions, .quest-list, .mission-detail, .weekly-best {
+        padding-bottom: 90px; /* 큰 화면에서 더 많은 여백 제공 */
+    }
 }
 
 .header {
@@ -180,10 +192,15 @@ body {
 
 #kakao-map {
     width: 100%;
-    height: calc(100% - 70px); /* 네비게이션바 높이만큼 제외 */
-    position: absolute;
-    top: 0;
-    left: 0;
+    height: 100%;
+    min-height: 400px;
+    z-index: 1;
+}
+
+@media (min-width: 769px) {
+    #kakao-map {
+        height: calc(100% - 80px); /* 큰 화면에서 네비게이션바 높이 조정 */
+    }
 }
 
 /* 현재 위치 반경 원 스타일 */
@@ -273,11 +290,12 @@ body {
 
 /* 선택된 장소 정보 카드 */
 .info-card {
-    position: absolute;
+    position: fixed; /* absolute에서 fixed로 변경 */
     bottom: 76px; /* 하단 네비게이션 바 위에 위치하도록 설정 */
     left: 50%;
     transform: translateX(-50%);
     width: 85%;
+    max-width: 440px; /* 테두리를 고려한 최대 너비 제한 */
     background: white;
     border-radius: var(--radius-lg);
     padding: 18px;
@@ -289,6 +307,13 @@ body {
 .info-card:hover {
     transform: translateX(-50%) translateY(-5px);
     box-shadow: var(--shadow-lg);
+}
+
+@media (min-width: 769px) {
+    .info-card {
+        bottom: 86px; /* 큰 화면에서 위치 조정 */
+        padding: 24px; /* 더 큰 패딩 */
+    }
 }
 
 .info-header {
@@ -365,11 +390,22 @@ body {
     background: white;
     border-top: var(--border-light);
     padding: 8px 0 18px;
-    position: absolute;
+    position: fixed; /* absolute에서 fixed로 변경 */
     bottom: 0;
     width: 100%;
+    max-width: 476px; /* 테두리 두께(2px)를 고려한 너비 */
+    left: 50%;
+    transform: translateX(-50%);
     z-index: 100; /* 높은 z-index 추가 */
     height: 70px; /* 명시적인 높이 지정 */
+    border-radius: 0 0 18px 18px; /* 컨테이너의 모서리와 일치 */
+}
+
+@media (min-width: 769px) {
+    .bottom-nav {
+        border-radius: 0 0 12px 12px; /* 하단 둥근 모서리 추가 */
+        padding: 8px 0 12px; /* 패딩 조정 */
+    }
 }
 
 .nav-item {
@@ -1301,4 +1337,169 @@ img.error::before {
 
 .best-photo.first .photo-image.empty-image {
     min-height: 240px;
+}
+
+/* 
+ * 카카오맵 및 마커 관련 스타일
+ */
+.palace-marker {
+    cursor: pointer;
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.15));
+    transition: all 0.3s ease;
+    z-index: 5;
+}
+
+.palace-marker:hover {
+    transform: translate(-50%, -105%) scale(1.08) !important;
+    filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.25));
+    z-index: 10;
+}
+
+/* 위치 마커 스타일 개선 */
+.location-marker {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    transform: translate(-50%, -100%);
+    cursor: pointer;
+    filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.2));
+    z-index: 5;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.location-marker:hover {
+    transform: translate(-50%, -110%) scale(1.1);
+}
+
+.marker-fill {
+    color: var(--primary);
+}
+
+.marker-fill-secondary {
+    color: var(--primary-light);
+}
+
+.marker-fill-completed {
+    color: var(--completed);
+}
+
+.marker-badge {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    background: var(--accent);
+    color: white;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 11px;
+    border: 2px solid white;
+}
+
+/* 맵 컨테이너 스타일 */
+#kakao-map {
+    width: 100%;
+    height: 100%;
+    min-height: 400px;
+    z-index: 1;
+}
+
+/* 선택된 장소 정보 카드 */
+.info-card {
+    position: fixed; /* absolute에서 fixed로 변경 */
+    bottom: 76px; /* 하단 네비게이션 바 위에 위치하도록 설정 */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 85%;
+    max-width: 440px; /* 테두리를 고려한 최대 너비 제한 */
+    background: white;
+    border-radius: var(--radius-lg);
+    padding: 18px;
+    box-shadow: var(--shadow-md);
+    transition: all 0.3s ease;
+    z-index: 95; /* 네비게이션 바보다 낮은 z-index */
+}
+
+.info-card:hover {
+    transform: translateX(-50%) translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+@media (min-width: 769px) {
+    .info-card {
+        bottom: 86px; /* 큰 화면에서 위치 조정 */
+        padding: 24px; /* 더 큰 패딩 */
+    }
+}
+
+.info-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.location-icon {
+    width: 38px;
+    height: 38px;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 12px;
+}
+
+.icon-fill {
+    color: var(--primary);
+}
+
+.info-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 2px;
+}
+
+.info-address {
+    font-size: 12px;
+    color: var(--text-medium);
+}
+
+.difficulty {
+    display: flex;
+    gap: 4px;
+    margin: 8px 0;
+}
+
+.difficulty-unit {
+    width: 20%;
+    height: 4px;
+    background: #E5E5E5;
+    border-radius: 2px;
+}
+
+.difficulty-unit.active {
+    background: var(--primary);
+}
+
+.info-stats {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: var(--text-medium);
+}
+
+.info-action {
+    display: flex;
+    justify-content: center;
+    margin-top: 14px;
+}
+
+.stat-value {
+    font-weight: 500;
+    color: var(--primary-dark);
 } 

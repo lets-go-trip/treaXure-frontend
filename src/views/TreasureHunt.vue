@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="map-container">
     <!-- 헤더 -->
     <div class="header">
       <div class="header-title">트레저헌터</div>
@@ -14,21 +14,6 @@
       </div>
       
       <div id="kakao-map" ref="kakaoMap"></div>
-      
-      <!-- 지도 위에 표시될 마커들 -->
-      <div 
-        v-for="(marker, index) in locationMarkers" 
-        :key="index"
-        class="location-marker" 
-        :style="{ top: marker.top, left: marker.left }"
-        @click="selectMarker(marker)">
-        <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M20 4C13.4 4 8 9.4 8 16C8 25 20 36 20 36C20 36 32 25 32 16C32 9.4 26.6 4 20 4ZM20 20C17.8 20 16 18.2 16 16C16 13.8 17.8 12 20 12C22.2 12 24 13.8 24 16C24 18.2 22.2 20 20 20Z" 
-                fill="currentColor" 
-                :class="marker.fillClass" />
-        </svg>
-        <div class="marker-badge">{{ marker.badge }}</div>
-      </div>
       
       <!-- 선택된 장소 정보 카드 -->
       <div class="info-card" v-if="selectedLocation">
@@ -77,13 +62,10 @@ export default {
   data() {
     return {
       selectedLocation: null,
-      locationMarkers: [
+      // 고정된 카카오맵 마커로 대체하므로 locationMarkers 배열은 더 이상 필요하지 않음
+      palaceData: [
         {
           id: 1,
-          top: '25%',
-          left: '25%',
-          fillClass: 'marker-fill',
-          badge: '2',
           title: '경복궁 숨겨진 비밀',
           address: '서울 종로구 사직로 161',
           difficulty: 2,
@@ -93,10 +75,6 @@ export default {
         },
         {
           id: 2,
-          top: '45%',
-          left: '65%',
-          fillClass: 'marker-fill-secondary',
-          badge: '3',
           title: '덕수궁 보물 찾기',
           address: '서울 중구 세종대로 99',
           difficulty: 3,
@@ -106,10 +84,6 @@ export default {
         },
         {
           id: 3,
-          top: '65%',
-          left: '40%',
-          fillClass: 'marker-fill-completed',
-          badge: '✓',
           title: '창덕궁 신비로운 길',
           address: '서울 종로구 율곡로 99',
           difficulty: 4,
@@ -122,19 +96,109 @@ export default {
   },
   mounted() {
     // 카카오맵 초기화 (KakaoMapMixin에서 가져온 메서드)
-    this.initMap(this.$refs.kakaoMap);
-    
-    // 기본적으로 첫 번째 마커 선택
-    this.selectMarker(this.locationMarkers[0]);
+    this.$nextTick(() => {
+      if (this.$refs.kakaoMap) {
+        this.initMap(this.$refs.kakaoMap);
+        
+        // 기본적으로 첫 번째 궁궐 정보 표시
+        this.selectedLocation = this.palaceData[0];
+        
+        // 글로벌 이벤트 리스너 추가
+        window.addEventListener('palaceSelected', this.handlePalaceSelected);
+      }
+    });
+  },
+  beforeUnmount() {
+    // 컴포넌트 제거 시 이벤트 리스너 제거
+    window.removeEventListener('palaceSelected', this.handlePalaceSelected);
   },
   methods: {
-    selectMarker(marker) {
-      this.selectedLocation = marker;
+    // 궁궐 마커가 클릭되었을 때 호출될 메서드
+    selectPalace(palace) {
+      // ID로 맞는 궁궐 데이터 찾기
+      const selectedData = this.palaceData.find(item => item.id === palace.id);
+      
+      if (selectedData) {
+        // 선택된 위치 정보 업데이트
+        this.selectedLocation = selectedData;
+        console.log(`${palace.name} 정보가 표시됩니다.`);
+      }
+    },
+    // 글로벌 이벤트 핸들러
+    handlePalaceSelected(event) {
+      const palace = event.detail.palace;
+      this.selectPalace(palace);
     }
   }
 };
 </script>
 
 <style scoped>
-/* 스타일은 전역 CSS에서 처리 */
+.map-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100vh; /* 전체 화면 높이 */
+  position: relative;
+}
+
+.map-view {
+  flex: 1;
+  width: 100%;
+  position: relative;
+  height: calc(100vh - 60px); /* 헤더 높이를 뺀 나머지 영역 */
+}
+
+/* 카카오맵 컨테이너 스타일 */
+#kakao-map {
+  width: 100%;
+  height: 100%;
+  min-height: 500px; /* 최소 높이 증가 */
+  z-index: 1;
+}
+
+/* 정보 카드 스타일 개선 */
+.info-card {
+  z-index: 20;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.2);
+  background-color: rgba(255, 255, 255, 0.95); /* 약간 투명하게 */
+  backdrop-filter: blur(5px); /* 블러 효과 추가 */
+  max-width: 90%; /* 모바일에서 너무 넓지 않도록 */
+}
+
+/* 헤더 스타일 개선 */
+.header {
+  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(5px);
+  z-index: 5;
+  height: 60px; /* 명시적 높이 지정 */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* 프로그레스 바 위치 수정 */
+.progress-bar {
+  position: absolute;
+  top: 60px; /* 헤더 아래에 위치 */
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: rgba(0, 0, 0, 0.1);
+  z-index: 5;
+}
+
+/* 미디어 쿼리 추가 - 데스크톱에서 높이 조정 */
+@media (min-width: 769px) {
+  .map-container {
+    height: calc(100vh - 40px); /* 브라우저 상단 여백 고려 */
+    margin: 20px auto;
+  }
+  
+  .map-view {
+    height: calc(100vh - 100px);
+  }
+  
+  #kakao-map {
+    min-height: 600px;
+  }
+}
 </style> 
