@@ -1,0 +1,1304 @@
+/* CSS 파일 내용 */ 
+
+/* 기존 CSS 파일 내용 - Vue.js 프로젝트용으로 조정 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+:root {
+    /* 주요 컬러 테마 - 갈색 계열 */
+    --primary: #8B6E4E;
+    --primary-dark: #6D553C;
+    --primary-light: #C5AA8E;
+    --accent: #D9A566;
+    --accent-light: #F2D2A9;
+    
+    /* 중립 컬러 */
+    --text-dark: #333333;
+    --text-medium: #666666;
+    --text-light: #FFFFFF;
+    --bg-primary: #FFFFFF;
+    --bg-secondary: #FAF7F2;
+    
+    /* 상태 컬러 */
+    --completed: #7D9D6F;
+    --error: #E74C3C;
+    
+    /* 레이아웃 스타일 */
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 20px;
+    --border-light: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+body {
+    background-color: var(--bg-primary);
+    color: var(--text-dark);
+    font-size: 15px;
+    line-height: 1.5;
+}
+
+/* 공통 컴포넌트 */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: var(--radius-sm);
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn:hover {
+    background: var(--primary-dark);
+}
+
+.btn-outline {
+    background: transparent;
+    border: 1px solid var(--primary);
+    color: var(--primary);
+    display: inline-block;
+    text-decoration: none;
+    text-align: center;
+}
+
+.btn-outline:hover {
+    background: rgba(139, 110, 78, 0.08);
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--primary-light);
+    color: var(--primary-dark);
+    border-radius: 99px;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.badge.completed {
+    background: var(--completed);
+    color: white;
+}
+
+.btn-small {
+    padding: 6px 12px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-block;
+    text-decoration: none;
+    text-align: center;
+}
+
+.btn-small:hover {
+    background: var(--primary-dark);
+}
+
+/* 콘텐츠 영역 공통 스타일 */
+.mypage, .quest-screen, .all-missions, .quest-list, .mission-detail, .weekly-best {
+    flex: 1;
+    overflow-y: auto;
+    padding-bottom: 80px; /* 하단 네비게이션바 높이에 맞게 조정 */
+    -webkit-overflow-scrolling: touch; /* 모바일 스크롤 부드럽게 */
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    background: var(--bg-primary);
+    border-bottom: var(--border-light);
+    z-index: 10;
+}
+
+.header-back {
+    display: flex;
+    align-items: center;
+}
+
+.header-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.header-action {
+    display: flex;
+    gap: 16px;
+}
+
+.icon-btn {
+    background: transparent;
+    border: none;
+    font-size: 20px;
+    color: var(--text-medium);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+}
+
+.icon-btn:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+/* 지도 및 마커 관련 스타일 */
+.map-view {
+    flex: 1;
+    position: relative;
+}
+
+#kakao-map {
+    width: 100%;
+    height: calc(100% - 70px); /* 네비게이션바 높이만큼 제외 */
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+/* 현재 위치 반경 원 스타일 */
+.radius-circle {
+    border-radius: 50%;
+    border: 2px dashed var(--primary);
+    background-color: rgba(217, 165, 102, 0.3);
+    position: absolute;
+    pointer-events: none;
+    z-index: 2;
+    transform: translate(-50%, -50%);
+    box-sizing: border-box;
+}
+
+.current-location-marker {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    background-color: var(--primary);
+    border: 3px solid white;
+    border-radius: 50%;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    transform: translate(-50%, -50%);
+    z-index: 3;
+    pointer-events: none;
+}
+
+.progress-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: rgba(0, 0, 0, 0.1);
+    z-index: 5;
+}
+
+.progress-fill {
+    height: 100%;
+    background: var(--primary);
+    width: 35%; /* 프로그레스 퍼센트 */
+}
+
+.location-marker {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    transform: translate(-50%, -100%);
+    cursor: pointer;
+    filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.2));
+    z-index: 5;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.location-marker:hover {
+    transform: translate(-50%, -110%) scale(1.1);
+}
+
+.marker-fill {
+    color: var(--primary);
+}
+
+.marker-fill-secondary {
+    color: var(--primary-light);
+}
+
+.marker-fill-completed {
+    color: var(--completed);
+}
+
+.marker-badge {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    background: var(--accent);
+    color: white;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 11px;
+    border: 2px solid white;
+}
+
+/* 선택된 장소 정보 카드 */
+.info-card {
+    position: absolute;
+    bottom: 76px; /* 하단 네비게이션 바 위에 위치하도록 설정 */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 85%;
+    background: white;
+    border-radius: var(--radius-lg);
+    padding: 18px;
+    box-shadow: var(--shadow-md);
+    transition: all 0.3s ease;
+    z-index: 95; /* 네비게이션 바보다 낮은 z-index */
+}
+
+.info-card:hover {
+    transform: translateX(-50%) translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+.info-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.location-icon {
+    width: 38px;
+    height: 38px;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 12px;
+}
+
+.icon-fill {
+    color: var(--primary);
+}
+
+.info-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 2px;
+}
+
+.info-address {
+    font-size: 12px;
+    color: var(--text-medium);
+}
+
+.difficulty {
+    display: flex;
+    gap: 4px;
+    margin: 8px 0;
+}
+
+.difficulty-unit {
+    width: 20%;
+    height: 4px;
+    background: #E5E5E5;
+    border-radius: 2px;
+}
+
+.difficulty-unit.active {
+    background: var(--primary);
+}
+
+.info-stats {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: var(--text-medium);
+}
+
+.info-action {
+    display: flex;
+    justify-content: center;
+    margin-top: 14px;
+}
+
+.stat-value {
+    font-weight: 500;
+    color: var(--primary-dark);
+}
+
+/* 하단 내비게이션 */
+.bottom-nav {
+    display: flex;
+    background: white;
+    border-top: var(--border-light);
+    padding: 8px 0 18px;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    z-index: 100; /* 높은 z-index 추가 */
+    height: 70px; /* 명시적인 높이 지정 */
+}
+
+.nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 8px 0;
+    color: var(--text-medium);
+    font-size: 12px;
+    font-weight: 500;
+    transition: color 0.2s ease;
+    text-decoration: none;
+}
+
+.nav-item.active {
+    color: var(--primary);
+}
+
+.nav-icon {
+    margin-bottom: 4px;
+    font-size: 20px;
+}
+
+/* 퀘스트 화면 */
+.quest-screen {
+    display: flex; /* Vue에서는 display: none 대신 v-if/v-show를 사용 */
+    flex-direction: column;
+}
+
+.quest-list {
+    flex: 1;
+    padding: 16px;
+}
+
+/* 전체 미션 페이지 스타일 */
+.all-missions {
+    flex: 1;
+    padding: 16px;
+}
+
+/* 필터 및 정렬 옵션 */
+.filter-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 16px;
+    background: var(--bg-secondary);
+    border-bottom: var(--border-light);
+    z-index: 5;
+}
+
+.filter-options {
+    display: flex;
+    gap: 12px;
+}
+
+.checkbox {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+}
+
+.checkbox input {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--primary);
+    cursor: pointer;
+}
+
+.checkbox-label {
+    font-size: 13px;
+    color: var(--text-medium);
+}
+
+.sort-dropdown select {
+    padding: 6px 10px;
+    border: 1px solid var(--primary-light);
+    border-radius: var(--radius-sm);
+    background: white;
+    color: var(--text-medium);
+    font-size: 13px;
+    font-family: 'Noto Sans KR', sans-serif;
+    cursor: pointer;
+    outline: none;
+}
+
+.sort-dropdown select:focus {
+    border-color: var(--primary);
+}
+
+/* 장소 그룹 스타일 */
+.location-group {
+    margin-bottom: 20px;
+    background: white;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    overflow: visible; /* hidden에서 visible로 변경 */
+}
+
+.location-header {
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    margin-bottom: 0 !important;
+    border-bottom: var(--border-light);
+}
+
+.location-header:hover {
+    background: var(--bg-secondary);
+}
+
+.location-stats {
+    font-size: 13px;
+    color: var(--primary);
+    margin-left: 8px;
+    font-weight: 500;
+}
+
+.toggle-icon {
+    margin-left: auto;
+    transition: transform 0.3s ease;
+}
+
+.location-header.collapsed .toggle-icon {
+    transform: rotate(180deg);
+}
+
+.mission-list {
+    overflow: visible !important; /* 강제로 visible 설정 */
+    padding: 14px !important;
+}
+
+.location-image {
+    width: 60px;
+    height: 60px;
+    border-radius: var(--radius-md);
+    background: var(--bg-secondary);
+    margin-right: 14px;
+    object-fit: cover;
+}
+
+.location-details h3 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+}
+
+.completion-badge {
+    font-size: 13px;
+    color: var(--completed);
+    margin-left: 8px;
+}
+
+.location-details p {
+    font-size: 13px;
+    color: var(--text-medium);
+    margin-bottom: 8px;
+}
+
+.quest-card {
+    background: white;
+    border-radius: var(--radius-md);
+    padding: 18px;
+    margin-bottom: 14px;
+    box-shadow: var(--shadow-sm);
+    border-left: 4px solid var(--primary);
+}
+
+.quest-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+}
+
+.quest-card.completed {
+    border-left-color: var(--completed);
+}
+
+.quest-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--text-dark);
+}
+
+.quest-desc {
+    font-size: 14px;
+    color: var(--text-medium);
+    line-height: 1.5;
+    margin-bottom: 12px;
+}
+
+.quest-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.coin-reward {
+    display: flex;
+    align-items: center;
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.coin-icon {
+    width: 18px;
+    height: 18px;
+    margin-right: 4px;
+    background: var(--accent-light);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    color: var(--accent);
+}
+
+.location-info {
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    padding: 18px;
+    margin-top: 24px;
+    margin-bottom: 14px;
+}
+
+.location-info h4 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--primary);
+    margin-bottom: 12px;
+}
+
+.location-info p {
+    font-size: 14px;
+    color: var(--text-medium);
+    line-height: 1.6;
+    margin-bottom: 14px;
+}
+
+/* 미션 상세 페이지 */
+.mission-detail {
+    display: flex;
+    flex-direction: column;
+    height: auto; /* 높이를 auto로 변경 */
+    padding: 0;
+}
+
+.mission-header {
+    padding: 20px 16px;
+    background: var(--bg-secondary);
+    border-bottom: var(--border-light);
+}
+
+.mission-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.mission-icon {
+    width: 24px;
+    height: 24px;
+    font-size: 14px;
+}
+
+.mission-header h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+}
+
+.mission-location {
+    font-size: 14px;
+    color: var(--text-medium);
+}
+
+.mission-content {
+    padding: 16px;
+}
+
+.mission-desc {
+    margin-bottom: 24px;
+}
+
+.mission-desc p {
+    font-size: 15px;
+    line-height: 1.6;
+    margin-bottom: 16px;
+    color: var(--text-dark);
+}
+
+.mission-desc ul {
+    padding-left: 20px;
+    margin-bottom: 16px;
+}
+
+.mission-desc li {
+    font-size: 14px;
+    color: var(--text-medium);
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
+
+.example-image {
+    margin-bottom: 24px;
+}
+
+.example-image h4, .upload-section h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: var(--primary);
+}
+
+.image-container {
+    width: 100%;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+}
+
+.image-container img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.upload-section {
+    margin-bottom: 24px;
+}
+
+.upload-section p {
+    font-size: 14px;
+    color: var(--text-medium);
+    margin-bottom: 16px;
+}
+
+.upload-box {
+    border: 2px dashed var(--primary-light);
+    border-radius: var(--radius-md);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+    background: var(--bg-secondary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.upload-box:hover {
+    border-color: var(--primary);
+    background: rgba(197, 170, 142, 0.1);
+}
+
+.upload-box.file-selected {
+    border-color: var(--primary);
+    background: rgba(197, 170, 142, 0.2);
+}
+
+.upload-box svg {
+    color: var(--primary);
+}
+
+.upload-box p {
+    margin-bottom: 0;
+    text-align: center;
+    font-weight: 500;
+}
+
+.comment-box {
+    margin-top: 24px;
+}
+
+.comment-box textarea {
+    width: 100%;
+    border: 1px solid var(--primary-light);
+    border-radius: var(--radius-sm);
+    padding: 12px;
+    font-size: 14px;
+    resize: none;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+.comment-box textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+.action-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.action-buttons button {
+    flex: 1;
+    padding: 12px 0;
+}
+
+/* 마이페이지 */
+.mypage {
+    padding: 0;
+}
+
+.profile-section {
+    padding: 16px;
+    background: var(--bg-secondary);
+    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+    margin-bottom: 20px;
+}
+
+.profile-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.profile-avatar {
+    position: relative;
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 16px;
+    box-shadow: var(--shadow-md);
+}
+
+.profile-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.edit-avatar-btn {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 32px;
+    height: 32px;
+    background: var(--primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.profile-info {
+    flex: 1;
+}
+
+.profile-info h2 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    color: var(--text-dark);
+}
+
+.profile-info p {
+    font-size: 14px;
+    color: var(--text-medium);
+    margin-bottom: 10px;
+}
+
+.level-progress {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.level-bar {
+    height: 6px;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.level-fill {
+    height: 100%;
+    background: var(--primary);
+    border-radius: 3px;
+}
+
+.level-progress span {
+    font-size: 12px;
+    color: var(--text-medium);
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+.stat-box {
+    background: white;
+    border-radius: var(--radius-sm);
+    padding: 10px 5px;
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+}
+
+.stat-value {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 4px;
+}
+
+.stat-label {
+    font-size: 12px;
+    color: var(--text-medium);
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 16px 10px;
+}
+
+.section-header h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+.view-all {
+    font-size: 13px;
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.ranking-section {
+    margin-bottom: 20px;
+}
+
+.ranking-card {
+    display: flex;
+    align-items: center;
+    background: white;
+    margin: 0 16px 12px;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    padding: 16px;
+}
+
+.ranking-position {
+    background: var(--bg-secondary);
+    padding: 10px;
+    border-radius: var(--radius-sm);
+    text-align: center;
+    margin-right: 14px;
+}
+
+.position-number {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.position-text {
+    font-size: 12px;
+    color: var(--text-medium);
+}
+
+.ranking-info {
+    display: flex;
+    align-items: center;
+}
+
+.ranking-info svg {
+    margin-right: 12px;
+    color: var(--primary);
+}
+
+.ranking-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 2px;
+}
+
+.ranking-subtitle {
+    font-size: 12px;
+    color: var(--text-medium);
+}
+
+.photo-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    padding: 0 16px;
+}
+
+.photo-item {
+    position: relative;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+}
+
+.photo-item img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    display: block;
+}
+
+.photo-badge {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: var(--accent);
+    color: white;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 8px;
+    border-radius: 99px;
+}
+
+.photo-badge.best {
+    background: var(--primary-dark);
+}
+
+.settings-section {
+    margin-top: 24px;
+    padding: 0 16px 16px;
+}
+
+.settings-item {
+    display: flex;
+    align-items: center;
+    padding: 14px 16px;
+    background: white;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 12px;
+    text-decoration: none;
+    color: var(--text-dark);
+}
+
+.settings-item svg:first-child {
+    margin-right: 16px;
+    color: var(--primary);
+}
+
+.settings-item span {
+    flex: 1;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.settings-item svg:last-child {
+    color: var(--text-medium);
+}
+
+/* 주간 베스트 페이지 */
+.weekly-best {
+    padding: 0;
+}
+
+.date-selector {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    background: var(--bg-secondary);
+    border-bottom: var(--border-light);
+}
+
+.date-display {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--primary);
+}
+
+.date-nav {
+    background: transparent;
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--primary);
+    transition: background 0.2s ease;
+}
+
+.date-nav:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.best-content {
+    padding: 16px;
+}
+
+.best-photo {
+    position: relative;
+    margin-bottom: 24px;
+    background: white;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+}
+
+.photo-rank {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: var(--accent);
+    color: white;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 99px;
+    font-size: 14px;
+    z-index: 2;
+}
+
+.best-photo.first .photo-rank {
+    background: var(--primary-dark);
+}
+
+.best-photo.second .photo-rank {
+    background: var(--primary);
+}
+
+.best-photo.third .photo-rank {
+    background: var(--primary-light);
+}
+
+.photo-image {
+    width: 100%;
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+    overflow: hidden;
+}
+
+.photo-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.photo-info {
+    padding: 16px;
+}
+
+.photo-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 10px;
+}
+
+.user-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.user-name {
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 2px;
+}
+
+.photo-location {
+    font-size: 12px;
+    color: var(--text-medium);
+}
+
+.like-button, .like-count {
+    display: flex;
+    align-items: center;
+    color: var(--primary);
+    gap: 4px;
+    font-weight: 500;
+}
+
+.like-count {
+    font-size: 14px;
+}
+
+.like-button svg, .like-count svg {
+    color: var(--accent);
+}
+
+.photo-desc {
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--text-dark);
+    margin-bottom: 16px;
+}
+
+.photo-desc-short {
+    font-size: 13px;
+    line-height: 1.4;
+    color: var(--text-dark);
+    margin-top: 8px;
+}
+
+.action-bar {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-sm {
+    padding: 8px 14px;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.runners-up {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.runners-up .best-photo {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+.vote-info {
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    margin-top: 30px;
+}
+
+.vote-header {
+    margin-bottom: 16px;
+}
+
+.vote-header h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+}
+
+.vote-stats {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: var(--text-medium);
+}
+
+.vote-action {
+    display: flex;
+    justify-content: center;
+}
+
+.vote-action .btn {
+    width: 100%;
+    max-width: 240px;
+}
+
+/* 
+ * General image style for all images in the site
+ * With error handling
+ */
+img {
+    max-width: 100%;
+}
+
+img.error {
+    background-color: #f5f5f5;
+    border-radius: var(--radius-sm);
+    display: flex;
+    min-height: 100px;
+}
+
+img.error::before {
+    content: "이미지를 불러올 수 없습니다";
+    font-size: 12px;
+    color: var(--text-medium);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+/* 랭킹 페이지 빈 이미지 처리 */
+.photo-image.empty-image {
+    background-color: #f5f5f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 180px;
+    border-radius: var(--radius-md);
+}
+
+.photo-image.empty-image::after {
+    content: "등록된 이미지가 없습니다";
+    font-size: 14px;
+    color: var(--text-medium);
+}
+
+.best-photo.first .photo-image.empty-image {
+    min-height: 240px;
+} 
