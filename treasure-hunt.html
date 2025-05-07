@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>트레저헌터</title>
+    <!-- Noto Sans KR 폰트 추가 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- CSS 파일 링크 -->
+    <link rel="stylesheet" href="styles.css">
+    <!-- 카카오맵 API -->
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=41c4ab1496ff9b9a7677b9a5cbaec3d3"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="app">
+            <!-- 지도 화면 -->
+            <div class="header">
+                <div class="header-title">트레저헌터</div>
+                <div class="header-action">
+                    <button class="icon-btn">⋮</button>
+                </div>
+            </div>
+            
+            <div class="map-view">
+                <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                </div>
+                
+                <div id="kakao-map"></div>
+                
+                <!-- 지도 위에 표시될 마커들 -->
+                <div class="location-marker" style="top: 25%; left: 25%;">
+                    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20 4C13.4 4 8 9.4 8 16C8 25 20 36 20 36C20 36 32 25 32 16C32 9.4 26.6 4 20 4ZM20 20C17.8 20 16 18.2 16 16C16 13.8 17.8 12 20 12C22.2 12 24 13.8 24 16C24 18.2 22.2 20 20 20Z" fill="currentColor" class="marker-fill"/>
+                    </svg>
+                    <div class="marker-badge">2</div>
+                </div>
+                
+                <div class="location-marker" style="top: 45%; left: 65%;">
+                    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20 4C13.4 4 8 9.4 8 16C8 25 20 36 20 36C20 36 32 25 32 16C32 9.4 26.6 4 20 4ZM20 20C17.8 20 16 18.2 16 16C16 13.8 17.8 12 20 12C22.2 12 24 13.8 24 16C24 18.2 22.2 20 20 20Z" fill="currentColor" class="marker-fill-secondary"/>
+                    </svg>
+                    <div class="marker-badge">3</div>
+                </div>
+                
+                <div class="location-marker" style="top: 65%; left: 40%;">
+                    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20 4C13.4 4 8 9.4 8 16C8 25 20 36 20 36C20 36 32 25 32 16C32 9.4 26.6 4 20 4ZM20 20C17.8 20 16 18.2 16 16C16 13.8 17.8 12 20 12C22.2 12 24 13.8 24 16C24 18.2 22.2 20 20 20Z" fill="currentColor" class="marker-fill-completed"/>
+                    </svg>
+                    <div class="marker-badge">✓</div>
+                </div>
+                
+                <!-- 선택된 장소 정보 카드 -->
+                <div class="info-card">
+                    <div class="info-header">
+                        <div class="location-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM16 16H8V14H16V16ZM16 13H8V11H16V13ZM16 10H8V8H16V10Z" fill="currentColor" class="icon-fill"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="info-title">경복궁 숨겨진 비밀</div>
+                            <div class="info-address">서울 종로구 사직로 161</div>
+                        </div>
+                    </div>
+                    
+                    <div class="difficulty">
+                        <div class="difficulty-unit active"></div>
+                        <div class="difficulty-unit active"></div>
+                        <div class="difficulty-unit"></div>
+                        <div class="difficulty-unit"></div>
+                        <div class="difficulty-unit"></div>
+                    </div>
+                    
+                    <div class="info-stats">
+                        <div>퀘스트 <span class="stat-value">3개</span></div>
+                        <div>코인 <span class="stat-value">250</span></div>
+                        <div>상태 <span class="stat-value">접근 가능</span></div>
+                    </div>
+                    
+                    <div class="info-action">
+                        <a href="mission-list.html" class="btn-small">미션 보기</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bottom-nav">
+                <div class="nav-item active">
+                    <div class="nav-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13 15.87 2 12 2ZM12 11.5C10.62 11.5 9.5 10.38 9.5 9C9.5 7.62 10.62 6.5 12 6.5C13.38 6.5 14.5 7.62 14.5 9C14.5 10.38 13.38 11.5 12 11.5Z" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <span>지도</span>
+                </div>
+                <a href="mission-list.html" class="nav-item">
+                    <div class="nav-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3ZM9 17H7V10H9V17ZM13 17H11V7H13V17ZM17 17H15V13H17V17Z" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <span>탐색</span>
+                </a>
+                <a href="all-missions.html" class="nav-item">
+                    <div class="nav-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <span>전체 미션</span>
+                </a>
+                <a href="weekly-best.html" class="nav-item">
+                    <div class="nav-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M17 3H7C5.9 3 5 3.9 5 5V21L12 18L19 21V5C19 3.9 18.1 3 17 3Z" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <span>랭킹</span>
+                </a>
+                <a href="mypage.html" class="nav-item">
+                    <div class="nav-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 12C14.21 12 16 10.21 16 8C16 5.79 14.21 4 12 4C9.79 4 8 5.79 8 8C8 10.21 9.79 12 12 12ZM12 14C9.33 14 4 15.34 4 18V20H20V18C20 15.34 14.67 14 12 14Z" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <span>내정보</span>
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 지도 컨테이너
+            var mapContainer = document.getElementById('kakao-map');
+            
+            // 기본 위치 - 서울 시청
+            var defaultPosition = new kakao.maps.LatLng(37.5665, 126.9780);
+            
+            // 지도 옵션
+            var mapOption = { 
+                center: defaultPosition,
+                level: 3  // 확대 레벨 (낮을수록 확대)
+            };
+            
+            // 지도 생성
+            var map = new kakao.maps.Map(mapContainer, mapOption);
+            
+            // 반경 원과 마커를 전역 변수로 선언
+            var circle = null;
+            var marker = null;
+            
+            // 반경 원 스타일 정의
+            var circleOptions = {
+                radius: 100,           // 미터 단위 반경
+                strokeWeight: 4,       // 선의 두께 (더 두껍게)
+                strokeColor: '#8B6E4E',// 선의 색상 (갈색)
+                strokeOpacity: 1,      // 선의 불투명도 (완전 불투명)
+                strokeStyle: 'dashed', // 선의 스타일
+                fillColor: '#D9A566',  // 채우기 색상 (황금빛)
+                fillOpacity: 0.6       // 채우기 불투명도 (더 진하게)
+            };
+            
+            // 위치 정보 가져오기 시도
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    // 위치 정보 가져오기 성공 시
+                    function(position) {
+                        // 현재 위치 좌표
+                        var lat = position.coords.latitude;
+                        var lng = position.coords.longitude;
+                        var currentPosition = new kakao.maps.LatLng(lat, lng);
+                        
+                        // 지도 중심 이동
+                        map.setCenter(currentPosition);
+                        
+                        // 현재 위치 마커 생성
+                        marker = new kakao.maps.Marker({
+                            position: currentPosition,
+                            map: map
+                        });
+                        
+                        // 반경 원 생성 및 표시
+                        displayCircle(currentPosition);
+                        
+                        console.log('현재 위치 기반 지도 표시 완료');
+                    },
+                    // 위치 정보 가져오기 실패 시
+                    function(error) {
+                        console.error('위치 정보를 가져오는데 실패했습니다:', error);
+                        
+                        // 기본 위치로 지도 표시
+                        displayDefaultMap();
+                        
+                        alert('위치 정보를 가져올 수 없어 기본 위치(서울 시청)를 표시합니다.');
+                    }
+                );
+            } else {
+                // 위치 정보 지원하지 않는 경우
+                console.error('Geolocation이 지원되지 않는 브라우저입니다.');
+                
+                // 기본 위치로 지도 표시
+                displayDefaultMap();
+                
+                alert('이 브라우저에서는 위치 정보를 사용할 수 없습니다.');
+            }
+            
+            // 기본 위치로 지도 표시 함수
+            function displayDefaultMap() {
+                // 지도 중심 설정
+                map.setCenter(defaultPosition);
+                
+                // 기본 위치 마커 생성
+                marker = new kakao.maps.Marker({
+                    position: defaultPosition,
+                    map: map
+                });
+                
+                // 반경 원 생성 및 표시
+                displayCircle(defaultPosition);
+            }
+            
+            // 특정 좌표에 반경 원 표시 함수
+            function displayCircle(position) {
+                // 기존 원 삭제 (있는 경우)
+                if (circle) {
+                    circle.setMap(null);
+                }
+                
+                // 반경 원 생성
+                circle = new kakao.maps.Circle(Object.assign({
+                    center: position,
+                    map: map
+                }, circleOptions));
+                
+                console.log('반경 표시 완료:', position);
+            }
+            
+            // 지도 이동 이벤트 리스너
+            kakao.maps.event.addListener(map, 'center_changed', function() {
+                console.log('지도 중심이 변경되었습니다.');
+            });
+        });
+    </script>
+    <!-- Add script.js for image error handling -->
+    <script src="script.js"></script>
+</body>
+</html> 

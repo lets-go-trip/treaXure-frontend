@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>트레저헌터 - 전체 미션</title>
+    <!-- Noto Sans KR 폰트 추가 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- CSS 파일 링크 -->
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* 장소 그룹 스타일 추가 수정 */
+        .location-header {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            margin-bottom: 0;
+            border-bottom: var(--border-light);
+        }
+        
+        .location-image {
+            width: 60px;
+            height: 60px;
+            border-radius: var(--radius-md);
+            background: var(--bg-secondary);
+            margin-right: 14px;
+            object-fit: cover;
+        }
+        
+        .mission-list {
+            padding: 14px;
+            display: block;
+            max-height: 600px; /* 충분히 큰 초기 높이 */
+            overflow: visible;
+        }
+        
+        .quest-card {
+            display: block;
+            margin-bottom: 14px;
+        }
+        
+        .quest-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="app">
+            <!-- 헤더 -->
+            <div class="header">
+                <div class="header-back">
+                    <a href="treasure-hunt.html" class="icon-btn">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M20 11H7.83L13.42 5.41L12 4L4 12L12 20L13.41 18.59L7.83 13H20V11Z" fill="currentColor"/>
+                        </svg>
+                    </a>
+                </div>
+                <div class="header-title">전체 미션</div>
+                <div class="header-action">
+                    <button class="icon-btn">⋮</button>
+                </div>
+            </div>
+            
+            <!-- 필터 및 정렬 옵션 -->
+            <div class="filter-bar">
+                <div class="filter-options">
+                    <label class="checkbox">
+                        <input type="checkbox" id="toggle-incomplete" checked>
+                        <span class="checkbox-label">미완료 미션</span>
+                    </label>
+                    <label class="checkbox">
+                        <input type="checkbox" id="toggle-complete" checked>
+                        <span class="checkbox-label">완료 미션</span>
+                    </label>
+                </div>
+                <div class="sort-dropdown">
+                    <select id="sort-missions">
+                        <option value="recent">최근 방문순</option>
+                        <option value="points">포인트 높은순</option>
+                        <option value="location">장소별</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- 미션 목록 컨테이너 -->
+            <div class="all-missions">
+                <!-- 장소 그룹 1 -->
+                <div class="location-group" style="display:block;">
+                    <div class="location-header" data-toggle="location-1" style="margin-bottom:0;">
+                        <div class="location-image" style="background-image: url('https://via.placeholder.com/60x60?text=경복궁')"></div>
+                        <div class="location-details">
+                            <h3>경복궁 <span class="location-stats">2/3 완료</span></h3>
+                            <p>서울 종로구 사직로 161</p>
+                        </div>
+                        <div class="toggle-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M16.59 8.59L12 13.17L7.41 8.59L6 10L12 16L18 10L16.59 8.59Z" fill="currentColor"/>
+                            </svg>
+                        </div>
+                    </div>
+                    
+                    <div class="mission-list" id="location-1" style="display:block; max-height:600px; overflow:visible;">
+                        <div class="quest-card completed" style="display:block;">
+                            <div class="quest-title">경복궁 근정전 인증하기</div>
+                            <div class="quest-desc">경복궁의 정전인 근정전 앞에서 인증샷을 찍어보세요.</div>
+                            <div class="quest-footer" style="display:flex;">
+                                <div class="coin-reward">
+                                    <div class="coin-icon">●</div>
+                                    100 포인트
+                                </div>
+                                <div class="badge completed">완료</div>
+                            </div>
+                        </div>
+                        
+                        <div class="quest-card completed" style="display:block;">
+                            <div class="quest-title">향원정의 연못 찾기</div>
+                            <div class="quest-desc">경복궁 후원에 있는 향원정 연못의 아름다운 모습을 담아보세요.</div>
+                            <div class="quest-footer" style="display:flex;">
+                                <div class="coin-reward">
+                                    <div class="coin-icon">●</div>
+                                    150 포인트
+                                </div>
+                                <div class="badge completed">완료</div>
+                            </div>
+                        </div>
+                        
+                        <div class="quest-card" style="display:block;">
+                            <div class="quest-title">숨겨진 동궁과 후원 찾기</div>
+                            <div class="quest-desc">경복궁에서 가장 아름다운 영역 중 하나인 동궁과 후원의 풍경을 담아보세요.</div>
+                            <div class="quest-footer" style="display:flex;">
+                                <div class="coin-reward">
+                                    <div class="coin-icon">●</div>
+                                    200 포인트
+                                </div>
+                                <a href="mission-detail.html" class="btn-small">도전하기</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 장소 그룹 2 -->
+                <div class="location-group" style="display:block;">
+                    <div class="location-header" data-toggle="location-2" style="margin-bottom:0;">
+                        <div class="location-image" style="background-image: url('https://via.placeholder.com/60x60?text=창덕궁')"></div>
+                        <div class="location-details">
+                            <h3>창덕궁 <span class="location-stats">1/3 완료</span></h3>
+                            <p>서울 종로구 율곡로 99</p>
+                        </div>
+                        <div class="toggle-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M16.59 8.59L12 13.17L7.41 8.59L6 10L12 16L18 10L16.59 8.59Z" fill="currentColor"/>
+                            </svg>
+                        </div>
+                    </div>
+                    
+                    <div class="mission-list" id="location-2" style="display:block; max-height:600px; overflow:visible;">
+                        <div class="quest-card completed" style="display:block;">
+                            <div class="quest-title">부용지 연꽃 촬영하기</div>
+                            <div class="quest-desc">창덕궁의 후원에 있는 부용지에 피어있는 연꽃을 촬영해보세요.</div>
+                            <div class="quest-footer" style="display:flex;">
+                                <div class="coin-reward">
+                                    <div class="coin-icon">●</div>
+                                    120 포인트
+                                </div>
+                                <div class="badge completed">완료</div>
+                            </div>
+                        </div>
+                        
+                        <div class="quest-card" style="display:block;">
+                            <div class="quest-title">대조전 찾아가기</div>
+                            <div class="quest-desc">왕비의 처소였던 대조전을 찾아 그 아름다운 건축양식을 담아보세요.</div>
+                            <div class="quest-footer" style="display:flex;">
+                                <div class="coin-reward">
+                                    <div class="coin-icon">●</div>
+                                    150 포인트
+                                </div>
+                                <a href="mission-detail.html" class="btn-small">도전하기</a>
+                            </div>
+                        </div>
+                        
+                        <div class="quest-card" style="display:block;">
+                            <div class="quest-title">낙선재 문고 탐방</div>
+                            <div class="quest-desc">조선시대 왕실 도서관이었던 낙선재 문고를 찾아 인증샷을 찍어보세요.</div>
+                            <div class="quest-footer" style="display:flex;">
+                                <div class="coin-reward">
+                                    <div class="coin-icon">●</div>
+                                    180 포인트
+                                </div>
+                                <a href="mission-detail.html" class="btn-small">도전하기</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 장소 그룹 3 -->
+                <div class="location-group" style="display:block;">
+                    <div class="location-header" data-toggle="location-3" style="margin-bottom:0;">
+                        <div class="location-image" style="background-image: url('https://via.placeholder.com/60x60?text=덕수궁')"></div>
+                        <div class="location-details">
+                            <h3>덕수궁 <span class="location-stats">0/2 완료</span></h3>
+                            <p>서울 중구 세종대로 99</p>
+                        </div>
+                        <div class="toggle-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M16.59 8.59L12 13.17L7.41 8.59L6 10L12 16L18 10L16.59 8.59Z" fill="currentColor"/>
+                            </svg>
+                        </div>
+                    </div>
+                    
+                    <div class="mission-list" id="location-3" style="display:block; max-height:600px; overflow:visible;">
+                        <div class="quest-card" style="display:block;">
+                            <div class="quest-title">정관헌 촬영하기</div>
+                            <div class="quest-desc">서양식 건물인 정관헌의 독특한 건축 양식을 담아보세요.</div>
+                            <div class="quest-footer" style="display:flex;">
+                                <div class="coin-reward">
+                                    <div class="coin-icon">●</div>
+                                    130 포인트
+                                </div>
+                                <a href="mission-detail.html" class="btn-small">도전하기</a>
+                            </div>
+                        </div>
+                        
+                        <div class="quest-card" style="display:block;">
+                            <div class="quest-title">중화전 찾기</div>
+                            <div class="quest-desc">덕수궁의 정전인 중화전을 찾아 그 웅장한 모습을 촬영해보세요.</div>
+                            <div class="quest-footer" style="display:flex;">
+                                <div class="coin-reward">
+                                    <div class="coin-icon">●</div>
+                                    170 포인트
+                                </div>
+                                <a href="mission-detail.html" class="btn-small">도전하기</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 하단 내비게이션 -->
+            <div class="bottom-nav">
+                <a href="treasure-hunt.html" class="nav-item">
+                    <div class="nav-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13 15.87 2 12 2ZM12 11.5C10.62 11.5 9.5 10.38 9.5 9C9.5 7.62 10.62 6.5 12 6.5C13.38 6.5 14.5 7.62 14.5 9C14.5 10.38 13.38 11.5 12 11.5Z" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <span>지도</span>
+                </a>
+                <a href="mission-list.html" class="nav-item">
+                    <div class="nav-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3ZM9 17H7V10H9V17ZM13 17H11V7H13V17ZM17 17H15V13H17V17Z" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <span>탐색</span>
+                </a>
+                <a href="all-missions.html" class="nav-item active">
+                    <div class="nav-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <span>전체 미션</span>
+                </a>
+                <a href="weekly-best.html" class="nav-item">
+                    <div class="nav-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M17 3H7C5.9 3 5 3.9 5 5V21L12 18L19 21V5C19 3.9 18.1 3 17 3Z" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <span>랭킹</span>
+                </a>
+                <a href="mypage.html" class="nav-item">
+                    <div class="nav-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 12C14.21 12 16 10.21 16 8C16 5.79 14.21 4 12 4C9.79 4 8 5.79 8 8C8 10.21 9.79 12 12 12ZM12 14C9.33 14 4 15.34 4 18V20H20V18C20 15.34 14.67 14 12 14Z" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <span>내정보</span>
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 페이지 로드 시 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            // 모든 미션 리스트를 확실하게 보이게 함
+            document.querySelectorAll('.mission-list').forEach(list => {
+                list.style.maxHeight = '1000px';
+                list.style.padding = '14px';
+                list.style.display = 'block';
+                list.style.overflow = 'visible';
+            });
+            
+            // 모든 미션 카드도 확실하게 보이게 함
+            document.querySelectorAll('.quest-card').forEach(card => {
+                card.style.display = 'block';
+            });
+            
+            // 필터링 설정에 따라 초기 미션 표시
+            updateMissionVisibility();
+        });
+        
+        // 미션 필터링 토글 기능
+        const toggleIncomplete = document.getElementById('toggle-incomplete');
+        const toggleComplete = document.getElementById('toggle-complete');
+        const questCards = document.querySelectorAll('.quest-card');
+        
+        function updateMissionVisibility() {
+            const showIncomplete = toggleIncomplete.checked;
+            const showComplete = toggleComplete.checked;
+            
+            questCards.forEach(card => {
+                const isCompleted = card.classList.contains('completed');
+                
+                if ((isCompleted && showComplete) || (!isCompleted && showIncomplete)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+            
+            // 모든 장소 그룹 확인하여 표시할 미션이 없는 경우 숨기기
+            document.querySelectorAll('.location-group').forEach(group => {
+                const visibleMissions = group.querySelectorAll('.quest-card[style="display: block"]').length;
+                if (visibleMissions === 0) {
+                    group.style.display = 'none';
+                } else {
+                    group.style.display = 'block';
+                }
+            });
+        }
+        
+        toggleIncomplete.addEventListener('change', updateMissionVisibility);
+        toggleComplete.addEventListener('change', updateMissionVisibility);
+        
+        // 정렬 기능
+        const sortSelect = document.getElementById('sort-missions');
+        const locationGroups = document.querySelector('.all-missions');
+        
+        sortSelect.addEventListener('change', function() {
+            const sortValue = this.value;
+            const groups = Array.from(document.querySelectorAll('.location-group'));
+            
+            switch (sortValue) {
+                case 'recent':
+                    // 최근 방문순 (현재 순서 그대로 유지)
+                    break;
+                    
+                case 'points':
+                    // 포인트 높은순으로 정렬
+                    groups.sort((a, b) => {
+                        const pointsA = getTotalPoints(a);
+                        const pointsB = getTotalPoints(b);
+                        return pointsB - pointsA;
+                    });
+                    break;
+                    
+                case 'location':
+                    // 장소별 정렬 (이름순)
+                    groups.sort((a, b) => {
+                        const nameA = a.querySelector('h3').textContent.split(' ')[0];
+                        const nameB = b.querySelector('h3').textContent.split(' ')[0];
+                        return nameA.localeCompare(nameB);
+                    });
+                    break;
+            }
+            
+            // 정렬된 순서대로 DOM에 다시 추가
+            groups.forEach(group => {
+                locationGroups.appendChild(group);
+            });
+        });
+        
+        // 장소 그룹의 총 포인트 계산 함수
+        function getTotalPoints(group) {
+            let total = 0;
+            const rewards = group.querySelectorAll('.coin-reward');
+            rewards.forEach(reward => {
+                const pointsText = reward.textContent.trim();
+                const pointsMatch = pointsText.match(/(\d+)\s*포인트/);
+                if (pointsMatch && pointsMatch[1]) {
+                    const points = parseInt(pointsMatch[1]);
+                    if (!isNaN(points)) {
+                        total += points;
+                    }
+                }
+            });
+            return total;
+        }
+    </script>
+    <!-- Add script.js for image error handling -->
+    <script src="script.js"></script>
+</body>
+</html> 
