@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="all-missions-screen">
     <!-- 헤더 -->
     <div class="header">
       <div class="header-back">
@@ -11,33 +11,46 @@
       </div>
       <div class="header-title">전체 미션</div>
       <div class="header-action">
-        <button class="icon-btn">⋮</button>
+        <button class="icon-btn">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 8C13.1 8 14 7.1 14 6C14 4.9 13.1 4 12 4C10.9 4 10 4.9 10 6C10 7.1 10.9 8 12 8ZM12 10C10.9 10 10 10.9 10 12C10 13.1 10.9 14 12 14C13.1 14 14 13.1 14 12C14 10.9 13.1 10 12 10ZM12 16C10.9 16 10 16.9 10 18C10 19.1 10.9 20 12 20C13.1 20 14 19.1 14 18C14 16.9 13.1 16 12 16Z" fill="currentColor"/>
+          </svg>
+        </button>
       </div>
     </div>
     
     <!-- 필터 및 정렬 옵션 -->
     <div class="filter-bar">
-      <div class="filter-options">
-        <label class="checkbox">
-          <input type="checkbox" v-model="filters.showIncomplete">
-          <span class="checkbox-label">미완료 미션</span>
+      <div class="filter-chips">
+        <label class="chip" :class="{ active: filters.showIncomplete }">
+          <input type="checkbox" v-model="filters.showIncomplete" class="chip-input">
+          <div class="chip-content">
+            <span class="chip-dot" v-if="filters.showIncomplete"></span>
+            <span class="chip-label">미완료 미션</span>
+          </div>
         </label>
-        <label class="checkbox">
-          <input type="checkbox" v-model="filters.showComplete">
-          <span class="checkbox-label">완료 미션</span>
+        <label class="chip" :class="{ active: filters.showComplete }">
+          <input type="checkbox" v-model="filters.showComplete" class="chip-input">
+          <div class="chip-content">
+            <span class="chip-dot" v-if="filters.showComplete"></span>
+            <span class="chip-label">완료 미션</span>
+          </div>
         </label>
       </div>
       <div class="sort-dropdown">
-        <select v-model="sortOption">
+        <select v-model="sortOption" class="sort-select">
           <option value="recent">최근 방문순</option>
           <option value="points">포인트 높은순</option>
           <option value="location">장소별</option>
         </select>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="sort-icon">
+          <path d="M7 10l5 5 5-5z" fill="currentColor"/>
+        </svg>
       </div>
     </div>
     
     <!-- 미션 목록 컨테이너 -->
-    <div class="all-missions">
+    <div class="missions-container">
       <!-- 각 장소 그룹 -->
       <div 
         v-for="(location, locationIndex) in filteredLocations" 
@@ -53,10 +66,10 @@
             <img :src="location.imageUrl" :alt="location.name">
           </div>
           <div class="location-details">
-            <h3>{{ location.name }} <span class="location-stats">{{ location.completedCount }}/{{ location.totalCount }} 완료</span></h3>
+            <h3>{{ location.name }} <span class="location-stats">{{ location.completedCount }}/{{ location.totalCount }}</span></h3>
             <p>{{ location.address }}</p>
           </div>
-          <div class="toggle-icon">
+          <div class="toggle-icon" :class="{ collapsed: location.collapsed }">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M16.59 8.59L12 13.17L7.41 8.59L6 10L12 16L18 10L16.59 8.59Z" fill="currentColor"/>
             </svg>
@@ -76,7 +89,12 @@
             <div class="quest-desc">{{ mission.description }}</div>
             <div class="quest-footer">
               <div class="coin-reward">
-                <div class="coin-icon">●</div>
+                <div class="coin-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20Z" fill="#FFD700"/>
+                    <path d="M12 7L14.39 11.79L19.5 12.26L15.75 15.9L16.8 21L12 18.27L7.2 21L8.25 15.9L4.5 12.26L9.61 11.79L12 7Z" fill="#FFD700"/>
+                  </svg>
+                </div>
                 {{ mission.points }} 포인트
               </div>
               <div v-if="mission.completed" class="badge completed">완료</div>
@@ -237,5 +255,316 @@ export default {
 </script>
 
 <style scoped>
-/* 스타일은 전역 CSS에서 처리 */
+.all-missions-screen {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100vh; /* 뷰포트 높이로 고정 */
+  position: relative;
+  background-color: var(--bg-secondary);
+}
+
+.filter-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-md);
+  background-color: var(--bg-primary);
+  border-bottom: 1px solid var(--border-color);
+  position: sticky;
+  top: 60px;
+  z-index: 8;
+}
+
+.filter-chips {
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 14px;
+  background-color: #f0f0f5;
+  border-radius: 16px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #8E8E93;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid transparent;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  position: relative;
+  overflow: hidden;
+}
+
+.chip-content {
+  display: flex;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+
+.chip-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--primary);
+  margin-right: 8px;
+  display: inline-block;
+  transition: transform 0.3s ease;
+  box-shadow: 0 0 0 2px rgba(79, 108, 255, 0.2);
+}
+
+.chip.active {
+  background-color: var(--bg-tertiary);
+  color: var(--primary);
+  border: 1px solid rgba(79, 108, 255, 0.3);
+  box-shadow: 0 3px 8px rgba(79, 108, 255, 0.15);
+  transform: translateY(-1px);
+  font-weight: 600;
+}
+
+.chip:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.chip.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  border-radius: 4px;
+}
+
+.chip-input {
+  display: none;
+}
+
+.sort-dropdown {
+  position: relative;
+}
+
+.sort-select {
+  appearance: none;
+  background-color: transparent;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 8px 30px 8px 14px;
+  font-size: 13px;
+  color: var(--text-dark);
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s ease;
+}
+
+.sort-select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(79, 108, 255, 0.1);
+}
+
+.sort-icon {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: var(--text-medium);
+}
+
+.missions-container {
+  flex: 1;
+  padding: var(--spacing-md);
+  padding-bottom: 80px; /* 네비게이션 바 위치 고려 */
+  overflow-y: auto; /* 스크롤 가능하도록 설정 */
+  -webkit-overflow-scrolling: touch; /* iOS에서 부드러운 스크롤 */
+}
+
+.location-group {
+  margin-bottom: var(--spacing-lg);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  background-color: var(--bg-primary);
+}
+
+.location-header {
+  display: flex;
+  align-items: center;
+  padding: var(--spacing-md);
+  background: linear-gradient(to right, var(--bg-tertiary), var(--bg-primary));
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  position: relative;
+}
+
+.location-header:hover {
+  background: linear-gradient(to right, rgba(79, 108, 255, 0.1), rgba(79, 108, 255, 0.05));
+}
+
+.location-image {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-right: var(--spacing-md);
+  flex-shrink: 0;
+  background-color: var(--bg-tertiary);
+  border: 2px solid #fff;
+  box-shadow: var(--shadow-sm);
+}
+
+.location-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.location-details {
+  flex: 1;
+}
+
+.location-details h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 var(--spacing-xs) 0;
+  color: var(--text-dark);
+  display: flex;
+  align-items: center;
+}
+
+.location-details p {
+  font-size: 13px;
+  color: var(--text-medium);
+  margin: 0;
+}
+
+.location-stats {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(79, 108, 255, 0.1);
+  color: var(--primary);
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: 12px;
+  padding: 2px 8px;
+  margin-left: var(--spacing-sm);
+}
+
+.toggle-icon {
+  width: 24px;
+  height: 24px;
+  transition: transform 0.3s ease;
+}
+
+.toggle-icon.collapsed {
+  transform: rotate(-180deg);
+}
+
+.mission-list {
+  padding: var(--spacing-md);
+  background-color: var(--bg-primary);
+  transition: all var(--transition-normal);
+  overflow: hidden;
+}
+
+.quest-card {
+  background: var(--bg-secondary);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+  position: relative;
+  overflow: hidden;
+}
+
+.quest-card:last-child {
+  margin-bottom: 0;
+}
+
+.quest-card:active {
+  transform: translateY(2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.quest-card.completed {
+  background-color: var(--bg-tertiary);
+  border-left: 4px solid var(--primary);
+}
+
+.quest-title {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: var(--spacing-xs);
+  color: var(--text-dark);
+}
+
+.quest-desc {
+  font-size: 13px;
+  color: var(--text-medium);
+  margin-bottom: var(--spacing-md);
+  line-height: 1.5;
+}
+
+.quest-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.coin-reward {
+  display: flex;
+  align-items: center;
+  color: var(--secondary);
+  font-weight: 500;
+  font-size: 13px;
+}
+
+.coin-icon {
+  display: flex;
+  align-items: center;
+  margin-right: var(--spacing-xs);
+}
+
+.badge.completed {
+  background-color: rgba(79, 108, 255, 0.1);
+  color: var(--primary);
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* 반응형 디자인 */
+@media (min-width: 769px) {
+  .missions-container {
+    padding: var(--spacing-lg);
+  }
+  
+  .location-group {
+    margin-bottom: var(--spacing-xl);
+  }
+  
+  .quest-card {
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-md);
+    transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+  }
+  
+  .quest-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+  
+  .filter-bar {
+    padding: var(--spacing-md) var(--spacing-lg);
+  }
+}
 </style> 

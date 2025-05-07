@@ -66,9 +66,8 @@ export default {
   width: 100%;
   max-width: 480px;
   height: 65px;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(8px);
-  box-shadow: 0 -1px 15px rgba(0, 0, 0, 0.08);
+  background: #ffffff;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
   border-radius: 20px 20px 0 0;
   z-index: 100;
   padding-bottom: env(safe-area-inset-bottom, 0);
@@ -81,7 +80,7 @@ export default {
   justify-content: center;
   flex: 1;
   height: 100%;
-  color: var(--text-light);
+  color: #8E8E93;
   text-decoration: none;
   transition: all var(--transition-fast);
   position: relative;
@@ -95,12 +94,11 @@ export default {
 .nav-item.active::after {
   content: '';
   position: absolute;
-  bottom: 0;
+  bottom: 2px;
   width: 50%;
-  height: 4px;
+  height: 3px;
   background: var(--primary);
-  border-radius: 4px 4px 0 0;
-  transform: translateY(-8px);
+  border-radius: 3px 3px 0 0;
 }
 
 .nav-icon {
@@ -117,6 +115,7 @@ export default {
   font-size: 11px;
   font-weight: 500;
   letter-spacing: -0.3px;
+  margin-bottom: 8px;
 }
 
 /* 중요한 애니메이션 효과 추가 */
