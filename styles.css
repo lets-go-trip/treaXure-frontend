@@ -125,9 +125,16 @@ body {
     margin: 30px auto;
     background: var(--bg-primary);
     border-radius: 28px;
-    overflow: hidden;
     box-shadow: var(--shadow-lg);
     position: relative;
+}
+
+/* 콘텐츠 영역 공통 스타일 - 모든 스크롤 가능한 페이지에 적용 */
+.mypage, .quest-screen, .all-missions, .quest-list, .mission-detail, .weekly-best {
+    flex: 1;
+    overflow-y: auto;
+    padding-bottom: 80px; /* 하단 네비게이션바 높이에 맞게 조정 */
+    -webkit-overflow-scrolling: touch; /* 모바일 스크롤 부드럽게 */
 }
 
 .header {
@@ -183,7 +190,10 @@ body {
 
 #kakao-map {
     width: 100%;
-    height: 100%;
+    height: calc(100% - 70px); /* 네비게이션바 높이만큼 제외 */
+    position: absolute;
+    top: 0;
+    left: 0;
 }
 
 /* 현재 위치 반경 원 스타일 */
@@ -271,9 +281,10 @@ body {
     border: 2px solid white;
 }
 
+/* 선택된 장소 정보 카드 - 네비게이션 바 아래로 수정 */
 .info-card {
     position: absolute;
-    bottom: 84px;
+    bottom: 76px; /* 하단 네비게이션 바 위에 위치하도록 설정 */
     left: 50%;
     transform: translateX(-50%);
     width: 85%;
@@ -282,7 +293,7 @@ body {
     padding: 18px;
     box-shadow: var(--shadow-md);
     transition: all 0.3s ease;
-    z-index: 10;
+    z-index: 95; /* 네비게이션 바보다 낮은 z-index */
 }
 
 .info-card:hover {
@@ -367,6 +378,8 @@ body {
     position: absolute;
     bottom: 0;
     width: 100%;
+    z-index: 100; /* 높은 z-index 추가 */
+    height: 70px; /* 명시적인 높이 지정 */
 }
 
 .nav-item {
@@ -395,23 +408,17 @@ body {
 .quest-screen {
     display: none; /* 기본적으로 숨김 */
     flex-direction: column;
-    height: 100%;
 }
 
 .quest-list {
     flex: 1;
     padding: 16px;
-    overflow-y: auto;
 }
 
 /* 전체 미션 페이지 스타일 */
 .all-missions {
     flex: 1;
-    overflow-y: auto;
     padding: 16px;
-    height: calc(100% - 110px);
-    padding-bottom: 90px; /* 하단 네비게이션 영역 고려해서 여백 늘림 */
-    -webkit-overflow-scrolling: touch; /* 모바일 스크롤 부드럽게 */
 }
 
 /* 필터 및 정렬 옵션 */
@@ -635,9 +642,8 @@ body {
 .mission-detail {
     display: flex;
     flex-direction: column;
-    height: 100%;
-    overflow-y: auto;
-    padding: 0 0 70px;
+    height: auto; /* 높이를 auto로 변경 */
+    padding: 0;
 }
 
 .mission-header {
@@ -798,9 +804,7 @@ body {
 
 /* 마이페이지 */
 .mypage {
-    height: 100%;
-    overflow-y: auto;
-    padding: 0 0 80px;
+    padding: 0;
 }
 
 .profile-section {
@@ -1059,9 +1063,7 @@ body {
 
 /* 주간 베스트 페이지 */
 .weekly-best {
-    height: 100%;
-    overflow-y: auto;
-    padding: 0 0 80px;
+    padding: 0;
 }
 
 .date-selector {
@@ -1282,21 +1284,43 @@ body {
  * With error handling
  */
 img {
-    background-color: var(--bg-secondary);
+    max-width: 100%;
 }
 
 img.error {
-    display: block;
+    background-color: #f5f5f5;
+    border-radius: var(--radius-sm);
+    display: flex;
     min-height: 100px;
-    background-color: var(--bg-secondary);
-    position: relative;
 }
 
 img.error::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
+    content: "이미지를 불러올 수 없습니다";
+    font-size: 12px;
+    color: var(--text-medium);
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 100%;
     height: 100%;
+}
+
+/* 랭킹 페이지 빈 이미지 처리 */
+.photo-image.empty-image {
+    background-color: #f5f5f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 180px;
+    border-radius: var(--radius-md);
+}
+
+.photo-image.empty-image::after {
+    content: "등록된 이미지가 없습니다";
+    font-size: 14px;
+    color: var(--text-medium);
+}
+
+.best-photo.first .photo-image.empty-image {
+    min-height: 240px;
 } 
