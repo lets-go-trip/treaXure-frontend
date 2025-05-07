@@ -2,7 +2,7 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-import './assets/styles.css'
+import './assets/css/styles.css'
 import config from './config'
 
 // 카카오맵 API 감지 함수
