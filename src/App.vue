@@ -6,14 +6,14 @@
 </template>
 
 <script>
-import BottomNav from '@/components/BottomNav.vue'
+import BottomNav from "@/components/BottomNav.vue";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    BottomNav
-  }
-}
+    BottomNav,
+  },
+};
 </script>
 
 <style>
@@ -22,41 +22,20 @@ export default {
 
 /* 전역 CSS 변수 - 디자인 시스템 */
 :root {
-  /* 주요 색상 */
-  --primary: #4F6CFF;
-  --primary-dark: #3F56CC;
-  --secondary: #6652FF;
-  
-  /* 중립 색상 */
-  --text-dark: #333333;
-  --text-medium: #666666;
-  --text-light: #999999;
-  --border-color: #E0E0E0;
-  
-  /* 배경 색상 */
-  --bg-primary: #ffffff;
-  --bg-secondary: #f8f9fa;
-  --bg-tertiary: #f0f3ff;
-  
-  /* 상태 색상 */
-  --success: #2ECC71;
-  --warning: #F39C12;
-  --error: #E74C3C;
-  
   /* 그림자 */
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
   --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
-  
+
   /* 라운딩 */
   --radius-sm: 8px;
   --radius-md: 16px;
   --radius-lg: 24px;
-  
+
   /* 애니메이션 */
   --transition-fast: 0.2s ease;
   --transition-normal: 0.3s ease;
-  
+
   /* 간격 */
   --spacing-xs: 4px;
   --spacing-sm: 8px;
@@ -75,7 +54,8 @@ export default {
 }
 
 body {
-  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, Helvetica, Arial, sans-serif;
   color: var(--text-dark);
   background-color: #f0f2f5;
 }
@@ -100,7 +80,8 @@ body {
 }
 
 /* 버튼 공통 스타일 */
-button, .btn {
+button,
+.btn {
   cursor: pointer;
   border: none;
   font-family: inherit;
@@ -117,7 +98,7 @@ button, .btn {
   background: var(--bg-primary);
   position: relative;
   overflow: hidden;
-  border-radius: var(--radius-lg);
+  /* border-radius: var(--radius-lg); */
   box-shadow: var(--shadow-lg);
 }
 
@@ -157,7 +138,8 @@ button, .btn {
   font-size: 14px;
   font-weight: 500;
   display: inline-block;
-  transition: background var(--transition-fast), transform var(--transition-fast);
+  transition: background var(--transition-fast),
+    transform var(--transition-fast);
   border: none;
 }
 
@@ -181,16 +163,16 @@ button, .btn {
 }
 
 /* 미디어 쿼리 */
-@media (min-width: 769px) {
+/* @media (min-width: 769px) {
   .app-container {
     margin: 20px auto;
     min-height: calc(100vh - 40px);
   }
-}
-
+} */
+/*
 @media (min-height: 900px) {
   .app-container {
     max-height: 90vh;
   }
-}
-</style> 
+} */
+</style>
