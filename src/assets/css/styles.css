@@ -1,13 +1,9 @@
 /* CSS 파일 내용 */
 
-/* 기존 CSS 파일 내용 - Vue.js 프로젝트용으로 조정 */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Noto Sans KR", sans-serif;
-}
+/* 프리텐다드 폰트 추가 */
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css");
 
+/* 전역 CSS 변수 - 디자인 시스템 */
 :root {
   /* 주요 색상 */
   --primary: #40c996;
@@ -22,7 +18,6 @@
   --text-dark: #686868;
   --text-medium: #b1b1b1;
   --text-light: #eff0f4;
-  --text-light: #ffffff;
   --border-color: #e0e0e0;
 
   /* 배경 색상 */
@@ -43,17 +38,69 @@
   --radius-md: 12px;
   --radius-lg: 20px;
   --border-light: 1px solid rgba(0, 0, 0, 0.08);
+
+  /* 그림자 */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+  
+  /* 라운딩 */
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  
+  /* 애니메이션 */
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.3s ease;
+  
+  /* 간격 */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+}
+
+/* 기본 스타일 초기화 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Noto Sans KR", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
-  background-color: #e0e0e0; /* 더 뚜렷한 배경색 변경 */
-  color: var(--text-dark);
+  background-color: var(--bg-secondary); /* 더 뚜렷한 배경색 변경 */
+  color: var(--text-deep-dark);
+  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, Helvetica, Arial, sans-serif;
   font-size: 15px;
   line-height: 1.5;
   min-height: 100vh; /* 최소 높이 추가 */
   display: flex; /* 컨테이너를 가운데 정렬하기 위해 flex 추가 */
   flex-direction: column; /* 세로 방향 정렬 */
   justify-content: flex-start; /* 내용물을 위에서부터 배치 */
+}
+
+/* 스크롤바 스타일 */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.15);
 }
 
 /* 공통 컴포넌트 */
@@ -63,6 +110,23 @@ body {
   padding: 0 20px;
 }
 
+/* 앱 컨테이너 스타일 */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 480px;
+  min-height: 100vh;
+  margin: 0 auto;
+  background: var(--bg-primary);
+  position: relative;
+  overflow: hidden;
+  /* border-radius: var(--radius-lg); */
+  box-shadow: var(--shadow-lg);
+}
+
+/* 버튼 공통 스타일 */
+button,
 .btn {
   display: inline-flex;
   align-items: center;
@@ -74,8 +138,9 @@ body {
   border-radius: var(--radius-sm);
   font-weight: 500;
   font-size: 14px;
+  font-family: inherit;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--transition-fast) ease;
 }
 
 .btn:hover {
@@ -95,14 +160,15 @@ body {
   background: rgba(139, 110, 78, 0.08);
 }
 
+/* 배지 스타일 */
 .badge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   background: var(--primary-light);
-  color: var(--primary-dark);
+  color: var(--primary);
   border-radius: 99px;
-  padding: 4px 10px;
+  padding: 4px 12px;
   font-size: 12px;
   font-weight: 500;
 }
@@ -117,17 +183,22 @@ body {
   background: var(--secondary);
   color: var(--text-deep-dark);
   padding: 10px 24px;
-  border-radius: 24px;
+  border-radius: var(--radius-lg);
   text-decoration: none;
   font-size: 14px;
   font-weight: 500;
   display: inline-block;
-  transition: background 0.2s, transform 0.2s;
+  transition: background var(--transition-fast),
+  transform var(--transition-fast);
 }
 
 .btn-small:hover {
   /* background: linear-gradient(135deg, var(--primary-light), var(--primary)); */
   background: var(--primary);
+}
+
+.btn-small:active {
+  transform: scale(0.98);
 }
 
 /* 콘텐츠 영역 공통 스타일 */
@@ -154,16 +225,37 @@ body {
   .weekly-best {
     padding-bottom: 90px; /* 큰 화면에서 더 많은 여백 제공 */
   }
+
+  .map-container {
+    height: calc(100vh - 40px); /* 브라우저 상단 여백 고려 */
+    /* margin: 20px auto; */
+  }
+
+  .map-view {
+    height: calc(100vh - 100px);
+  }
+
+  #kakao-map {
+    height: calc(100% - 80px); /* 큰 화면에서 네비게이션바 높이 조정 */
+  }
+
+
 }
 
+/* 헤더 공통 스타일 */
 .header {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  padding: 14px 16px;
-  background: var(--bg-primary);
+  align-items: center;
+  height: 60px;
+  padding: 0 var(--spacing-md);
+  background-color: rgba(255, 255, 255, 0.95);
   border-bottom: var(--border-light);
+  backdrop-filter: blur(8px);
   z-index: 10;
+  box-shadow: var(--shadow-sm);
+  position: sticky;
+  top: 0;
 }
 
 .header-back {
@@ -209,23 +301,28 @@ body {
   background: rgba(0, 0, 0, 0.05);
 }
 
-/* 지도 및 마커 관련 스타일 */
-.map-view {
-  flex: 1;
+.map-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100vh; /* 전체 화면 높이 */
   position: relative;
 }
 
+/* 지도 및 마커 관련 스타일 */
+.map-view {
+  flex: 1;
+  width: 100%;
+  position: relative;
+  height: calc(100vh - 60px); /* 헤더 높이를 뺀 나머지 영역 */
+}
+
+/* 카카오맵 컨테이너 스타일 */
 #kakao-map {
   width: 100%;
   height: 100%;
-  min-height: 400px;
+  min-height: 500px; /* 최소 높이 증가 */
   z-index: 1;
-}
-
-@media (min-width: 769px) {
-  #kakao-map {
-    height: calc(100% - 80px); /* 큰 화면에서 네비게이션바 높이 조정 */
-  }
 }
 
 /* 현재 위치 반경 원 스타일 */
@@ -316,7 +413,7 @@ body {
 .info-header {
   display: flex;
   align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: var(--spacing-md);
 }
 
 .icon-fill {
@@ -338,7 +435,8 @@ body {
 .difficulty {
   display: flex;
   gap: 7px;
-  margin: 8px 0;
+  margin-bottom: var(--spacing-md);
+  /* margin: 20px 0; */
 }
 
 .difficulty-unit {
@@ -358,12 +456,13 @@ body {
   justify-content: space-between;
   font-size: 13px;
   color: var(--text-medium);
+  margin-bottom: var(--spacing-md);
 }
 
 .info-action {
   display: flex;
   justify-content: center;
-  margin-top: 14px;
+  text-align: center;
 }
 
 .stat-value-parent {
@@ -393,13 +492,6 @@ body {
   height: 70px; /* 명시적인 높이 지정 */
   border-radius: 0 0 18px 18px; /* 컨테이너의 모서리와 일치 */
 }
-
-/* @media (min-width: 769px) {
-  .bottom-nav {
-    border-radius: 0 0 12px 12px;
-    padding: 8px 0 12px;
-  }
-} */
 
 .nav-item {
   flex: 1;
@@ -1370,7 +1462,7 @@ img.error::before {
 
 /* 선택된 장소 정보 카드 */
 .info-card {
-  position: fixed; /* absolute에서 fixed로 변경 */
+  position: fixed;
   bottom: 76px; /* 하단 네비게이션 바 위에 위치하도록 설정 */
   left: 50%;
   transform: translateX(-50%);
@@ -1388,12 +1480,6 @@ img.error::before {
 .info-card:hover {
   transform: translateX(-50%) translateY(-5px);
   box-shadow: var(--shadow-lg);
-}
-
-.info-header {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
 }
 
 .location-icon {
@@ -1416,17 +1502,4 @@ img.error::before {
 .info-address {
   font-size: 12px;
   color: var(--text-medium);
-}
-
-.info-stats {
-  display: flex;
-  justify-content: space-between;
-  font-size: 13px;
-  color: var(--text-medium);
-}
-
-.info-action {
-  display: flex;
-  justify-content: center;
-  margin-top: 14px;
 }
