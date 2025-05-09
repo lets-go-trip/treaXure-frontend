@@ -44,17 +44,17 @@
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
   --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
-  
+
   /* 라운딩 */
   --radius-sm: 8px;
   --radius-md: 16px;
   --radius-lg: 24px;
-  
+
   /* 애니메이션 */
   --transition-fast: 0.2s ease;
   --transition-normal: 0.3s ease;
   --transition-slow: 0.5s ease;
-  
+
   /* 간격 */
   --spacing-xs: 4px;
   --spacing-sm: 8px;
@@ -180,46 +180,6 @@ button,
   color: white;
 }
 
-.btn-small {
-  position: relative;           /* ::before 위치 기준 */
-  z-index: 0;
-  display: inline-block;
-  padding: 10px 24px;
-  border-radius: var(--radius-lg);
-  background: radial-gradient(circle farthest-side at 10% 20%, var(--primary-light), var(--primary), var(--secondary));
-  color: var(--text-deep-dark);
-  font-size: 14px;
-  font-weight: 500;
-  text-decoration: none;
-  overflow: hidden;             /* ::before가 벗어나지 않도록 */
-  transition: color var(--transition-fast), transform var(--transition-slow);
-}
-
-/* ::before로 그라디언트 레이어 생성 */
-.btn-small::before {
-  content: "";
-  position: absolute;
-  inset: 0;                     /* top:0; right:0; bottom:0; left:0; */
-  background: radial-gradient(circle farthest-side at 10% 20%, var(--secondary), var(--primary), var(--primary-deep));
-  opacity: 0;                   /* 초기엔 투명 */
-  transition: opacity var(--transition-slow);
-  z-index: -1;
-}
-
-.btn-small:hover {
-  /* 원한다면 호버 시 살짝 눌린 느낌(transform 적용) */
-  color: var(--text-light);
-}
-
-/* hover 시 그라디언트 레이어를 서서히 보여주기 */
-.btn-small:hover::before {
-  opacity: 1; /* 그라디언트 레이어 서서히 보이기 */
-}
-
-.btn-small:active {
-  transform: scale(0.98);
-}
-
 /* 콘텐츠 영역 공통 스타일 */
 .mypage,
 .quest-screen,
@@ -257,8 +217,6 @@ button,
   #kakao-map {
     height: calc(100% - 80px); /* 큰 화면에서 네비게이션바 높이 조정 */
   }
-
-
 }
 
 /* 헤더 공통 스타일 */
@@ -343,7 +301,6 @@ button,
   min-height: 500px; /* 최소 높이 증가 */
   z-index: 1;
 }
-
 
 /* 현재 위치 반경 원 스타일 */
 .radius-circle {
@@ -430,10 +387,48 @@ button,
   border: 2px solid white;
 }
 
+/* 선택된 장소 정보 카드 */
+.info-card {
+  position: fixed;
+  bottom: 76px; /* 하단 네비게이션 바 위에 위치하도록 설정 */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 440px; /* 테두리를 고려한 최대 너비 제한 */
+  backdrop-filter: blur(10px);
+  border-radius: var(--radius-lg);
+  padding: 18px;
+  box-shadow: var(--shadow-lg);
+  transition: all 0.3s ease;
+  z-index: 95; /* 네비게이션 바보다 낮은 z-index */
+  /* background: radial-gradient(circle farthest-side at 10% 20%, rgba(165, 245, 222, 0.1), rgba(64, 201, 150, 0.1), rgba(255, 229, 0, 0.1)), rgba(255, 255, 255, 0.8);; */
+  background: rgba(255, 255, 255, 1);
+}
+
+.info-card:hover {
+  transform: translateX(-50%) translateY(-5px);
+}
+
+.blur-box {
+  position: absolute;
+  inset: 0; /* top:0; right:0; bottom:0; left:0; */
+  pointer-events: none; /* 클릭 등 이벤트가 아래 맵에 전달되도록 */
+  backdrop-filter: none; /* 기본엔 필터 없음 */
+  transition: backdrop-filter var(--transition-normal),
+    background var(--transition-normal);
+  z-index: 1; /* info-card보다 뒤, 맵보다 앞 */
+}
+
 .info-header {
   display: flex;
   align-items: center;
   margin-bottom: var(--spacing-md);
+}
+
+/* info-card가 hover 되었을 때 blur-box에 브러 효과 적용 */
+.info-card:hover ~ .blur-box {
+  backdrop-filter: blur(3px);
+  background: rgba(0, 0, 0, 0.3);
 }
 
 .icon-fill {
@@ -461,15 +456,45 @@ button,
 
 .difficulty-unit {
   width: 20%;
-  height: 10px;
-  background: var(--text-light);
-  /* background: var(--text-deep-light); */
+  height: 20px;
   border-radius: 2px;
+  background: linear-gradient(
+    90deg,
+    var(--text-light) 0%,
+    var(--text-light) 30%,
+    var(--primary-light) 50%,
+    var(--text-light) 70%,
+    var(--text-light) 100%
+  );
+  background-size: 1000% 100%;
 }
 
 .difficulty-unit.active {
-  background: radial-gradient(circle farthest-side at 10% 50%, var(--primary-light), var(--primary), var(--primary-deep));
-  /* background: var(--primary); */
+  background: linear-gradient(
+    90deg,
+    var(--primary) 0%,
+    var(--primary) 15%,
+    var(--primary-light) 50%,
+    var(--primary) 85%,
+    var(--primary) 100%
+  );
+  background-size: 1000% 100%;
+}
+
+/* info-card에 마우스 오버 시 difficulty-unit.active에 애니메이션 적용 */
+.info-card:hover .difficulty-unit.active,
+.difficulty-unit {
+  animation: gradient-slide 50s linear infinite;
+}
+
+@keyframes gradient-slide {
+  /* start: 배경의 왼쪽 끝, end: 배경의 오른쪽 끝 */
+  0% {
+    background-position: 0% 0;
+  }
+  100% {
+    background-position: 1000% 0;
+  }
 }
 
 .info-stats {
@@ -484,6 +509,71 @@ button,
   display: flex;
   justify-content: center;
   text-align: center;
+}
+
+.btn-small {
+  position: relative; /* ::before 위치 기준 */
+  z-index: 0;
+  display: block;
+  width: 100%;
+  padding: 24px 24px;
+  border-radius: var(--radius-lg);
+  background: radial-gradient(
+    circle farthest-side at 10% 20%,
+    var(--primary-light),
+    var(--primary),
+    var(--secondary)
+  );
+  color: var(--text-deep-dark);
+  font-size: 16px;
+  font-weight: 500;
+  text-decoration: none;
+  overflow: hidden; /* ::before가 벗어나지 않도록 */
+  transition: color var(--transition-slow) ease,
+    transform var(--transition-slow);
+  /* hue-rotate 애니메이션 */
+  /* animation: hue-cycle 5s linear infinite; */
+}
+
+/* ::before로 그라디언트 레이어 생성 */
+.btn-small::before {
+  content: "";
+  position: absolute;
+  inset: 0; /* top:0; right:0; bottom:0; left:0; */
+  opacity: 0; /* 초기엔 투명 */
+  transition: opacity var(--transition-slow);
+  z-index: -1;
+  background: linear-gradient(
+    90deg,
+    var(--primary-light) 0%,
+    var(--primary) 15%,
+    var(--secondary) 50%,
+    var(--primary) 85%,
+    var(--primary-light) 100%
+  );
+  /* 2) 가로로 500% 늘려서 색이 흘러갈 공간 확보 */
+  background-size: 1000% 100%;
+  /* 3) 부드럽게 흐르는 애니메이션 */
+  animation: btn-gradient-slide 20s linear infinite;
+}
+
+/* btn-gradient-slide 키프레임 정의 */
+@keyframes btn-gradient-slide {
+  0% {
+    background-position: 0% 0;
+  }
+  100% {
+    background-position: 1000% 0;
+  }
+}
+
+/* hover 시 그라디언트 레이어를 서서히 보여주기 */
+.btn-small:hover::before {
+  opacity: 1; /* 그라디언트 레이어 서서히 보이기 */
+}
+
+.btn-small:active {
+  transform: scale(0.98);
 }
 
 .stat-value-parent {
@@ -502,30 +592,38 @@ button,
 /* 하단 내비게이션 */
 .bottom-nav {
   display: flex;
-  background: white;
-  border-top: var(--border-light);
-  padding: 8px 0 18px;
-  position: fixed; /* absolute에서 fixed로 변경 */
+  justify-content: space-around;
+  align-items: center;
+  position: fixed; /* 화면 하단에 고정 */
   bottom: 0;
-  width: 100%;
-  max-width: 476px; /* 테두리 두께(2px)를 고려한 너비 */
   left: 50%;
   transform: translateX(-50%);
-  z-index: 100; /* 높은 z-index 추가 */
-  height: 70px; /* 명시적인 높이 지정 */
-  border-radius: 0 0 18px 18px; /* 컨테이너의 모서리와 일치 */
+  width: 100%;
+  /* max-width: 480px; */
+  height: 65px;
+  background: var(--text-deep-light);
+  border-top: var(--border-light);
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 20px 20px 0 0;
+  z-index: 100;
+  padding: 8px 0 18px;
+  padding-bottom: env(safe-area-inset-bottom, 0);
 }
 
 .nav-item {
+  position: relative;
+  padding: var(--spacing-sm) 0;
+  height: 100%;
   flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   padding: 8px 0;
-  color: var(--text-medium);
+  color: var(--text-deep-dark);
   font-size: 12px;
   font-weight: 500;
-  transition: color 0.2s ease;
+  transition: all var(--transition-fast);
   text-decoration: none;
 }
 
@@ -534,8 +632,37 @@ button,
 }
 
 .nav-icon {
-  margin-bottom: 4px;
-  font-size: 20px;
+  margin-bottom: var(--spacing-xs);
+  position: relative;
+  width: 24px;
+  height: 24px;
+}
+
+.nav-item.active .nav-icon {
+  transform: scale(1.1);
+  transition: transform var(--transition-fast);
+}
+
+.nav-item:active .nav-icon {
+  animation: nav-bounce 0.3s ease;
+}
+
+.nav-item span {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: -0.3px;
+  margin-bottom: 8px;
+}
+
+/* 중요한 애니메이션 효과 추가 */
+@keyframes nav-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
 }
 
 /* 퀘스트 화면 */
@@ -620,7 +747,7 @@ button,
   align-items: center;
   padding: 16px;
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: all var(--transition-fast) ease;
   margin-bottom: 0 !important;
   border-bottom: var(--border-light);
 }
@@ -638,7 +765,7 @@ button,
 
 .toggle-icon {
   margin-left: auto;
-  transition: transform 0.3s ease;
+  transition: all var(--transition-normal) ease;
 }
 
 .location-header.collapsed .toggle-icon {
@@ -872,7 +999,7 @@ button,
   margin-bottom: 20px;
   background: var(--bg-secondary);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--transition-fast) ease;
 }
 
 .upload-box:hover {
@@ -1208,7 +1335,7 @@ button,
   justify-content: center;
   cursor: pointer;
   color: var(--primary);
-  transition: background 0.2s ease;
+  transition: all var(--transition-fast) ease;
 }
 
 .date-nav:hover {
@@ -1449,7 +1576,7 @@ img.error::before {
 .palace-marker {
   cursor: pointer;
   filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.15));
-  transition: all 0.3s ease;
+  transition: all var(--transition-normal) ease;
   z-index: 5;
 }
 
@@ -1468,37 +1595,12 @@ img.error::before {
   cursor: pointer;
   filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.2));
   z-index: 5;
-  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transition: all var(--transition-normal)
+    cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .location-marker:hover {
   transform: translate(-50%, -110%) scale(1.1);
-}
-
-/* 선택된 장소 정보 카드 */
-.info-card {
-  position: fixed;
-  bottom: 76px; /* 하단 네비게이션 바 위에 위치하도록 설정 */
-  left: 50%;
-  transform: translateX(-50%);
-  width: 90%;
-  max-width: 440px; /* 테두리를 고려한 최대 너비 제한 */
-  backdrop-filter: blur(10px);
-  border-radius: var(--radius-lg);
-  padding: 18px;
-  box-shadow: var(--shadow-lg);
-  transition: all 0.3s ease;
-  z-index: 95; /* 네비게이션 바보다 낮은 z-index */
-  /* background: radial-gradient(circle farthest-side at 10% 20%, rgba(165, 245, 222, 0.1), rgba(64, 201, 150, 0.1), rgba(255, 229, 0, 0.1)), rgba(255, 255, 255, 0.8);; */
-  background: rgba(255, 255, 255, 1);
-}
-
-.info-card:hover {
-  transform: translateX(-50%) translateY(-5px);
-}
-
-.blur-box {
-  
 }
 
 .location-icon {
