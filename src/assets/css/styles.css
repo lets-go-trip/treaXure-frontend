@@ -18,6 +18,7 @@
   --text-dark: #686868;
   --text-medium: #b1b1b1;
   --text-light: #eff0f4;
+  --text-deep-light: #ffffff;
   --border-color: #e0e0e0;
 
   /* 배경 색상 */
@@ -52,6 +53,7 @@
   /* 애니메이션 */
   --transition-fast: 0.2s ease;
   --transition-normal: 0.3s ease;
+  --transition-slow: 0.5s ease;
   
   /* 간격 */
   --spacing-xs: 4px;
@@ -115,7 +117,7 @@ body {
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-width: 480px;
+  /* max-width: 480px; */
   min-height: 100vh;
   margin: 0 auto;
   background: var(--bg-primary);
@@ -144,7 +146,7 @@ button,
 }
 
 .btn:hover {
-  background: var(--primary-dark);
+  background: var(--primary-deep);
 }
 
 .btn-outline {
@@ -179,22 +181,39 @@ button,
 }
 
 .btn-small {
-  /* background: linear-gradient(135deg, var(--secondary-light), var(--secondary)); */
-  background: var(--secondary);
-  color: var(--text-deep-dark);
+  position: relative;           /* ::before 위치 기준 */
+  z-index: 0;
+  display: inline-block;
   padding: 10px 24px;
   border-radius: var(--radius-lg);
-  text-decoration: none;
+  background: radial-gradient(circle farthest-side at 10% 20%, var(--primary-light), var(--primary), var(--secondary));
+  color: var(--text-deep-dark);
   font-size: 14px;
   font-weight: 500;
-  display: inline-block;
-  transition: background var(--transition-fast),
-  transform var(--transition-fast);
+  text-decoration: none;
+  overflow: hidden;             /* ::before가 벗어나지 않도록 */
+  transition: color var(--transition-fast), transform var(--transition-slow);
+}
+
+/* ::before로 그라디언트 레이어 생성 */
+.btn-small::before {
+  content: "";
+  position: absolute;
+  inset: 0;                     /* top:0; right:0; bottom:0; left:0; */
+  background: radial-gradient(circle farthest-side at 10% 20%, var(--secondary), var(--primary), var(--primary-deep));
+  opacity: 0;                   /* 초기엔 투명 */
+  transition: opacity var(--transition-slow);
+  z-index: -1;
 }
 
 .btn-small:hover {
-  /* background: linear-gradient(135deg, var(--primary-light), var(--primary)); */
-  background: var(--primary);
+  /* 원한다면 호버 시 살짝 눌린 느낌(transform 적용) */
+  color: var(--text-light);
+}
+
+/* hover 시 그라디언트 레이어를 서서히 보여주기 */
+.btn-small:hover::before {
+  opacity: 1; /* 그라디언트 레이어 서서히 보이기 */
 }
 
 .btn-small:active {
@@ -325,6 +344,7 @@ button,
   z-index: 1;
 }
 
+
 /* 현재 위치 반경 원 스타일 */
 .radius-circle {
   border-radius: 50%;
@@ -442,13 +462,14 @@ button,
 .difficulty-unit {
   width: 20%;
   height: 10px;
-  background: var(--bg-primary);
+  background: var(--text-light);
+  /* background: var(--text-deep-light); */
   border-radius: 2px;
 }
 
 .difficulty-unit.active {
-  background: var(--primary);
-  /* background: linear-gradient(45deg, var(--primary-deep), var(--primary)); */
+  background: radial-gradient(circle farthest-side at 10% 50%, var(--primary-light), var(--primary), var(--primary-deep));
+  /* background: var(--primary); */
 }
 
 .info-stats {
@@ -466,13 +487,15 @@ button,
 }
 
 .stat-value-parent {
-  color: var(--primary);
+  /* color: var(--primary); */
+  color: var(--text-deep-dark);
 }
 
 .stat-value {
   font-size: 18px;
   font-weight: 700;
-  color: var(--text-deep-dark);
+  /* color: var(--text-deep-dark); */
+  color: var(--primary);
   margin-bottom: 4px;
 }
 
@@ -1119,7 +1142,7 @@ button,
 }
 
 .photo-badge.best {
-  background: var(--primary-dark);
+  background: var(--primary-deep);
 }
 
 .settings-section {
@@ -1219,7 +1242,7 @@ button,
 }
 
 .best-photo.first .photo-rank {
-  background: var(--primary-dark);
+  background: var(--primary-deep);
 }
 
 .best-photo.second .photo-rank {
@@ -1452,14 +1475,6 @@ img.error::before {
   transform: translate(-50%, -110%) scale(1.1);
 }
 
-/* 맵 컨테이너 스타일 */
-#kakao-map {
-  width: 100%;
-  height: 100%;
-  min-height: 400px;
-  z-index: 1;
-}
-
 /* 선택된 장소 정보 카드 */
 .info-card {
   position: fixed;
@@ -1471,15 +1486,19 @@ img.error::before {
   backdrop-filter: blur(10px);
   border-radius: var(--radius-lg);
   padding: 18px;
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-lg);
   transition: all 0.3s ease;
   z-index: 95; /* 네비게이션 바보다 낮은 z-index */
-  background: rgba(255, 255, 255, 0.5);
+  /* background: radial-gradient(circle farthest-side at 10% 20%, rgba(165, 245, 222, 0.1), rgba(64, 201, 150, 0.1), rgba(255, 229, 0, 0.1)), rgba(255, 255, 255, 0.8);; */
+  background: rgba(255, 255, 255, 1);
 }
 
 .info-card:hover {
   transform: translateX(-50%) translateY(-5px);
-  box-shadow: var(--shadow-lg);
+}
+
+.blur-box {
+  
 }
 
 .location-icon {
@@ -1488,7 +1507,7 @@ img.error::before {
   height: 40px;
   border-radius: 50%;
   border: 1px solid var(--primary);
-  background-color: var(--bg-secondary);
+  background-color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
