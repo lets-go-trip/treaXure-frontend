@@ -4,33 +4,59 @@
     <div class="header">
       <div class="header-back">
         <router-link to="/" class="icon-btn">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M20 11H7.83L13.42 5.41L12 4L4 12L12 20L13.41 18.59L7.83 13H20V11Z" fill="currentColor"/>
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M20 11H7.83L13.42 5.41L12 4L4 12L12 20L13.41 18.59L7.83 13H20V11Z"
+              fill="currentColor"
+            />
           </svg>
         </router-link>
       </div>
       <div class="header-title">전체 미션</div>
       <div class="header-action">
         <button class="icon-btn">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 8C13.1 8 14 7.1 14 6C14 4.9 13.1 4 12 4C10.9 4 10 4.9 10 6C10 7.1 10.9 8 12 8ZM12 10C10.9 10 10 10.9 10 12C10 13.1 10.9 14 12 14C13.1 14 14 13.1 14 12C14 10.9 13.1 10 12 10ZM12 16C10.9 16 10 16.9 10 18C10 19.1 10.9 20 12 20C13.1 20 14 19.1 14 18C14 16.9 13.1 16 12 16Z" fill="currentColor"/>
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M12 8C13.1 8 14 7.1 14 6C14 4.9 13.1 4 12 4C10.9 4 10 4.9 10 6C10 7.1 10.9 8 12 8ZM12 10C10.9 10 10 10.9 10 12C10 13.1 10.9 14 12 14C13.1 14 14 13.1 14 12C14 10.9 13.1 10 12 10ZM12 16C10.9 16 10 16.9 10 18C10 19.1 10.9 20 12 20C13.1 20 14 19.1 14 18C14 16.9 13.1 16 12 16Z"
+              fill="currentColor"
+            />
           </svg>
         </button>
       </div>
     </div>
-    
+
     <!-- 필터 및 정렬 옵션 -->
     <div class="filter-bar">
       <div class="filter-chips">
         <label class="chip" :class="{ active: filters.showIncomplete }">
-          <input type="checkbox" v-model="filters.showIncomplete" class="chip-input">
+          <input
+            type="checkbox"
+            v-model="filters.showIncomplete"
+            class="chip-input"
+          />
           <div class="chip-content">
             <span class="chip-dot" v-if="filters.showIncomplete"></span>
             <span class="chip-label">미완료 미션</span>
           </div>
         </label>
         <label class="chip" :class="{ active: filters.showComplete }">
-          <input type="checkbox" v-model="filters.showComplete" class="chip-input">
+          <input
+            type="checkbox"
+            v-model="filters.showComplete"
+            class="chip-input"
+          />
           <div class="chip-content">
             <span class="chip-dot" v-if="filters.showComplete"></span>
             <span class="chip-label">완료 미션</span>
@@ -43,70 +69,110 @@
           <option value="points">포인트 높은순</option>
           <option value="location">장소별</option>
         </select>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="sort-icon">
-          <path d="M7 10l5 5 5-5z" fill="currentColor"/>
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          class="sort-icon"
+        >
+          <path d="M7 10l5 5 5-5z" fill="currentColor" />
         </svg>
       </div>
     </div>
-    
+
     <!-- 스크롤 가능한 컨텐츠 영역 -->
     <div class="scrollable-content">
       <!-- 미션 목록 컨테이너 -->
       <div class="missions-container">
         <!-- 각 장소 그룹 -->
-        <div 
-          v-for="(location, locationIndex) in filteredLocations" 
-          :key="locationIndex" 
-          class="location-group">
-          
+        <div
+          v-for="(location, locationIndex) in filteredLocations"
+          :key="locationIndex"
+          class="location-group"
+        >
           <!-- 장소 헤더 -->
-          <div 
-            class="location-header" 
+          <div
+            class="location-header"
             :class="{ collapsed: location.collapsed }"
-            @click="toggleLocation(locationIndex)">
+            @click="toggleLocation(locationIndex)"
+          >
             <div class="location-image">
-              <img :src="location.imageUrl" :alt="location.name">
+              <img :src="location.imageUrl" :alt="location.name" />
             </div>
             <div class="location-details">
-              <h3>{{ location.name }} <span class="location-stats">{{ location.completedCount }}/{{ location.totalCount }}</span></h3>
+              <h3>
+                {{ location.name }}
+                <span class="location-stats"
+                  >{{ location.completedCount }}/{{ location.totalCount }}</span
+                >
+              </h3>
               <p>{{ location.address }}</p>
             </div>
             <div class="toggle-icon" :class="{ collapsed: location.collapsed }">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M16.59 8.59L12 13.17L7.41 8.59L6 10L12 16L18 10L16.59 8.59Z" fill="currentColor"/>
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M16.59 8.59L12 13.17L7.41 8.59L6 10L12 16L18 10L16.59 8.59Z"
+                  fill="currentColor"
+                />
               </svg>
             </div>
           </div>
-          
+
           <!-- 미션 리스트 -->
-          <div 
-            class="mission-list" 
-            v-show="!location.collapsed">
-            <div 
-              v-for="(mission, missionIndex) in filteredMissions(location.missions)" 
-              :key="missionIndex" 
-              class="quest-card" 
-              :class="{ completed: mission.completed }">
+          <div class="mission-list" v-show="!location.collapsed">
+            <div
+              v-for="(mission, missionIndex) in filteredMissions(
+                location.missions
+              )"
+              :key="missionIndex"
+              class="quest-card"
+              :class="{ completed: mission.completed }"
+            >
               <div class="quest-title">{{ mission.title }}</div>
               <div class="quest-desc">{{ mission.description }}</div>
               <div class="quest-footer">
                 <div class="coin-reward">
                   <div class="coin-icon">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20Z" fill="#FFD700"/>
-                      <path d="M12 7L14.39 11.79L19.5 12.26L15.75 15.9L16.8 21L12 18.27L7.2 21L8.25 15.9L4.5 12.26L9.61 11.79L12 7Z" fill="#FFD700"/>
+                    <svg
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20Z"
+                        fill="#FFD700"
+                      />
+                      <path
+                        d="M12 7L14.39 11.79L19.5 12.26L15.75 15.9L16.8 21L12 18.27L7.2 21L8.25 15.9L4.5 12.26L9.61 11.79L12 7Z"
+                        fill="#FFD700"
+                      />
                     </svg>
                   </div>
                   {{ mission.points }} 포인트
                 </div>
                 <div v-if="mission.completed" class="badge completed">완료</div>
-                <router-link v-else :to="'/mission-detail/' + mission.id" class="btn-small">도전하기</router-link>
+                <router-link
+                  v-else
+                  :to="'/mission-detail/' + mission.id"
+                  class="btn-small"
+                  >도전하기</router-link
+                >
               </div>
             </div>
           </div>
         </div>
       </div>
-      
+
       <!-- 하단 여백 -->
       <div class="bottom-space"></div>
     </div>
@@ -114,149 +180,156 @@
 </template>
 
 <script>
-import { ImageErrorMixin } from '@/script';
+import { ImageErrorMixin } from "@/script";
 
 export default {
-  name: 'AllMissions',
+  name: "AllMissions",
   mixins: [ImageErrorMixin],
   data() {
     return {
       filters: {
         showIncomplete: true,
-        showComplete: true
+        showComplete: true,
       },
-      sortOption: 'recent',
+      sortOption: "recent",
       locations: [
         {
           id: 1,
-          name: '경복궁',
-          address: '서울 종로구 사직로 161',
-          imageUrl: 'https://via.placeholder.com/60x60?text=경복궁',
+          name: "경복궁",
+          address: "서울 종로구 사직로 161",
+          imageUrl: "https://via.placeholder.com/60x60?text=경복궁",
           completedCount: 2,
           totalCount: 3,
           collapsed: false,
           missions: [
             {
               id: 1,
-              title: '경복궁 근정전 인증하기',
-              description: '경복궁의 정전인 근정전 앞에서 인증샷을 찍어보세요.',
+              title: "경복궁 근정전 인증하기",
+              description: "경복궁의 정전인 근정전 앞에서 인증샷을 찍어보세요.",
               points: 100,
-              completed: true
+              completed: true,
             },
             {
               id: 2,
-              title: '향원정의 연못 찾기',
-              description: '경복궁 후원에 있는 향원정 연못의 아름다운 모습을 담아보세요.',
+              title: "향원정의 연못 찾기",
+              description:
+                "경복궁 후원에 있는 향원정 연못의 아름다운 모습을 담아보세요.",
               points: 150,
-              completed: true
+              completed: true,
             },
             {
               id: 3,
-              title: '숨겨진 동궁과 후원 찾기',
-              description: '경복궁에서 가장 아름다운 영역 중 하나인 동궁과 후원의 풍경을 담아보세요.',
+              title: "숨겨진 동궁과 후원 찾기",
+              description:
+                "경복궁에서 가장 아름다운 영역 중 하나인 동궁과 후원의 풍경을 담아보세요.",
               points: 200,
-              completed: false
-            }
-          ]
+              completed: false,
+            },
+          ],
         },
         {
           id: 2,
-          name: '창덕궁',
-          address: '서울 종로구 율곡로 99',
-          imageUrl: 'https://via.placeholder.com/60x60?text=창덕궁',
+          name: "창덕궁",
+          address: "서울 종로구 율곡로 99",
+          imageUrl: "https://via.placeholder.com/60x60?text=창덕궁",
           completedCount: 1,
           totalCount: 3,
           collapsed: false,
           missions: [
             {
               id: 4,
-              title: '부용지 연꽃 촬영하기',
-              description: '창덕궁의 후원에 있는 부용지에 피어있는 연꽃을 촬영해보세요.',
+              title: "부용지 연꽃 촬영하기",
+              description:
+                "창덕궁의 후원에 있는 부용지에 피어있는 연꽃을 촬영해보세요.",
               points: 120,
-              completed: true
+              completed: true,
             },
             {
               id: 5,
-              title: '대조전 찾아가기',
-              description: '왕비의 처소였던 대조전을 찾아 그 아름다운 건축양식을 담아보세요.',
+              title: "대조전 찾아가기",
+              description:
+                "왕비의 처소였던 대조전을 찾아 그 아름다운 건축양식을 담아보세요.",
               points: 150,
-              completed: false
+              completed: false,
             },
             {
               id: 6,
-              title: '낙선재 문고 탐방',
-              description: '조선시대 왕실 도서관이었던 낙선재 문고를 찾아 인증샷을 찍어보세요.',
+              title: "낙선재 문고 탐방",
+              description:
+                "조선시대 왕실 도서관이었던 낙선재 문고를 찾아 인증샷을 찍어보세요.",
               points: 180,
-              completed: false
-            }
-          ]
+              completed: false,
+            },
+          ],
         },
         {
           id: 3,
-          name: '덕수궁',
-          address: '서울 중구 세종대로 99',
-          imageUrl: 'https://via.placeholder.com/60x60?text=덕수궁',
+          name: "덕수궁",
+          address: "서울 중구 세종대로 99",
+          imageUrl: "https://via.placeholder.com/60x60?text=덕수궁",
           completedCount: 0,
           totalCount: 2,
           collapsed: false,
           missions: [
             {
               id: 7,
-              title: '정관헌 촬영하기',
-              description: '서양식 건물인 정관헌의 독특한 건축 양식을 담아보세요.',
+              title: "정관헌 촬영하기",
+              description:
+                "서양식 건물인 정관헌의 독특한 건축 양식을 담아보세요.",
               points: 130,
-              completed: false
+              completed: false,
             },
             {
               id: 8,
-              title: '중화전 찾기',
-              description: '덕수궁의 정전인 중화전을 찾아 그 웅장한 모습을 촬영해보세요.',
+              title: "중화전 찾기",
+              description:
+                "덕수궁의 정전인 중화전을 찾아 그 웅장한 모습을 촬영해보세요.",
               points: 170,
-              completed: false
-            }
-          ]
-        }
-      ]
+              completed: false,
+            },
+          ],
+        },
+      ],
     };
   },
   computed: {
     filteredLocations() {
       let sortedLocations = [...this.locations];
-      
+
       // 정렬 옵션에 따라 장소 목록 정렬
       switch (this.sortOption) {
-        case 'recent':
+        case "recent":
           // 최근 방문순 (예시 데이터에서는 현재 순서 유지)
           break;
-        case 'points':
+        case "points":
           // 포인트 높은순
           sortedLocations.sort((a, b) => {
-            const aMaxPoints = Math.max(...a.missions.map(m => m.points));
-            const bMaxPoints = Math.max(...b.missions.map(m => m.points));
+            const aMaxPoints = Math.max(...a.missions.map((m) => m.points));
+            const bMaxPoints = Math.max(...b.missions.map((m) => m.points));
             return bMaxPoints - aMaxPoints;
           });
           break;
-        case 'location':
+        case "location":
           // 장소명 순
           sortedLocations.sort((a, b) => a.name.localeCompare(b.name));
           break;
       }
-      
+
       return sortedLocations;
-    }
+    },
   },
   methods: {
     toggleLocation(index) {
       this.locations[index].collapsed = !this.locations[index].collapsed;
     },
     filteredMissions(missions) {
-      return missions.filter(mission => {
+      return missions.filter((mission) => {
         if (mission.completed && this.filters.showComplete) return true;
         if (!mission.completed && this.filters.showIncomplete) return true;
         return false;
       });
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -301,7 +374,7 @@ export default {
   border-radius: 16px;
   font-size: 13px;
   font-weight: 500;
-  color: #8E8E93;
+  color: #8e8e93;
   cursor: pointer;
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   border: 1px solid transparent;
@@ -343,7 +416,7 @@ export default {
 }
 
 .chip.active::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: 0;
   left: 0;
@@ -413,7 +486,11 @@ export default {
 }
 
 .location-header:hover {
-  background: linear-gradient(to right, rgba(79, 108, 255, 0.1), rgba(79, 108, 255, 0.05));
+  background: linear-gradient(
+    to right,
+    rgba(79, 108, 255, 0.1),
+    rgba(79, 108, 255, 0.05)
+  );
 }
 
 .location-image {
@@ -489,7 +566,8 @@ export default {
   padding: var(--spacing-md);
   margin-bottom: var(--spacing-md);
   box-shadow: var(--shadow-sm);
-  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+  transition: transform var(--transition-fast),
+    box-shadow var(--transition-fast);
   position: relative;
   overflow: hidden;
 }
@@ -556,22 +634,23 @@ export default {
   .missions-container {
     padding: var(--spacing-lg);
   }
-  
+
   .location-group {
     margin-bottom: var(--spacing-xl);
   }
-  
+
   .quest-card {
     padding: var(--spacing-lg);
     margin-bottom: var(--spacing-md);
-    transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+    transition: transform var(--transition-normal),
+      box-shadow var(--transition-normal);
   }
-  
+
   .quest-card:hover {
     transform: translateY(-2px);
     box-shadow: var(--shadow-md);
   }
-  
+
   .filter-bar {
     padding: var(--spacing-md) var(--spacing-lg);
   }
@@ -584,11 +663,11 @@ export default {
     align-items: flex-start;
     gap: var(--spacing-md);
   }
-  
+
   .sort-dropdown {
     width: 100%;
   }
-  
+
   .sort-select {
     width: 100%;
   }
@@ -607,4 +686,4 @@ export default {
   height: 300px; /* 충분한 하단 여백 */
   width: 100%;
 }
-</style> 
+</style>
