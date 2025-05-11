@@ -189,7 +189,7 @@ button,
 .weekly-best {
   flex: 1;
   overflow-y: auto;
-  padding-bottom: 80px; /* 하단 네비게이션바 높이에 맞게 조정 */
+  padding-bottom: 64px; /* 하단 네비게이션바 높이에 맞게 조정 */
   -webkit-overflow-scrolling: touch; /* 모바일 스크롤 부드럽게 */
   position: relative; /* 위치 지정 */
   width: 100%; /* 전체 너비 */
@@ -236,8 +236,10 @@ button,
 }
 
 .header-back {
+  width: 40px;
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 
 .header-title {
@@ -263,6 +265,7 @@ button,
   background: transparent;
   border: none;
   font-size: 20px;
+  padding: 8px;
   color: var(--text-medium);
   cursor: pointer;
   display: flex;
@@ -325,22 +328,6 @@ button,
   transform: translate(-50%, -50%);
   z-index: 3;
   pointer-events: none;
-}
-
-.progress-bar {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 3px;
-  background: rgba(0, 0, 0, 0.1);
-  z-index: 5;
-}
-
-.progress-fill {
-  height: 100%;
-  background: var(--primary);
-  width: 35%; /* 프로그레스 퍼센트 */
 }
 
 .location-marker {
@@ -471,7 +458,7 @@ button,
 
 .difficulty {
   display: flex;
-  gap: 7px;
+  gap: 5px;
   width: 100%;
   margin-bottom: var(--spacing-md);
   /* margin: 20px 0; */
@@ -698,17 +685,6 @@ button,
   }
 }
 
-/* 퀘스트 화면 */
-.quest-screen {
-  display: flex; /* Vue에서는 display: none 대신 v-if/v-show를 사용 */
-  flex-direction: column;
-}
-
-.quest-list {
-  flex: 1;
-  padding: 16px;
-}
-
 /* 전체 미션 페이지 스타일 */
 .all-missions {
   flex: 1;
@@ -775,20 +751,6 @@ button,
   overflow: visible; /* hidden에서 visible로 변경 */
 }
 
-.location-header {
-  display: flex;
-  align-items: center;
-  padding: 16px;
-  cursor: pointer;
-  transition: all var(--transition-fast) ease;
-  margin-bottom: 0 !important;
-  border-bottom: var(--border-light);
-}
-
-.location-header:hover {
-  background: var(--bg-secondary);
-}
-
 .location-stats {
   font-size: 13px;
   color: var(--primary);
@@ -801,22 +763,9 @@ button,
   transition: all var(--transition-normal) ease;
 }
 
-.location-header.collapsed .toggle-icon {
-  transform: rotate(180deg);
-}
-
 .mission-list {
   overflow: visible !important; /* 강제로 visible 설정 */
   padding: 14px !important;
-}
-
-.location-image {
-  width: 60px;
-  height: 60px;
-  border-radius: var(--radius-md);
-  background: var(--bg-secondary);
-  margin-right: 14px;
-  object-fit: cover;
 }
 
 .location-details h3 {
@@ -827,54 +776,10 @@ button,
   align-items: center;
 }
 
-.completion-badge {
-  font-size: 13px;
-  color: var(--completed);
-  margin-left: 8px;
-}
-
 .location-details p {
   font-size: 13px;
   color: var(--text-medium);
   margin-bottom: 8px;
-}
-
-.quest-card {
-  background: white;
-  border-radius: var(--radius-md);
-  padding: 18px;
-  margin-bottom: 14px;
-  box-shadow: var(--shadow-sm);
-  border-left: 4px solid var(--primary);
-}
-
-.quest-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-md);
-}
-
-.quest-card.completed {
-  border-left-color: var(--completed);
-}
-
-.quest-title {
-  font-size: 16px;
-  font-weight: 600;
-  margin-bottom: 8px;
-  color: var(--text-dark);
-}
-
-.quest-desc {
-  font-size: 14px;
-  color: var(--text-medium);
-  line-height: 1.5;
-  margin-bottom: 12px;
-}
-
-.quest-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 }
 
 .coin-reward {
@@ -898,7 +803,7 @@ button,
   color: var(--accent);
 }
 
-.location-info {
+/* .location-info {
   background: var(--bg-secondary);
   border-radius: var(--radius-md);
   padding: 18px;
@@ -918,7 +823,7 @@ button,
   color: var(--text-medium);
   line-height: 1.6;
   margin-bottom: 14px;
-}
+} */
 
 /* 미션 상세 페이지 */
 .mission-detail {
@@ -1643,8 +1548,8 @@ img.error::before {
 /* 회전 원근감 부여: wrapper에 적용 */
 .location-icon-wrapper {
   perspective: 1000px;
-  width: 150px;
-  height: 150px;
+  width: 130px;
+  height: 130px;
 }
 
 /* 회전 컨테이너 */
@@ -1673,6 +1578,18 @@ img.error::before {
 .coin-face.front {
   border: 5px solid var(--primary);
   color: var(--primary);
+  background: linear-gradient(
+    90deg,
+    var(--primary-light) 0%,
+    var(--secondary-light) 15%,
+    var(--text-deep-light) 50%,
+    var(--secondary-light) 85%,
+    var(--primary-light) 100%
+  );
+  /* 2) 가로로 500% 늘려서 색이 흘러갈 공간 확보 */
+  background-size: 1000% 100%;
+  /* 3) 부드럽게 흐르는 애니메이션 */
+  animation: btn-gradient-slide 20s linear infinite;
   transform: rotateY(0deg);
 }
 

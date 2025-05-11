@@ -18,7 +18,6 @@
           </svg>
         </router-link>
       </div>
-      <div class="header-title">{{ locationInfo.name }}</div>
       <div class="header-action">
         <button class="icon-btn">
           <svg
@@ -36,17 +35,94 @@
         </button>
       </div>
     </div>
+    <!-- 장소 정보 헤더 -->
+    <div class="location-info">
+      <div class="location-wrapper">
+        <div class="location-name">{{ locationInfo.name }}</div>
+        <div class="location-description">{{ locationInfo.description }}</div>
+      </div>
+      <!-- <div class="location-image">
+        <img
+          src="https://via.placeholder.com/120x120?text=경복궁"
+          alt="경복궁"
+        />
+      </div> -->
+    </div>
+
+    <div class="info-stats">
+      <div class="stat-wrapper">
+        <div class="stat-info">
+          <div class="stat-icon">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              xmlns:xlink="http://www.w3.org/1999/xlink"
+              version="1.1"
+              x="0px"
+              y="0px"
+              viewBox="0 0 32 32"
+              style="enable-background: new 0 0 32 32"
+              xml:space="preserve"
+            >
+              <path
+                d="M16,30c0.8857422,0,1.7314453-0.378418,2.3183594-1.0380859C21.7470703,25.105957,27.5,17.9550781,27.5,13.3891602  C27.5,7.109375,22.3408203,2,16,2S4.5,7.109375,4.5,13.3891602c0,4.565918,5.7529297,11.7167969,9.1816406,15.5732422  C14.2685547,29.621582,15.1142578,30,16,30z M16,4c5.2382812,0,9.5,4.2119141,9.5,9.3891602  c0,2.8095703-3.2431641,8.1342773-8.6757812,14.2431641c-0.421875,0.4746094-1.2265625,0.4741211-1.6484375,0.0004883  C9.7431641,21.5234375,6.5,16.1987305,6.5,13.3891602C6.5,8.2119141,10.7617188,4,16,4z"
+              />
+              <path
+                d="M16,20.1459961c3.1748047,0,5.7568359-2.5825195,5.7568359-5.7568359c0-0.5522461-0.4472656-1-1-1s-1,0.4477539-1,1  c0,2.0712891-1.6855469,3.7568359-3.7568359,3.7568359s-3.7568359-1.6855469-3.7568359-3.7568359c0-0.5522461-0.4472656-1-1-1  s-1,0.4477539-1,1C10.2431641,17.5634766,12.8251953,20.1459961,16,20.1459961z"
+                fill="currentColor"
+              />
+              <path
+                d="M13.2822266,11.9916992c0.5527344,0,1-0.4477539,1-1V9.6328125c0-0.5522461-0.4472656-1-1-1s-1,0.4477539-1,1v1.3588867  C12.2822266,11.5439453,12.7294922,11.9916992,13.2822266,11.9916992z"
+                fill="currentColor"
+              />
+              <path
+                d="M18.7177734,11.9916992c0.5527344,0,1-0.4477539,1-1V9.6328125c0-0.5522461-0.4472656-1-1-1s-1,0.4477539-1,1v1.3588867  C17.7177734,11.5439453,18.1650391,11.9916992,18.7177734,11.9916992z"
+                fill="currentColor"
+              />
+            </svg>
+          </div>
+          <div class="stat-title">방문자</div>
+        </div>
+
+        <div class="stat-value">{{ locationInfo.visitors }}명</div>
+      </div>
+      <div class="stat-wrapper">
+        <div class="stat-info">
+          <div class="stat-icon">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              xmlns:xlink="http://www.w3.org/1999/xlink"
+              version="1.1"
+              x="0px"
+              y="0px"
+              viewBox="0 0 32 32"
+              style="enable-background: new 0 0 32 32"
+              xml:space="preserve"
+            >
+              <path
+                d="M27.0839844,2.6347656C26.9335938,2.2519531,26.5644531,2,26.1533203,2H12.3574219c-0.5527344,0-1,0.4472656-1,1  s0.4472656,1,1,1h11.2490234l-5.1337891,4.7675781C18.2695312,8.9560547,18.1533203,9.2216797,18.1533203,9.5  s0.1162109,0.5439453,0.3193359,0.7324219L23.6064453,15H12.3574219c-0.5527344,0-1,0.4472656-1,1s0.4472656,1,1,1h13.7958984  c0.4111328,0,0.7802734-0.2519531,0.9306641-0.6347656s0.0507812-0.8183594-0.25-1.0976562L20.6230469,9.5l6.2109375-5.7675781  C27.1347656,3.453125,27.234375,3.0175781,27.0839844,2.6347656z"
+                fill="currentColor"
+              />
+              <path
+                d="M10.8691406,28H9.3574219V3c0-0.5527344-0.4472656-1-1-1s-1,0.4472656-1,1v25H5.8466797c-0.5527344,0-1,0.4472656-1,1  s0.4472656,1,1,1h5.0224609c0.5527344,0,1-0.4472656,1-1S11.421875,28,10.8691406,28z"
+              />
+            </svg>
+          </div>
+          <div class="stat-title">평균 완료</div>
+        </div>
+
+        <div class="stat-value">{{ locationInfo.avgCompletionTime }}</div>
+      </div>
+    </div>
 
     <!-- 미션 진행 상태 표시 -->
     <div class="progress-container">
       <div class="progress-info">
         <span>미션 진행도</span>
-        <span class="progress-percentage"
-          >{{
-            Math.round(
-              (locationInfo.completedCount / locationInfo.totalCount) * 100
-            )
-          }}%</span
+        <span class="completion-badge"
+          >{{ locationInfo.completedCount }}/{{
+            locationInfo.totalCount
+          }}
+          완료</span
         >
       </div>
       <div class="progress-bar">
@@ -63,83 +139,32 @@
 
     <!-- 미션 리스트 컨테이너 -->
     <div class="quest-list">
-      <!-- 장소 정보 헤더 -->
-      <div class="location-header">
-        <div class="location-image">
-          <img
-            src="https://via.placeholder.com/120x120?text=경복궁"
-            alt="경복궁"
-          />
-        </div>
-        <div class="location-details">
-          <h3>
-            {{ locationInfo.name }}
-            <span class="completion-badge"
-              >{{ locationInfo.completedCount }}/{{
-                locationInfo.totalCount
-              }}
-              완료</span
-            >
-          </h3>
-          <p>{{ locationInfo.address }}</p>
-          <div class="badge">{{ locationInfo.status }}</div>
-        </div>
-      </div>
-
       <!-- 미션 카드 목록 -->
-      <h4 class="section-title">미션 목록</h4>
+      <h4 class="section-title">도전 가능한 미션</h4>
       <div
-        v-for="(quest, index) in quests"
-        :key="index"
+        v-for="(quest, index) in availableQuests"
+        :key="'available-' + index"
         class="quest-card"
-        :class="{ completed: quest.completed }"
       >
         <div class="quest-title">{{ quest.title }}</div>
         <div class="quest-desc">{{ quest.description }}</div>
         <div class="quest-footer">
-          <div class="coin-reward">
-            <div class="coin-icon">
-              <svg
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20Z"
-                  fill="#FFD700"
-                />
-                <path
-                  d="M12 7L14.39 11.79L19.5 12.26L15.75 15.9L16.8 21L12 18.27L7.2 21L8.25 15.9L4.5 12.26L9.61 11.79L12 7Z"
-                  fill="#FFD700"
-                />
-              </svg>
-            </div>
-            {{ quest.points }} 포인트
-          </div>
-          <div v-if="quest.completed" class="badge completed">완료</div>
-          <router-link
-            v-else
-            :to="'/mission-detail/' + quest.id"
-            class="btn-small"
+          <router-link :to="'/mission-detail/' + quest.id" class="btn-small"
             >도전하기</router-link
           >
         </div>
       </div>
 
-      <!-- 추가 정보 섹션 -->
-      <div class="location-info">
-        <h4>장소 정보</h4>
-        <p>{{ locationInfo.description }}</p>
-        <div class="info-stats">
-          <div>
-            방문자 <span class="stat-value">{{ locationInfo.visitors }}명</span>
-          </div>
-          <div>
-            평균 완료
-            <span class="stat-value">{{ locationInfo.avgCompletionTime }}</span>
-          </div>
+      <h4 class="section-title section-title-completed">완료한 미션</h4>
+      <div
+        v-for="(quest, index) in completedQuests"
+        :key="'completed-' + index"
+        class="quest-card completed"
+      >
+        <div class="quest-title">{{ quest.title }}</div>
+        <div class="quest-desc">{{ quest.description }}</div>
+        <div class="quest-footer">
+          <div class="badge completed">완료</div>
         </div>
       </div>
     </div>
@@ -152,14 +177,22 @@ import { ImageErrorMixin } from "@/script";
 export default {
   name: "MissionList",
   mixins: [ImageErrorMixin],
+  computed: {
+    availableQuests() {
+      return this.quests.filter((q) => !q.completed);
+    },
+    completedQuests() {
+      return this.quests.filter((q) => q.completed);
+    },
+  },
   data() {
     return {
       locationInfo: {
         id: 1,
-        name: "경복궁 숨겨진 비밀",
+        name: "경복궁",
         address: "서울 종로구 사직로 161",
-        completedCount: 2,
-        totalCount: 3,
+        completedCount: 3,
+        totalCount: 5,
         status: "방문 완료",
         description: `경복궁은 조선왕조의 법궁으로, 1395년 태조 이성계가 창건했습니다. 고려 말 개성에서 한양으로 수도를 옮긴 후 가장 먼저 지어진 궁궐입니다. 경복(景福)이란 이름은 '큰 복을 누리라'는 의미를 담고 있습니다.`,
         visitors: "3,250",
@@ -168,13 +201,20 @@ export default {
       quests: [
         {
           id: 1,
+          title: "경복궁 방문하기",
+          description: "경복궁에 방문하세요.",
+          points: 100,
+          completed: true,
+        },
+        {
+          id: 2,
           title: "경복궁 근정전 인증하기",
           description: "경복궁의 정전인 근정전 앞에서 인증샷을 찍어보세요.",
           points: 100,
           completed: true,
         },
         {
-          id: 2,
+          id: 3,
           title: "향원정의 연못 찾기",
           description:
             "경복궁 후원에 있는 향원정 연못의 아름다운 모습을 담아보세요.",
@@ -182,10 +222,17 @@ export default {
           completed: true,
         },
         {
-          id: 3,
+          id: 4,
           title: "숨겨진 동궁과 후원 찾기",
           description:
             "경복궁에서 가장 아름다운 영역 중 하나인 동궁과 후원의 풍경을 담아보세요.",
+          points: 200,
+          completed: false,
+        },
+        {
+          id: 5,
+          title: "핫플 따라 찍기",
+          description: "경복궁에서 하늘과 함께 후원의 풍경을 담아보세요.",
           points: 200,
           completed: false,
         },
@@ -204,78 +251,45 @@ export default {
 </script>
 
 <style scoped>
-.quest-screen {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  min-height: 100vh;
-  position: relative;
-  background-color: var(--bg-secondary);
-}
-
 .header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 60px;
-  padding: 0 16px;
-  background-color: #ffffff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  position: sticky;
-  top: 0;
-  z-index: 10;
+  background-color: var(--primary);
+  border-bottom: 0;
+  box-shadow: none;
 }
 
-.header-back,
-.header-action {
-  width: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.header-back svg,
+.header-action svg {
+  color: var(--text-light);
 }
 
 .header-title {
-  font-size: 18px;
+  color: var(--text-light);
+}
+
+.location-info {
+  display: flex;
+  background-color: var(--primary);
+  padding: 0 var(--spacing-md);
+  gap: var(--spacing-md);
+}
+
+.location-name {
   font-weight: 600;
-  color: #333;
+  font-size: 26px;
+  color: var(--text-light);
+  margin-bottom: var(--spacing-md);
 }
 
-.icon-btn {
-  background: none;
-  border: none;
-  padding: 8px;
-  cursor: pointer;
-  color: #555;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  transition: background-color 0.2s;
-}
-
-.icon-btn:hover {
-  background-color: rgba(0, 0, 0, 0.05);
-}
-
-.quest-list {
-  flex: 1;
-  padding: var(--spacing-md);
-  padding-bottom: 300px; /* 네비게이션 바 위치 고려하여 큰 여백 추가 */
-}
-
-.location-header {
-  display: flex;
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
-  border-radius: var(--radius-md);
-  overflow: hidden;
-  box-shadow: 0 8px 24px rgba(79, 108, 255, 0.18);
-  margin-bottom: var(--spacing-lg);
-  position: relative;
+.location-description {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-light);
 }
 
 .location-image {
-  width: 120px;
-  height: 120px;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
   flex-shrink: 0;
   overflow: hidden;
 }
@@ -284,6 +298,105 @@ export default {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.info-stats {
+  display: flex;
+  justify-content: space-evenly;
+  background-color: var(--primary);
+  padding: var(--spacing-lg) var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+}
+
+.stat-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.stat-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.stat-icon {
+  width: 50px;
+  height: 50px;
+  background-color: var(--text-deep-light);
+  color: var(--primary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stat-icon svg {
+  width: 40px;
+  height: 40px;
+}
+
+.stat-title {
+  font-weight: 500;
+  font-size: 15px;
+  color: var(--text-deep-dark);
+}
+
+.stat-value {
+  color: var(--text-light);
+}
+
+.progress-container {
+  padding: var(--spacing-md);
+  background-color: var(--bg-primary);
+}
+
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-md);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-deep-dark);
+}
+
+.progress-bar {
+  width: 100%;
+  height: 20px;
+  border: 1px solid var(--primary);
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    var(--primary-light) 0%,
+    var(--primary) 15%,
+    var(--secondary) 50%,
+    var(--primary) 85%,
+    var(--primary-light) 100%
+  );
+  background-size: 1000% 100%;
+  animation: btn-gradient-slide 20s linear infinite;
+}
+
+.quest-list {
+  padding: var(--spacing-md);
+}
+
+.section-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-deep-dark);
+  padding: var(--spacing-md) 0;
+  /* margin: var(--spacing-md) 0; */
+}
+
+.section-title-completed {
+  padding-top: var(--spacing-xl);
 }
 
 .location-details {
@@ -308,14 +421,6 @@ export default {
   opacity: 0.9;
 }
 
-.completion-badge {
-  background-color: rgba(255, 255, 255, 0.2);
-  padding: 4px var(--spacing-sm);
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: 500;
-}
-
 .badge {
   display: inline-block;
   background-color: rgba(255, 255, 255, 0.25);
@@ -333,7 +438,7 @@ export default {
   box-shadow: var(--shadow-sm);
   transition: transform var(--transition-normal),
     box-shadow var(--transition-normal);
-  border-left: 4px solid var(--primary);
+  border: 1px solid var(--primary);
 }
 
 .quest-card:hover {
@@ -342,14 +447,17 @@ export default {
 }
 
 .quest-card.completed {
-  border-left: 4px solid var(--success);
-  opacity: 0.9;
+  border: 1px solid var(--primary-light);
 }
 
 .quest-title {
   font-size: 17px;
   font-weight: 600;
   margin-bottom: var(--spacing-sm);
+  color: var(--text-deep-dark);
+}
+
+.quest-card.completed .quest-title {
   color: var(--text-dark);
 }
 
@@ -366,151 +474,14 @@ export default {
   align-items: center;
 }
 
-.coin-reward {
-  display: flex;
-  align-items: center;
-  color: var(--secondary);
-  font-weight: 500;
-  font-size: 14px;
-}
-
-.coin-icon {
-  margin-right: 6px;
-  color: #ffd700;
-  font-size: 16px;
-}
-
-.btn-small {
-  background: #4f6cff;
-  color: white;
-  padding: 8px 16px;
-  border-radius: 20px;
-  text-decoration: none;
-  font-size: 14px;
-  font-weight: 500;
-  transition: background 0.2s;
-  border: none;
-  cursor: pointer;
-}
-
-.btn-small:hover {
-  background: #3f56cc;
+.quest-footer .btn-small {
+  border-radius: 10px;
+  text-align: center;
 }
 
 .badge.completed {
-  background-color: #e8f0fe;
+  background-color: var(--primary-light);
   color: var(--primary);
-}
-
-.location-info {
-  background: var(--bg-primary);
-  border-radius: var(--radius-md);
-  padding: var(--spacing-lg);
-  margin-top: var(--spacing-lg);
-  box-shadow: var(--shadow-sm);
-}
-
-.location-info h4 {
-  margin: 0 0 var(--spacing-md) 0;
-  font-size: 16px;
-  color: var(--text-dark);
-}
-
-.location-info p {
-  margin: 0 0 var(--spacing-md) 0;
-  font-size: 14px;
-  color: var(--text-medium);
-  line-height: 1.5;
-}
-
-.info-stats {
-  display: flex;
-  justify-content: space-between;
-  font-size: 14px;
-  color: var(--text-medium);
-}
-
-.stat-value {
-  font-weight: 600;
-  color: var(--primary);
-}
-
-/* 반응형 스타일 */
-@media (min-width: 769px) {
-  .quest-list {
-    padding: var(--spacing-lg);
-  }
-
-  .location-header {
-    margin-bottom: var(--spacing-xl);
-  }
-
-  .quest-card {
-    padding: var(--spacing-lg);
-    margin-bottom: var(--spacing-lg);
-    transition: transform var(--transition-normal),
-      box-shadow var(--transition-normal);
-  }
-
-  .quest-card:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
-  }
-}
-
-/* 새로 추가된 스타일 */
-.progress-container {
-  padding: var(--spacing-md) var(--spacing-md) 0;
-  background-color: var(--bg-primary);
-}
-
-.progress-info {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: var(--spacing-xs);
-  font-size: 13px;
-  color: var(--text-medium);
-}
-
-.progress-percentage {
-  color: var(--primary);
-  font-weight: 600;
-}
-
-.progress-bar {
-  width: 100%;
-  height: 5px;
-  background: var(--bg-secondary);
-  border-radius: 3px;
-  overflow: hidden;
-  margin-bottom: var(--spacing-md);
-}
-
-.progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--primary), var(--secondary));
-  border-radius: 3px;
-  transition: width 0.5s ease;
-}
-
-.section-title {
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--text-dark);
-  margin: var(--spacing-md) 0;
-}
-
-.coin-icon {
-  display: flex;
-  align-items: center;
-  margin-right: var(--spacing-xs);
-}
-
-@media (min-width: 769px) {
-  .progress-container {
-    padding: var(--spacing-md) var(--spacing-lg) 0;
-  }
 }
 
 /* 여백 공간 추가 */
