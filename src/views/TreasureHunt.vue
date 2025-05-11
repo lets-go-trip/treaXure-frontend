@@ -36,23 +36,19 @@
         <div class="info-card" v-if="selectedLocation">
           <div class="info-box">
             <div>
-              <div>
-                <div class="info-title">{{ selectedLocation.title }}</div>
-              </div>
-              <div class="stat-value-parent">
-                <span class="stat-status">{{ selectedLocation.status }}</span>
-              </div>
-              <div class="difficulty">
+              <div class="info-title">{{ selectedLocation.title }}</div>
+              <div class="stat-status">{{ selectedLocation.status }}</div>
+              <!-- <div class="difficulty">
                 <div
                   v-for="n in 5"
                   :key="n"
                   class="difficulty-unit"
                   :class="{ active: n <= selectedLocation.difficulty }"
                 ></div>
-              </div>
+              </div> -->
               <div class="info-stats">
                 <div class="stat-value-parent">
-                  남은 미션
+                  미션
                   <span class="stat-value">{{
                     selectedLocation.questCount
                   }}</span>
