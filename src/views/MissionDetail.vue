@@ -18,7 +18,7 @@
           </svg>
         </router-link>
       </div>
-      <div class="header-title">미션 상세</div>
+      <div class="header-title">{{mission.location}}</div>
       <div class="header-action">
         <button class="icon-btn">⋮</button>
       </div>
@@ -26,14 +26,8 @@
 
     <!-- 미션 상세 컨테이너 -->
     <div class="mission-header">
-      <div class="mission-badge">
-        <div class="coin-icon mission-icon">●</div>
-        <div class="badge">{{ mission.points }} 포인트</div>
-      </div>
       <h2>{{ mission.title }}</h2>
-      <div class="mission-location">
-        {{ mission.location }} · {{ mission.address }}
-      </div>
+      <div class="badge">{{ mission.points }} 포인트</div>
     </div>
 
     <div class="mission-content">

@@ -1,9 +1,7 @@
-/* CSS 파일 내용 */
-
-/* 프리텐다드 폰트 추가 */
+/****************************** 프리텐다드 폰트 추가 ******************************/
 @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css");
 
-/* 전역 CSS 변수 - 디자인 시스템 */
+/****************************** 전역 CSS 변수 - 디자인 시스템 ******************************/
 :root {
   /* 주요 색상 */
   --primary: #40c996;
@@ -63,7 +61,7 @@
   --spacing-xl: 32px;
 }
 
-/* 기본 스타일 초기화 */
+/****************************** 기본 스타일 초기화 ******************************/
 * {
   margin: 0;
   padding: 0;
@@ -71,6 +69,21 @@
   font-family: "Noto Sans KR", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* 앱 컨테이너 스타일 */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  /* max-width: 480px; */
+  min-height: 100vh;
+  margin: 0 auto;
+  background: var(--bg-primary);
+  position: relative;
+  overflow: hidden;
+  /* border-radius: var(--radius-lg); */
+  box-shadow: var(--shadow-lg);
 }
 
 body {
@@ -86,7 +99,7 @@ body {
   justify-content: flex-start; /* 내용물을 위에서부터 배치 */
 }
 
-/* 스크롤바 스타일 */
+/****************************** 스크롤바 스타일 ******************************/
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -105,29 +118,7 @@ body {
   background: rgba(0, 0, 0, 0.15);
 }
 
-/* 공통 컴포넌트 */
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
-}
-
-/* 앱 컨테이너 스타일 */
-.app-container {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  /* max-width: 480px; */
-  min-height: 100vh;
-  margin: 0 auto;
-  background: var(--bg-primary);
-  position: relative;
-  overflow: hidden;
-  /* border-radius: var(--radius-lg); */
-  box-shadow: var(--shadow-lg);
-}
-
-/* 버튼 공통 스타일 */
+/****************************** 버튼 공통 스타일 ******************************/
 button,
 .btn {
   display: inline-flex;
@@ -160,366 +151,6 @@ button,
 
 .btn-outline:hover {
   background: rgba(139, 110, 78, 0.08);
-}
-
-/* 배지 스타일 */
-.badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--primary-light);
-  color: var(--primary);
-  border-radius: 99px;
-  padding: 4px 12px;
-  font-size: 12px;
-  font-weight: 500;
-}
-
-.badge.completed {
-  background: var(--completed);
-  color: white;
-}
-
-/* 콘텐츠 영역 공통 스타일 */
-.mypage,
-.quest-screen,
-.all-missions,
-.quest-list,
-.mission-detail,
-.weekly-best {
-  flex: 1;
-  overflow-y: auto;
-  padding-bottom: 64px; /* 하단 네비게이션바 높이에 맞게 조정 */
-  -webkit-overflow-scrolling: touch; /* 모바일 스크롤 부드럽게 */
-  position: relative; /* 위치 지정 */
-  width: 100%; /* 전체 너비 */
-}
-
-@media (min-width: 769px) {
-  .mypage,
-  .quest-screen,
-  .all-missions,
-  .quest-list,
-  .mission-detail,
-  .weekly-best {
-    padding-bottom: 90px; /* 큰 화면에서 더 많은 여백 제공 */
-  }
-
-  .map-container {
-    height: calc(100vh - 40px); /* 브라우저 상단 여백 고려 */
-    /* margin: 20px auto; */
-  }
-
-  .map-view {
-    height: calc(100vh - 100px);
-  }
-
-  #kakao-map {
-    height: calc(100% - 80px); /* 큰 화면에서 네비게이션바 높이 조정 */
-  }
-}
-
-/* 헤더 공통 스타일 */
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 60px;
-  padding: 0 var(--spacing-md);
-  background-color: rgba(255, 255, 255, 0.95);
-  border-bottom: var(--border-light);
-  backdrop-filter: blur(8px);
-  z-index: 10;
-  box-shadow: var(--shadow-sm);
-  position: sticky;
-  top: 0;
-}
-
-.header-back {
-  width: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.header-title {
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--text-deep-dark);
-  display: flex;
-  gap: 15px;
-  align-items: center;
-}
-
-.header-action {
-  display: flex;
-  gap: 16px;
-}
-
-.logo {
-  width: 40px;
-  height: 40px;
-}
-
-.icon-btn {
-  background: transparent;
-  border: none;
-  font-size: 20px;
-  padding: 8px;
-  color: var(--text-medium);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  transition: all 0.2s ease;
-}
-
-.icon-btn:hover {
-  background: rgba(0, 0, 0, 0.05);
-}
-
-.map-container {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100vh; /* 전체 화면 높이 */
-  position: relative;
-}
-
-/* 지도 및 마커 관련 스타일 */
-.map-view {
-  flex: 1;
-  width: 100%;
-  position: relative;
-  height: calc(100vh - 60px); /* 헤더 높이를 뺀 나머지 영역 */
-}
-
-/* 카카오맵 컨테이너 스타일 */
-#kakao-map {
-  width: 100%;
-  height: 100%;
-  min-height: 500px; /* 최소 높이 증가 */
-  z-index: 1;
-}
-
-/* 현재 위치 반경 원 스타일 */
-.radius-circle {
-  border-radius: 50%;
-  border: 2px dashed var(--primary);
-  background-color: rgba(217, 165, 102, 0.3);
-  position: absolute;
-  pointer-events: none;
-  z-index: 2;
-  transform: translate(-50%, -50%);
-  box-sizing: border-box;
-}
-
-.current-location-marker {
-  position: absolute;
-  width: 16px;
-  height: 16px;
-  background-color: var(--primary);
-  border: 3px solid white;
-  border-radius: 50%;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-  transform: translate(-50%, -50%);
-  z-index: 3;
-  pointer-events: none;
-}
-
-.location-marker {
-  position: absolute;
-  width: 40px;
-  height: 40px;
-  transform: translate(-50%, -100%);
-  cursor: pointer;
-  filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.2));
-  z-index: 5;
-  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.location-marker:hover {
-  transform: translate(-50%, -110%) scale(1.1);
-}
-
-.marker-fill {
-  color: var(--primary);
-}
-
-.marker-fill-secondary {
-  color: var(--primary-light);
-}
-
-.marker-fill-completed {
-  color: var(--completed);
-}
-
-.marker-badge {
-  position: absolute;
-  top: -2px;
-  right: -2px;
-  background: var(--accent);
-  color: white;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 11px;
-  border: 2px solid white;
-}
-
-/* 선택된 장소 정보 카드 */
-.info-card {
-  position: fixed;
-  bottom: 0px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100%;
-  /* max-width: 440px; */
-  backdrop-filter: blur(10px);
-  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-  padding-top: 10px;
-  box-shadow: var(--shadow-lg);
-  transition: all 0.3s ease;
-  z-index: 200; /* 네비게이션 바보다 높은 z-index */
-  /* background: radial-gradient(circle farthest-side at 10% 20%, rgba(165, 245, 222, 0.1), rgba(64, 201, 150, 0.1), rgba(255, 229, 0, 0.1)), rgba(255, 255, 255, 0.8);; */
-  background: rgba(255, 255, 255, 1);
-}
-
-/* 시작 상태: 화면 바깥 아래에서 시작 */
-.info-card-enter-from {
-  transform: translate(-50%, 100%);
-}
-
-/* 도착 상태 */
-.info-card-enter-to {
-  transform: translate(-50%, 0);
-}
-
-/* 사라질 때 현재 위치에서 시작 */
-.info-card-leave-from {
-  transform: translate(-50%, 0);
-}
-
-/* 퇴장 상태: 다시 아래로 사라짐 */
-.info-card-leave-to {
-  transform: translate(-50%, 100%);
-}
-
-.blur-box {
-  position: absolute;
-  inset: 0; /* top:0; right:0; bottom:0; left:0; */
-  pointer-events: none; /* 클릭 등 이벤트가 아래 맵에 전달되도록 */
-  backdrop-filter: none; /* 기본엔 필터 없음 */
-  transition: backdrop-filter var(--transition-normal),
-    background var(--transition-normal);
-  z-index: 1; /* info-card보다 뒤, 맵보다 앞 */
-}
-
-.info-box {
-  display: flex;
-  justify-content: space-between;
-  padding: 20px;
-}
-
-.info-header {
-  display: flex;
-  align-items: center;
-  margin-bottom: var(--spacing-md);
-}
-
-/* info-card가 hover 되었을 때 blur-box에 브러 효과 적용 */
-.info-card:hover ~ .blur-box {
-  backdrop-filter: blur(3px);
-  background: rgba(0, 0, 0, 0.3);
-}
-
-.icon-fill {
-  color: var(--primary);
-}
-
-.info-title {
-  font-weight: 600;
-  font-size: 26px;
-  color: var(--text-deep-dark);
-  margin-bottom: var(--spacing-md);
-}
-
-.info-address {
-  font-size: 12px;
-  color: var(--text-medium);
-}
-
-.difficulty {
-  display: flex;
-  gap: 5px;
-  width: 100%;
-  margin-bottom: var(--spacing-md);
-  /* margin: 20px 0; */
-}
-
-.difficulty-unit {
-  width: 20%;
-  height: 20px;
-  border-radius: 2px;
-  background: linear-gradient(
-    90deg,
-    var(--text-light) 0%,
-    var(--text-light) 30%,
-    var(--primary-light) 50%,
-    var(--text-light) 70%,
-    var(--text-light) 100%
-  );
-  background-size: 1000% 100%;
-}
-
-.difficulty-unit.active {
-  background: linear-gradient(
-    90deg,
-    var(--primary) 0%,
-    var(--primary) 15%,
-    var(--primary-light) 50%,
-    var(--primary) 85%,
-    var(--primary) 100%
-  );
-  background-size: 1000% 100%;
-}
-
-/* info-card에 마우스 오버 시 difficulty-unit.active에 애니메이션 적용 */
-.info-card:hover .difficulty-unit.active,
-.difficulty-unit {
-  animation: gradient-slide 50s linear infinite;
-}
-
-@keyframes gradient-slide {
-  /* start: 배경의 왼쪽 끝, end: 배경의 오른쪽 끝 */
-  0% {
-    background-position: 0% 0;
-  }
-  100% {
-    background-position: 1000% 0;
-  }
-}
-
-.info-stats {
-  display: flex;
-  /* flex-direction: column; */
-  /* justify-content: space-between; */
-  font-size: 13px;
-  color: var(--text-medium);
-  /* margin-bottom: var(--spacing-md); */
-}
-
-.info-action {
-  display: flex;
-  justify-content: center;
-  text-align: center;
 }
 
 .btn-small {
@@ -587,29 +218,123 @@ button,
   transform: scale(0.98);
 }
 
-.stat-status {
-  font-weight: 600;
-  font-size: 18px;
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--primary-light);
   color: var(--primary);
-  margin-bottom: var(--spacing-md);
+  border-radius: 99px;
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 500;
 }
 
-.stat-value-parent {
+.badge.completed {
+  background-color: var(--primary-light);
+  color: var(--primary);
+}
+
+/****************************** 콘텐츠 영역 공통 스타일 ******************************/
+.mypage,
+.quest-screen,
+.all-missions,
+.mission-detail,
+.weekly-best {
+  flex: 1;
+  overflow-y: auto;
+  padding-bottom: 64px; /* 하단 네비게이션바 높이 */
+  -webkit-overflow-scrolling: touch; /* 모바일 스크롤 부드럽게 */
+  position: relative; /* 위치 지정 */
+  width: 100%;
+}
+
+@media (min-width: 769px) {
+  .mypage,
+  .quest-screen,
+  .all-missions,
+  .mission-detail,
+  .weekly-best {
+    padding-bottom: 90px; /* 큰 화면에서 더 많은 여백 제공 */
+  }
+
+  .map-container {
+    height: calc(100vh - 40px); /* 브라우저 상단 여백 고려 */
+    /* margin: 20px auto; */
+  }
+
+  .map-view {
+    height: calc(100vh - 100px);
+  }
+
+  #kakao-map {
+    height: calc(100% - 80px); /* 큰 화면에서 네비게이션바 높이 조정 */
+  }
+}
+
+/****************************** 헤더 공통 스타일 ******************************/
+.header {
   display: flex;
-  gap: 10px;
+  justify-content: space-between;
+  align-items: center;
+  height: 60px;
+  padding: 0 var(--spacing-md);
+  background-color: rgba(255, 255, 255, 0.95);
+  border-bottom: var(--border-light);
+  backdrop-filter: blur(8px);
+  z-index: 10;
+  box-shadow: var(--shadow-sm);
+  position: sticky;
+  top: 0;
+}
+
+.header-back {
+  width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header-title {
   font-size: 18px;
-  margin-right: 20px;
+  font-weight: 700;
   color: var(--text-deep-dark);
+  display: flex;
+  gap: 15px;
+  align-items: center;
 }
 
-.stat-value {
-  font-weight: 600;
-  font-size: 18px;
-  color: var(--primary);
-  /* margin-bottom: var(--spacing-md); */
+.header-action {
+  display: flex;
+  gap: 16px;
 }
 
-/* 하단 내비게이션 */
+.logo {
+  width: 40px;
+  height: 40px;
+}
+
+.icon-btn {
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  padding: 8px;
+  color: var(--text-medium);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.icon-btn:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/****************************** 하단 내비게이션 ******************************/
 .bottom-nav {
   display: flex;
   justify-content: space-around;
@@ -685,7 +410,469 @@ button,
   }
 }
 
-/* 전체 미션 페이지 스타일 */
+/****************************** TreasureHunt 페이지 스타일 ******************************/
+.map-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100vh;
+  position: relative;
+}
+
+.map-view {
+  flex: 1;
+  width: 100%;
+  position: relative;
+  height: calc(100vh - 60px);
+}
+
+#kakao-map {
+  width: 100%;
+  height: 100%;
+  min-height: 500px;
+  z-index: 1;
+}
+
+.info-card {
+  position: fixed;
+  bottom: 0px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  /* max-width: 440px; */
+  backdrop-filter: blur(10px);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  padding-top: 10px;
+  box-shadow: var(--shadow-lg);
+  transition: all 0.3s ease;
+  z-index: 200; /* 네비게이션 바보다 높은 z-index */
+  background: rgba(255, 255, 255, 1);
+}
+
+/* 시작 상태: 화면 바깥 아래에서 시작 */
+.info-card-enter-from {
+  transform: translate(-50%, 100%);
+}
+
+/* 도착 상태 */
+.info-card-enter-to {
+  transform: translate(-50%, 0);
+}
+
+/* 사라질 때 현재 위치에서 시작 */
+.info-card-leave-from {
+  transform: translate(-50%, 0);
+}
+
+/* 퇴장 상태: 다시 아래로 사라짐 */
+.info-card-leave-to {
+  transform: translate(-50%, 100%);
+}
+
+.info-wrapper {
+  display: flex;
+  justify-content: space-between;
+  padding: var(--spacing-md);
+}
+
+.info-title {
+  font-weight: 600;
+  font-size: 26px;
+  color: var(--text-deep-dark);
+  margin-bottom: var(--spacing-md);
+}
+
+.info-status {
+  font-weight: 600;
+  font-size: 18px;
+  color: var(--primary);
+  margin-bottom: var(--spacing-md);
+}
+
+.info-value-container {
+  display: flex;
+  font-size: 13px;
+  color: var(--text-medium);
+}
+
+.info-value-wrapper {
+  display: flex;
+  gap: 10px;
+  font-size: 18px;
+  margin-right: 20px;
+  color: var(--text-deep-dark);
+}
+
+.info-value {
+  font-weight: 600;
+  font-size: 18px;
+  color: var(--primary);
+}
+
+/* 회전 원근감 부여: wrapper에 적용 */
+.info-icon-wrapper {
+  perspective: 1000px;
+  width: 130px;
+  height: 130px;
+}
+
+/* 회전 컨테이너 */
+.info-icon-spin {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+
+  border-radius: 50%;
+  background: linear-gradient(
+    90deg,
+    var(--primary-light) 0%,
+    var(--secondary-light) 15%,
+    var(--text-deep-light) 40%,
+    var(--text-deep-light) 60%,
+    var(--secondary-light) 85%,
+    var(--primary-light) 100%
+  );
+  /* background: var(--secondary); */
+  /* 2) 가로로 500% 늘려서 색이 흘러갈 공간 확보 */
+  background-size: 1000% 100%;
+  /* 3) 부드럽게 흐르는 애니메이션 */
+  animation: btn-gradient-slide 20s linear infinite, spin-y 2s ease;
+  transform: rotateY(0deg);
+}
+
+.info-icon-background {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: linear-gradient(
+    90deg,
+    rgba(64, 201, 150, 0.2) 0%,
+    rgba(255, 248, 179, 0.5) 15%,
+    rgba(0, 0, 0, 0) 40%,
+    rgba(0, 0, 0, 0) 60%,
+    rgba(255, 248, 179, 0.2) 85%,
+    rgba(64, 201, 150, 0.2) 100%
+  );
+  /* background: var(--secondary); */
+  /* 2) 가로로 500% 늘려서 색이 흘러갈 공간 확보 */
+  background-size: 1000% 100%;
+  /* 3) 부드럽게 흐르는 애니메이션 */
+  animation: btn-gradient-slide 20s linear infinite;
+  transform: rotateY(0deg);
+}
+
+/* 앞면/뒷면 공통 */
+.info-icon {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  backface-visibility: hidden;
+  transition: background 0.3s ease;
+}
+
+/* 앞면: 흰 배경 */
+.info-icon.front {
+  box-shadow: 0 0 0 5px var(--primary) inset;
+  color: var(--primary);
+}
+
+/* 뒷면: secondary 색상 + 반대 방향 */
+.info-icon.back {
+  box-shadow: 0 0 0 5px var(--secondary) inset;
+  color: var(--secondary);
+  transform: rotateY(180deg);
+}
+
+.info-icon svg {
+  width: 100px;
+  height: 100px;
+}
+
+.spin-once {
+  animation: spin-y 2s ease; /* 한 번만 실행 */
+}
+
+@keyframes spin-y {
+  0% {
+    transform: rotateY(0deg);
+  }
+  20% {
+    transform: rotateY(0deg);
+  }
+  100% {
+    transform: rotateY(360deg);
+  }
+}
+
+.info-action {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+}
+
+.blur-box {
+  position: absolute;
+  inset: 0;
+  pointer-events: none; /* 클릭 등 이벤트가 아래 맵에 전달되도록 */
+  backdrop-filter: none; /* 기본엔 필터 없음 */
+  transition: backdrop-filter var(--transition-normal),
+    background var(--transition-normal);
+  z-index: 1; /* info-card보다 뒤, 맵보다 앞 */
+}
+
+/* info-card가 hover 되었을 때 blur-box에 브러 효과 적용 */
+.info-card:hover ~ .blur-box {
+  backdrop-filter: blur(3px);
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/****************************** MissionList 페이지 스타일 ******************************/
+.location-info {
+  display: flex;
+  background-color: var(--primary);
+  padding: var(--spacing-md);
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.location-name {
+  font-weight: 600;
+  font-size: 26px;
+  color: var(--text-light);
+}
+
+.location-description {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-light);
+}
+
+.location-icon-value-container {
+  display: flex;
+  font-size: 13px;
+  color: var(--text-medium);
+  justify-content: space-evenly;
+}
+
+.location-icon-value-wrapper {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: center;
+  padding: var(--spacing-md);
+}
+
+.location-icon-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.location-icon {
+  width: 50px;
+  height: 50px;
+  background-color: var(--text-deep-light);
+  color: var(--primary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.location-icon svg {
+  width: 40px;
+  height: 40px;
+}
+
+.location-title {
+  font-weight: 500;
+  font-size: 15px;
+  color: var(--text-deep-dark);
+}
+
+.location-value {
+  font-weight: 500;
+  font-size: 18px;
+  color: var(--text-light);
+}
+
+.progress-wrapper {
+  padding: var(--spacing-md);
+  background-color: var(--bg-primary);
+}
+
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-md) 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-deep-dark);
+}
+
+.progress-bar {
+  width: 100%;
+  height: 20px;
+  border: 1px solid var(--primary);
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    var(--primary-light) 0%,
+    var(--primary) 15%,
+    var(--secondary) 50%,
+    var(--primary) 85%,
+    var(--primary-light) 100%
+  );
+  background-size: 1000% 100%;
+  animation: btn-gradient-slide 20s linear infinite;
+}
+
+.mission-list {
+  padding: var(--spacing-md);
+}
+
+.mission-section-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-deep-dark);
+  padding: var(--spacing-md) 0;
+}
+
+.mission-section-title-completed {
+  padding-top: var(--spacing-xl);
+}
+
+.mission-card {
+  background-color: var(--bg-primary);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-normal),
+    box-shadow var(--transition-normal);
+  border: 1px solid var(--primary);
+}
+
+.mission-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+.mission-card.completed {
+  border: 1px solid var(--primary-light);
+}
+
+.mission-title {
+  font-size: 17px;
+  font-weight: 600;
+  margin-bottom: var(--spacing-sm);
+  color: var(--text-deep-dark);
+}
+
+.mission-card.completed .mission-title {
+  color: var(--text-dark);
+}
+
+.mission-desc {
+  font-size: 14px;
+  color: var(--text-medium);
+  margin-bottom: var(--spacing-md);
+  line-height: 1.5;
+}
+
+.mission-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mission-footer .btn-small {
+  border-radius: 10px;
+  text-align: center;
+}
+
+
+/******************************  ******************************/
+
+
+
+
+.location-image {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.location-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+
+
+
+
+
+
+
+
+.location-details {
+  flex: 1;
+  padding: var(--spacing-md);
+  color: var(--text-deep-light);
+}
+
+.location-details h3 {
+  margin: 0 0 var(--spacing-sm) 0;
+  font-size: 18px;
+  font-weight: 600;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.location-details p {
+  margin: 0 0 var(--spacing-md) 0;
+  color: var(--text-medium);
+  font-size: 14px;
+}
+
+
+
+.info-address {
+  font-size: 12px;
+  color: var(--text-medium);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/* 전체 미션 페이지 */
 .all-missions {
   flex: 1;
   padding: 16px;
@@ -768,20 +955,6 @@ button,
   padding: 14px !important;
 }
 
-.location-details h3 {
-  font-size: 18px;
-  font-weight: 700;
-  margin-bottom: 4px;
-  display: flex;
-  align-items: center;
-}
-
-.location-details p {
-  font-size: 13px;
-  color: var(--text-medium);
-  margin-bottom: 8px;
-}
-
 .coin-reward {
   display: flex;
   align-items: center;
@@ -803,28 +976,6 @@ button,
   color: var(--accent);
 }
 
-/* .location-info {
-  background: var(--bg-secondary);
-  border-radius: var(--radius-md);
-  padding: 18px;
-  margin-top: 24px;
-  margin-bottom: 14px;
-}
-
-.location-info h4 {
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--primary);
-  margin-bottom: 12px;
-}
-
-.location-info p {
-  font-size: 14px;
-  color: var(--text-medium);
-  line-height: 1.6;
-  margin-bottom: 14px;
-} */
-
 /* 미션 상세 페이지 */
 .mission-detail {
   display: flex;
@@ -834,29 +985,19 @@ button,
 }
 
 .mission-header {
-  padding: 20px 16px;
+  display: flex;
+  padding: var(--spacing-md);
   background: var(--bg-secondary);
   border-bottom: var(--border-light);
-}
-
-.mission-badge {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 10px;
-}
-
-.mission-icon {
-  width: 24px;
-  height: 24px;
-  font-size: 14px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-md);
 }
 
 .mission-header h2 {
-  font-size: 20px;
+  font-size: 26px;
   font-weight: 700;
-  color: var(--text-dark);
-  margin-bottom: 8px;
+  color: var(--text-deep-dark);
 }
 
 .mission-location {
@@ -1524,104 +1665,4 @@ img.error::before {
   z-index: 10;
 }
 
-/* 위치 마커 스타일 개선 */
-.location-marker {
-  position: absolute;
-  width: 40px;
-  height: 40px;
-  transform: translate(-50%, -100%);
-  cursor: pointer;
-  filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.2));
-  z-index: 5;
-  transition: all var(--transition-normal)
-    cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
 
-.location-marker:hover {
-  transform: translate(-50%, -110%) scale(1.1);
-}
-
-.spin-once {
-  animation: spin-y 2s ease; /* 한 번만 실행 */
-}
-
-/* 회전 원근감 부여: wrapper에 적용 */
-.location-icon-wrapper {
-  perspective: 1000px;
-  width: 130px;
-  height: 130px;
-}
-
-/* 회전 컨테이너 */
-.location-icon {
-  width: 100%;
-  height: 100%;
-  position: relative;
-  transform-style: preserve-3d;
-}
-
-/* 앞면/뒷면 공통 */
-.coin-face {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px;
-  backface-visibility: hidden;
-  transition: background 0.3s ease;
-}
-
-/* 앞면: 흰 배경 */
-.coin-face.front {
-  border: 5px solid var(--primary);
-  color: var(--primary);
-  background: linear-gradient(
-    90deg,
-    var(--primary-light) 0%,
-    var(--secondary-light) 15%,
-    var(--text-deep-light) 50%,
-    var(--secondary-light) 85%,
-    var(--primary-light) 100%
-  );
-  /* 2) 가로로 500% 늘려서 색이 흘러갈 공간 확보 */
-  background-size: 1000% 100%;
-  /* 3) 부드럽게 흐르는 애니메이션 */
-  animation: btn-gradient-slide 20s linear infinite;
-  transform: rotateY(0deg);
-}
-
-/* 뒷면: secondary 색상 + 반대 방향 */
-.coin-face.back {
-  border: 5px solid var(--secondary);
-  color: var(--secondary);
-  transform: rotateY(180deg);
-}
-
-@keyframes spin-y {
-  0% {
-    transform: rotateY(0deg);
-  }
-  20% {
-    transform: rotateY(0deg);
-  }
-  100% {
-    transform: rotateY(360deg);
-  }
-}
-
-.location-icon svg {
-  width: 100px;
-  height: 100px;
-}
-
-.icon-fill {
-  color: var(--primary);
-}
-
-.info-address {
-  font-size: 12px;
-  color: var(--text-medium);
-}
