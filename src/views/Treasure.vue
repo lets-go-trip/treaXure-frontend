@@ -178,7 +178,7 @@ import { KakaoMapMixin } from "@/script";
 import { ImageErrorMixin } from "@/script";
 
 export default {
-  name: "TreasureHunt",
+  name: "Treaure",
   mixins: [KakaoMapMixin, ImageErrorMixin],
   data() {
     return {
