@@ -10,6 +10,8 @@
   --secondary: #ffe500;
   --secondary-light: #fff8b3;
   --secondary-deep: #ccae00;
+  --tertiary: #f07b8a;
+  --tertiary-light: #FFC7CE;
 
   /* 중립 색상 */
   --text-deep-dark: #0d261a;
@@ -87,16 +89,21 @@
 }
 
 body {
-  background-color: var(--bg-secondary); /* 더 뚜렷한 배경색 변경 */
+  background-color: var(--bg-secondary);
+  /* 더 뚜렷한 배경색 변경 */
   color: var(--text-deep-dark);
   font-family: "Pretendard", -apple-system, BlinkMacSystemFont, "Segoe UI",
     Roboto, Helvetica, Arial, sans-serif;
   font-size: 15px;
   line-height: 1.5;
-  min-height: 100vh; /* 최소 높이 추가 */
-  display: flex; /* 컨테이너를 가운데 정렬하기 위해 flex 추가 */
-  flex-direction: column; /* 세로 방향 정렬 */
-  justify-content: flex-start; /* 내용물을 위에서부터 배치 */
+  min-height: 100vh;
+  /* 최소 높이 추가 */
+  display: flex;
+  /* 컨테이너를 가운데 정렬하기 위해 flex 추가 */
+  flex-direction: column;
+  /* 세로 방향 정렬 */
+  justify-content: flex-start;
+  /* 내용물을 위에서부터 배치 */
 }
 
 /****************************** 스크롤바 스타일 ******************************/
@@ -154,45 +161,47 @@ button,
 }
 
 .btn-small {
-  position: relative; /* ::before 위치 기준 */
+  position: relative;
+  /* ::before 위치 기준 */
   z-index: 0;
   display: block;
   width: 100%;
   padding: 20px 24px;
   /* border-radius: var(--radius-lg) var(--radius-lg) 0 0; */
-  background: radial-gradient(
-    circle farthest-side at 10% 20%,
-    var(--primary-light),
-    var(--primary),
-    var(--secondary)
-  );
+  background: radial-gradient(circle farthest-side at 10% 20%,
+      var(--primary-light),
+      var(--primary),
+      var(--secondary));
   color: var(--text-deep-dark);
   font-size: 16px;
   /* font-weight: 500; */
   text-decoration: none;
-  overflow: hidden; /* ::before가 벗어나지 않도록 */
+  overflow: hidden;
+  /* ::before가 벗어나지 않도록 */
   transition: color var(--transition-slow) ease,
     transform var(--transition-slow);
   /* hue-rotate 애니메이션 */
   /* animation: hue-cycle 5s linear infinite; */
+  border-radius: 10px;
+  text-align: center;
 }
 
 /* ::before로 그라디언트 레이어 생성 */
 .btn-small::before {
   content: "";
   position: absolute;
-  inset: 0; /* top:0; right:0; bottom:0; left:0; */
-  opacity: 0; /* 초기엔 투명 */
+  inset: 0;
+  /* top:0; right:0; bottom:0; left:0; */
+  opacity: 0;
+  /* 초기엔 투명 */
   transition: opacity var(--transition-slow);
   z-index: -1;
-  background: linear-gradient(
-    90deg,
-    var(--primary-light) 0%,
-    var(--primary) 15%,
-    var(--secondary) 50%,
-    var(--primary) 85%,
-    var(--primary-light) 100%
-  );
+  background: linear-gradient(90deg,
+      var(--primary-light) 0%,
+      var(--primary) 15%,
+      var(--secondary) 50%,
+      var(--primary) 85%,
+      var(--primary-light) 100%);
   /* 2) 가로로 500% 늘려서 색이 흘러갈 공간 확보 */
   background-size: 1000% 100%;
   /* 3) 부드럽게 흐르는 애니메이션 */
@@ -204,6 +213,7 @@ button,
   0% {
     background-position: 0% 0;
   }
+
   100% {
     background-position: 1000% 0;
   }
@@ -211,7 +221,8 @@ button,
 
 /* hover 시 그라디언트 레이어를 서서히 보여주기 */
 .btn-small:hover::before {
-  opacity: 1; /* 그라디언트 레이어 서서히 보이기 */
+  opacity: 1;
+  /* 그라디언트 레이어 서서히 보이기 */
 }
 
 .btn-small:active {
@@ -243,23 +254,29 @@ button,
 .weekly-best {
   flex: 1;
   overflow-y: auto;
-  padding-bottom: 64px; /* 하단 네비게이션바 높이 */
-  -webkit-overflow-scrolling: touch; /* 모바일 스크롤 부드럽게 */
-  position: relative; /* 위치 지정 */
+  padding-bottom: 64px;
+  /* 하단 네비게이션바 높이 */
+  -webkit-overflow-scrolling: touch;
+  /* 모바일 스크롤 부드럽게 */
+  position: relative;
+  /* 위치 지정 */
   width: 100%;
 }
 
 @media (min-width: 769px) {
+
   .mypage,
   .quest-screen,
   .all-missions,
   .mission-detail,
   .weekly-best {
-    padding-bottom: 90px; /* 큰 화면에서 더 많은 여백 제공 */
+    padding-bottom: 90px;
+    /* 큰 화면에서 더 많은 여백 제공 */
   }
 
   .map-container {
-    height: calc(100vh - 40px); /* 브라우저 상단 여백 고려 */
+    height: calc(100vh - 40px);
+    /* 브라우저 상단 여백 고려 */
     /* margin: 20px auto; */
   }
 
@@ -268,7 +285,8 @@ button,
   }
 
   #kakao-map {
-    height: calc(100% - 80px); /* 큰 화면에서 네비게이션바 높이 조정 */
+    height: calc(100% - 80px);
+    /* 큰 화면에서 네비게이션바 높이 조정 */
   }
 }
 
@@ -339,7 +357,8 @@ button,
   display: flex;
   justify-content: space-around;
   align-items: center;
-  position: fixed; /* 화면 하단에 고정 */
+  position: fixed;
+  /* 화면 하단에 고정 */
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
@@ -401,10 +420,12 @@ button,
 
 /* 중요한 애니메이션 효과 추가 */
 @keyframes nav-bounce {
+
   0%,
   100% {
     transform: translateY(0);
   }
+
   50% {
     transform: translateY(-3px);
   }
@@ -445,7 +466,8 @@ button,
   padding-top: 10px;
   box-shadow: var(--shadow-lg);
   transition: all 0.3s ease;
-  z-index: 200; /* 네비게이션 바보다 높은 z-index */
+  z-index: 200;
+  /* 네비게이션 바보다 높은 z-index */
   background: rgba(255, 255, 255, 1);
 }
 
@@ -524,15 +546,13 @@ button,
   transform-style: preserve-3d;
 
   border-radius: 50%;
-  background: linear-gradient(
-    90deg,
-    var(--primary-light) 0%,
-    var(--secondary-light) 15%,
-    var(--text-deep-light) 40%,
-    var(--text-deep-light) 60%,
-    var(--secondary-light) 85%,
-    var(--primary-light) 100%
-  );
+  background: linear-gradient(90deg,
+      var(--primary-light) 0%,
+      var(--secondary-light) 15%,
+      var(--text-deep-light) 40%,
+      var(--text-deep-light) 60%,
+      var(--secondary-light) 85%,
+      var(--primary-light) 100%);
   /* background: var(--secondary); */
   /* 2) 가로로 500% 늘려서 색이 흘러갈 공간 확보 */
   background-size: 1000% 100%;
@@ -546,15 +566,13 @@ button,
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  background: linear-gradient(
-    90deg,
-    rgba(64, 201, 150, 0.2) 0%,
-    rgba(255, 248, 179, 0.5) 15%,
-    rgba(0, 0, 0, 0) 40%,
-    rgba(0, 0, 0, 0) 60%,
-    rgba(255, 248, 179, 0.2) 85%,
-    rgba(64, 201, 150, 0.2) 100%
-  );
+  background: linear-gradient(90deg,
+      rgba(64, 201, 150, 0.2) 0%,
+      rgba(255, 248, 179, 0.5) 15%,
+      rgba(0, 0, 0, 0) 40%,
+      rgba(0, 0, 0, 0) 60%,
+      rgba(255, 248, 179, 0.2) 85%,
+      rgba(64, 201, 150, 0.2) 100%);
   /* background: var(--secondary); */
   /* 2) 가로로 500% 늘려서 색이 흘러갈 공간 확보 */
   background-size: 1000% 100%;
@@ -596,16 +614,19 @@ button,
 }
 
 .spin-once {
-  animation: spin-y 2s ease; /* 한 번만 실행 */
+  animation: spin-y 2s ease;
+  /* 한 번만 실행 */
 }
 
 @keyframes spin-y {
   0% {
     transform: rotateY(0deg);
   }
+
   20% {
     transform: rotateY(0deg);
   }
+
   100% {
     transform: rotateY(360deg);
   }
@@ -620,15 +641,18 @@ button,
 .blur-box {
   position: absolute;
   inset: 0;
-  pointer-events: none; /* 클릭 등 이벤트가 아래 맵에 전달되도록 */
-  backdrop-filter: none; /* 기본엔 필터 없음 */
+  pointer-events: none;
+  /* 클릭 등 이벤트가 아래 맵에 전달되도록 */
+  backdrop-filter: none;
+  /* 기본엔 필터 없음 */
   transition: backdrop-filter var(--transition-normal),
     background var(--transition-normal);
-  z-index: 1; /* info-card보다 뒤, 맵보다 앞 */
+  z-index: 1;
+  /* info-card보다 뒤, 맵보다 앞 */
 }
 
 /* info-card가 hover 되었을 때 blur-box에 브러 효과 적용 */
-.info-card:hover ~ .blur-box {
+.info-card:hover~.blur-box {
   backdrop-filter: blur(3px);
   background: rgba(0, 0, 0, 0.3);
 }
@@ -728,14 +752,12 @@ button,
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(
-    90deg,
-    var(--primary-light) 0%,
-    var(--primary) 15%,
-    var(--secondary) 50%,
-    var(--primary) 85%,
-    var(--primary-light) 100%
-  );
+  background: linear-gradient(90deg,
+      var(--primary-light) 0%,
+      var(--primary) 15%,
+      var(--secondary) 50%,
+      var(--primary) 85%,
+      var(--primary-light) 100%);
   background-size: 1000% 100%;
   animation: btn-gradient-slide 20s linear infinite;
 }
@@ -799,94 +821,272 @@ button,
   align-items: center;
 }
 
-.mission-footer .btn-small {
-  border-radius: 10px;
-  text-align: center;
-}
+/****************************** AllMissions 페이지 스타일 ******************************/
 
-
-/******************************  ******************************/
-
-
-
-
-.location-image {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  flex-shrink: 0;
-  overflow: hidden;
-}
-
-.location-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-
-
-
-
-
-
-
-
-.location-details {
-  flex: 1;
-  padding: var(--spacing-md);
-  color: var(--text-deep-light);
-}
-
-.location-details h3 {
-  margin: 0 0 var(--spacing-sm) 0;
-  font-size: 18px;
-  font-weight: 600;
+.filter-bar {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-xl) var(--spacing-md);
+  background-color: var(--bg-primary);
+  box-shadow: var(--shadow-sm);
+  position: sticky;
+  top: 60px;
+  z-index: 5;
   gap: var(--spacing-sm);
 }
 
-.location-details p {
-  margin: 0 0 var(--spacing-md) 0;
-  color: var(--text-medium);
-  font-size: 14px;
+.filter-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+  flex: 1;
 }
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 14px;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--text-light);
+  border-radius: 24px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-medium);
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  position: relative;
+  overflow: hidden;
+}
+
+.chip-content {
+  display: flex;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+
+.chip.active {
+  background-color: var(--primary-light);
+  color: var(--primary);
+  box-shadow: 0 3px 8px rgba(79, 108, 255, 0.15);
+  font-weight: 600;
+}
+
+.chip.incomplete.active {
+  background-color: var(--tertiary-light);
+  color: var(--tertiary);
+}
+
+.chip:hover {
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.chip-input {
+  display: none;
+}
+
+.sort-dropdown {
+  position: relative;
+}
+
+.sort-dropdown select {
+  border: 1px solid var(--text-medium);
+  background-color: var(--bg-primary);
+  border-radius: var(--radius-sm);
+  background: white;
+  color: var(--text-dark);
+  font-size: 13px;
+  font-family: "Noto Sans KR", sans-serif;
+  cursor: pointer;
+  outline: none;
+}
+
+.sort-select {
+  appearance: none;
+  background-color: transparent;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 8px 30px 8px 14px;
+  font-size: 13px;
+  color: var(--text-deep-dark);
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s ease;
+}
+
+.sort-icon {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: var(--text-medium);
+}
+
+.missions-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: var(--spacing-md) 0;
+}
+
+.location-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow: hidden;
+}
+
+.location-header-wrapper {
+  display: flex;
+  gap: var(--spacing-md);
+  align-items: flex-end;
+}
+
+.location-header {
+  width: fit-content;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xl);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 1px solid var(--primary);
+  border-radius: 0 24px 0 0;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  position: relative;
+}
+
+.location-title {
+  font-weight: 600;
+  font-size: 18px;
+  color: var(--primary);
+}
+
+.location-logo {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  color: var(--text-deep-light);
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  background-color: var(--primary);
+}
+
+.btn-small svg {
+  width: 16px;
+}
+
+.info-icon-svg {
+  width: 30px;
+  height: 30px;
+}
+
+.toggle-icon {
+  width: 24px;
+  height: 24px;
+  color: var(--primary);
+  margin-left: auto;
+  transition: all var(--transition-normal);
+}
+
+.toggle-icon.collapsed {
+  transform: rotate(-180deg);
+}
+
+.mission-img-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  /* 카드 간 여백 */
+}
+
+.mission-img-card {
+  position: relative;
+  background: var(--bg-secondary);
+  overflow: hidden;
+  /* 카드 자체를 정사각형으로 */
+  aspect-ratio: 1 / 1;
+}
+
+.mission-img-card.completed {
+  background-color: var(--bg-tertiary);
+}
+
+.mission-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  cursor: pointer;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+.badge.completed {
+  background-color: rgba(79, 108, 255, 0.1);
+  color: var(--primary);
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.coin-reward {
+  display: flex;
+  align-items: center;
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.coin-icon {
+  width: 18px;
+  height: 18px;
+  margin-right: 4px;
+  background: var(--accent-light);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  color: var(--accent);
+}
+
+.coin-reward {
+  display: flex;
+  align-items: center;
+  color: var(--secondary);
+  font-weight: 500;
+  font-size: 13px;
+}
+
+.coin-icon {
+  display: flex;
+  align-items: center;
+  margin-right: var(--spacing-xs);
+}
+
+
 
 
 
 .info-address {
   font-size: 12px;
   color: var(--text-medium);
-}
-
-
-
-
-
-
-
-
-
-
-
-
-/* 전체 미션 페이지 */
-.all-missions {
-  flex: 1;
-  padding: 16px;
-}
-
-/* 필터 및 정렬 옵션 */
-.filter-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 16px;
-  background: var(--bg-secondary);
-  border-bottom: var(--border-light);
-  z-index: 5;
 }
 
 .filter-options {
@@ -913,74 +1113,17 @@ button,
   color: var(--text-medium);
 }
 
-.sort-dropdown select {
-  padding: 6px 10px;
-  border: 1px solid var(--primary-light);
-  border-radius: var(--radius-sm);
-  background: white;
-  color: var(--text-medium);
-  font-size: 13px;
-  font-family: "Noto Sans KR", sans-serif;
-  cursor: pointer;
-  outline: none;
-}
 
-.sort-dropdown select:focus {
-  border-color: var(--primary);
-}
 
-/* 장소 그룹 스타일 */
-.location-group {
-  margin-bottom: 20px;
-  background: white;
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-sm);
-  overflow: visible; /* hidden에서 visible로 변경 */
-}
 
-.location-stats {
-  font-size: 13px;
-  color: var(--primary);
-  margin-left: 8px;
-  font-weight: 500;
-}
 
-.toggle-icon {
-  margin-left: auto;
-  transition: all var(--transition-normal) ease;
-}
-
-.mission-list {
-  overflow: visible !important; /* 강제로 visible 설정 */
-  padding: 14px !important;
-}
-
-.coin-reward {
-  display: flex;
-  align-items: center;
-  color: var(--accent);
-  font-weight: 600;
-  font-size: 13px;
-}
-
-.coin-icon {
-  width: 18px;
-  height: 18px;
-  margin-right: 4px;
-  background: var(--accent-light);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 11px;
-  color: var(--accent);
-}
 
 /* 미션 상세 페이지 */
 .mission-detail {
   display: flex;
   flex-direction: column;
-  height: auto; /* 높이를 auto로 변경 */
+  height: auto;
+  /* 높이를 auto로 변경 */
   padding: 0;
 }
 
@@ -1664,5 +1807,3 @@ img.error::before {
   filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.25));
   z-index: 10;
 }
-
-
