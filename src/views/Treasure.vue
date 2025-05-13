@@ -48,7 +48,7 @@
               </div>
             </div>
             <div class="info-icon-wrapper">
-              <div class="info-icon-spin">
+              <div class="info-icon-spin" :key="selectedLocation.id">
                 <div class="info-icon front">
                   <IconTemple class="info-icon-svg" />
                   <div class="info-icon-background"></div>
@@ -80,14 +80,13 @@ import IconTemple from "@/components/icons/IconTemple.vue";
 
 export default {
   name: "Treaure",
-  components: {
-    IconTemple,
-  },
+  components: { IconTemple },
   mixins: [KakaoMapMixin, ImageErrorMixin],
   data() {
     return {
+      // 현재 선택된 궁궐 정보
       selectedLocation: null,
-      // 고정된 카카오맵 마커로 대체하므로 locationMarkers 배열은 더 이상 필요하지 않음
+      // 카카오맵에서 사용할 궁궐 데이터
       palaceData: [
         {
           id: 1,
@@ -120,18 +119,10 @@ export default {
     };
   },
   mounted() {
-    // 카카오맵 초기화 (KakaoMapMixin에서 가져온 메서드)
     this.$nextTick(() => {
       if (this.$refs.kakaoMap) {
         this.initMap(this.$refs.kakaoMap);
-
-        // 기본적으로 첫 번째 궁궐 정보 표시
-        // this.selectedLocation = this.palaceData[0];
-
-        // 글로벌 이벤트 리스너 추가
         window.addEventListener("palaceSelected", this.handlePalaceSelected);
-
-        // 빈 공간 클릭 시 info-card 제거 이벤트 리스너 추가
         window.addEventListener(
           "clearSelectedPalace",
           this.clearSelectedPalace
@@ -140,51 +131,45 @@ export default {
     });
   },
   beforeUnmount() {
-    // 컴포넌트 제거 시 이벤트 리스너 제거
     window.removeEventListener("palaceSelected", this.handlePalaceSelected);
-    // 이것도 함께 제거
     window.removeEventListener("clearSelectedPalace", this.clearSelectedPalace);
   },
+  watch: {
+    // selectedLocation이 바뀔 때마다 코인 회전 재시작
+    selectedLocation() {
+      this.restartCoinSpin();
+    },
+  },
   methods: {
-    // 궁궐 마커가 클릭되었을 때 호출될 메서드
+    // 마커 클릭 시 선택된 궁궐 설정
     selectPalace(palace) {
-      // ID로 맞는 궁궐 데이터 찾기
       const selectedData = this.palaceData.find(
         (item) => item.id === palace.id
       );
-
       if (selectedData) {
-        // 선택된 위치 정보 업데이트
-        this.selectedLocation = selectedData;
+        // 동일 참조 문제 방지: 새로운 객체로 할당
+        this.selectedLocation = { ...selectedData };
         console.log(`${palace.name} 정보가 표시됩니다.`);
       }
-
-      this.restartCoinSpin();
     },
 
+    // 코인 회전 애니메이션 리셋 및 재시작
     restartCoinSpin() {
       this.$nextTick(() => {
         const el = this.$el.querySelector(".info-icon-spin");
         if (!el) return;
-
-        // 기존 애니메이션 클래스 제거
         el.classList.remove("spin-once");
-
-        // 강제로 reflow 발생시켜 재적용 가능하게 함
-        void el.offsetWidth;
-
-        // 다시 클래스 추가해서 애니메이션 재시작
+        void el.offsetWidth; // reflow 발생
         el.classList.add("spin-once");
       });
     },
 
     // 글로벌 이벤트 핸들러
     handlePalaceSelected(event) {
-      const palace = event.detail.palace;
-      this.selectPalace(palace);
+      this.selectPalace(event.detail.palace);
     },
 
-    // 빈 공간 클릭 시 info-card 숨기기
+    // 빈 공간 클릭 시 선택 해제
     clearSelectedPalace() {
       this.selectedLocation = null;
     },
