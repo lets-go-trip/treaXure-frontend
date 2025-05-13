@@ -11,7 +11,7 @@
   --secondary-light: #fff8b3;
   --secondary-deep: #ccae00;
   --tertiary: #f07b8a;
-  --tertiary-light: #FFC7CE;
+  --tertiary-light: #ffc7ce;
 
   /* 중립 색상 */
   --text-deep-dark: #0d261a;
@@ -168,10 +168,12 @@ button,
   width: 100%;
   padding: 20px 24px;
   /* border-radius: var(--radius-lg) var(--radius-lg) 0 0; */
-  background: radial-gradient(circle farthest-side at 10% 20%,
-      var(--primary-light),
-      var(--primary),
-      var(--secondary));
+  background: radial-gradient(
+    circle farthest-side at 10% 20%,
+    var(--primary-light),
+    var(--primary),
+    var(--secondary)
+  );
   color: var(--text-deep-dark);
   font-size: 16px;
   /* font-weight: 500; */
@@ -196,12 +198,14 @@ button,
   /* 초기엔 투명 */
   transition: opacity var(--transition-slow);
   z-index: -1;
-  background: linear-gradient(90deg,
-      var(--primary-light) 0%,
-      var(--primary) 15%,
-      var(--secondary) 50%,
-      var(--primary) 85%,
-      var(--primary-light) 100%);
+  background: linear-gradient(
+    90deg,
+    var(--primary-light) 0%,
+    var(--primary) 15%,
+    var(--secondary) 50%,
+    var(--primary) 85%,
+    var(--primary-light) 100%
+  );
   /* 2) 가로로 500% 늘려서 색이 흘러갈 공간 확보 */
   background-size: 1000% 100%;
   /* 3) 부드럽게 흐르는 애니메이션 */
@@ -264,7 +268,6 @@ button,
 }
 
 @media (min-width: 769px) {
-
   .mypage,
   .quest-screen,
   .all-missions,
@@ -420,7 +423,6 @@ button,
 
 /* 중요한 애니메이션 효과 추가 */
 @keyframes nav-bounce {
-
   0%,
   100% {
     transform: translateY(0);
@@ -546,13 +548,15 @@ button,
   transform-style: preserve-3d;
 
   border-radius: 50%;
-  background: linear-gradient(90deg,
-      var(--primary-light) 0%,
-      var(--secondary-light) 15%,
-      var(--text-deep-light) 40%,
-      var(--text-deep-light) 60%,
-      var(--secondary-light) 85%,
-      var(--primary-light) 100%);
+  background: linear-gradient(
+    90deg,
+    var(--primary-light) 0%,
+    var(--secondary-light) 15%,
+    var(--text-deep-light) 40%,
+    var(--text-deep-light) 60%,
+    var(--secondary-light) 85%,
+    var(--primary-light) 100%
+  );
   /* background: var(--secondary); */
   /* 2) 가로로 500% 늘려서 색이 흘러갈 공간 확보 */
   background-size: 1000% 100%;
@@ -566,13 +570,15 @@ button,
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  background: linear-gradient(90deg,
-      rgba(64, 201, 150, 0.2) 0%,
-      rgba(255, 248, 179, 0.5) 15%,
-      rgba(0, 0, 0, 0) 40%,
-      rgba(0, 0, 0, 0) 60%,
-      rgba(255, 248, 179, 0.2) 85%,
-      rgba(64, 201, 150, 0.2) 100%);
+  background: linear-gradient(
+    90deg,
+    rgba(64, 201, 150, 0.2) 0%,
+    rgba(255, 248, 179, 0.5) 15%,
+    rgba(0, 0, 0, 0) 40%,
+    rgba(0, 0, 0, 0) 60%,
+    rgba(255, 248, 179, 0.2) 85%,
+    rgba(64, 201, 150, 0.2) 100%
+  );
   /* background: var(--secondary); */
   /* 2) 가로로 500% 늘려서 색이 흘러갈 공간 확보 */
   background-size: 1000% 100%;
@@ -652,7 +658,7 @@ button,
 }
 
 /* info-card가 hover 되었을 때 blur-box에 브러 효과 적용 */
-.info-card:hover~.blur-box {
+.info-card:hover ~ .blur-box {
   backdrop-filter: blur(3px);
   background: rgba(0, 0, 0, 0.3);
 }
@@ -752,12 +758,14 @@ button,
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg,
-      var(--primary-light) 0%,
-      var(--primary) 15%,
-      var(--secondary) 50%,
-      var(--primary) 85%,
-      var(--primary-light) 100%);
+  background: linear-gradient(
+    90deg,
+    var(--primary-light) 0%,
+    var(--primary) 15%,
+    var(--secondary) 50%,
+    var(--primary) 85%,
+    var(--primary-light) 100%
+  );
   background-size: 1000% 100%;
   animation: btn-gradient-slide 20s linear infinite;
 }
@@ -789,7 +797,6 @@ button,
 }
 
 .mission-card:hover {
-  transform: translateY(-3px);
   box-shadow: var(--shadow-md);
 }
 
@@ -955,14 +962,34 @@ button,
   border: 1px solid var(--primary);
   border-radius: 0 24px 0 0;
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition: all var(--transition-normal);
   position: relative;
+}
+
+.location-group:hover .location-header,
+.location-header.highlighted {
+  border: 1px solid rgba(0, 0, 0, 0);
+  background: linear-gradient(
+    90deg,
+    var(--primary-light) 0%,
+    var(--primary) 15%,
+    var(--secondary) 50%,
+    var(--primary) 85%,
+    var(--primary-light) 100%
+  );
+  background-size: 1000% 100%;
+  animation: btn-gradient-slide 20s linear infinite;
 }
 
 .location-title {
   font-weight: 600;
   font-size: 18px;
   color: var(--primary);
+}
+
+.location-group:hover .location-title,
+.location-header.highlighted .location-title {
+  color: var(--text-deep-light);
 }
 
 .location-logo {
@@ -976,6 +1003,11 @@ button,
   overflow: hidden;
   flex-shrink: 0;
   background-color: var(--primary);
+}
+
+.location-group:hover .location-logo,
+.location-header.highlighted .location-logo {
+  background: none;
 }
 
 .btn-small svg {
@@ -995,6 +1027,11 @@ button,
   transition: all var(--transition-normal);
 }
 
+.location-group:hover .toggle-icon,
+.location-header.highlighted .toggle-icon {
+  color: var(--text-deep-light);
+}
+
 .toggle-icon.collapsed {
   transform: rotate(-180deg);
 }
@@ -1008,14 +1045,17 @@ button,
 
 .mission-img-card {
   position: relative;
-  background: var(--bg-secondary);
+  filter: grayscale(100%) brightness(30%);
   overflow: hidden;
-  /* 카드 자체를 정사각형으로 */
   aspect-ratio: 1 / 1;
 }
 
+.mission-img-card:hover .mission-img {
+  filter: brightness(50%);
+}
+
 .mission-img-card.completed {
-  background-color: var(--bg-tertiary);
+  filter: none;
 }
 
 .mission-img {
@@ -1025,64 +1065,109 @@ button,
   cursor: pointer;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-.badge.completed {
-  background-color: rgba(79, 108, 255, 0.1);
-  color: var(--primary);
-  padding: 4px 10px;
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: 500;
-}
-
-.coin-reward {
-  display: flex;
-  align-items: center;
-  color: var(--accent);
-  font-weight: 600;
-  font-size: 13px;
-}
-
-.coin-icon {
-  width: 18px;
-  height: 18px;
-  margin-right: 4px;
-  background: var(--accent-light);
-  border-radius: 50%;
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 11px;
-  color: var(--accent);
+  z-index: 1000;
 }
 
-.coin-reward {
-  display: flex;
-  align-items: center;
-  color: var(--secondary);
+.modal-container {
+  max-width: 448px;
+  max-height: 582px;
+  transition: transform 0.1s ease-out;
+  position: relative;
+  will-change: transform;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+}
+
+.modal-container > * {
+  pointer-events: none;
+}
+
+.modal-overlay-effect {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2000;
+  border-radius: 8px;
+  background-color: var(--primary);
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    var(--primary-light) 45%,
+    var(--secondary-light) 50%,
+    transparent 54%
+  );
+  filter: brightness(1.1) opacity(0.5);
+  mix-blend-mode: color-dodge;
+  background-size: 150% 150%;
+  background-position: 100%;
+  transition: all 0.1s;
+  pointer-events: none;
+}
+
+.close-btn {
+  position: fixed;
+  top: 8px;
+  right: 8px;
+  border: none;
+  background: transparent;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.modal-card {
+  background: var(--text-deep-light);
+  padding: 36px 24px;
+  max-width: 90vw;
+  max-height: 582px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  position: relative;
+  z-index: 1;
+}
+
+.modal-img {
+  width: 100%;
+  max-width: 400px;
+  border-radius: 4px;
+  object-fit: cover;
+  filter: grayscale(100%) brightness(30%);
+}
+
+.modal-img.completed {
+  filter: none;
+}
+
+.modal-title {
+  font-size: 18px;
+  font-weight: 600;
+  max-width: 400px;
+  margin-bottom: 15px;
+}
+
+.modal-description {
+  max-width: 400px;
+  text-align: start;
+}
+
+.modal-points {
+  width: fit-content;
+  color: var(--primary);
+  font-size: 12px;
   font-weight: 500;
-  font-size: 13px;
+  margin-left: auto;
 }
 
-.coin-icon {
-  display: flex;
-  align-items: center;
-  margin-right: var(--spacing-xs);
-}
-
-
-
-
+/****************************** Ranking 페이지 스타일 ******************************/
 
 .info-address {
   font-size: 12px;
@@ -1112,11 +1197,6 @@ button,
   font-size: 13px;
   color: var(--text-medium);
 }
-
-
-
-
-
 
 /* 미션 상세 페이지 */
 .mission-detail {

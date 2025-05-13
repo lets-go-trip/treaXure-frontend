@@ -97,7 +97,10 @@
           <div class="location-header-wrapper">
             <div
               class="location-header"
-              :class="{ collapsed: location.collapsed }"
+              :class="{
+                collapsed: location.collapsed,
+                highlighted: location.id === selectedLocationId,
+              }"
               @click="toggleLocation(locationIndex)"
             >
               <div class="location-logo">
@@ -167,7 +170,7 @@
                 :src="mission.imageUrl"
                 :alt="mission.title"
                 class="mission-img"
-                @click.stop="selectMission(mission)"
+                @click.stop="selectMission(mission, location.id)"
               />
             </div>
           </div>
@@ -180,16 +183,21 @@
         class="modal-overlay"
         @click.self="closeModal"
       >
-        <div class="modal-content">
-          <button class="close-btn" @click="closeModal">×</button>
-          <h3>{{ selectedMission.title }}</h3>
-          <p>{{ selectedMission.description }}</p>
-          <img
-            :src="selectedMission.imageUrl"
-            :alt="selectedMission.title"
-            class="modal-img"
-          />
-          <p class="modal-points">{{ selectedMission.points }} 포인트</p>
+        <div class="modal-container" ref="container" @click.self="closeModal">
+          <div class="modal-overlay-effect" ref="overlay"></div>
+          <div class="modal-card">
+            <img
+              :src="selectedMission.imageUrl"
+              :alt="selectedMission.title"
+              class="modal-img"
+              :class="{ completed: selectedMission.completed }"
+            />
+            <div class="modal-points">🍀 {{ selectedMission.points }}</div>
+            <div class="modal-title">{{ selectedMission.title }}</div>
+            <div class="modal-description">
+              {{ selectedMission.description }}
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -208,8 +216,9 @@ export default {
   mixins: [ImageErrorMixin],
   data() {
     return {
-      // 모달에 띄울 선택된 미션
-      selectedMission: null,
+      selectedMission: null, // 모달에 띄울 선택된 미션
+      savedScrollY: 0, // 현재 스크롤 위치 저장
+      selectedLocationId: null,
       filters: {
         showIncomplete: true,
         showComplete: true,
@@ -304,7 +313,7 @@ export default {
               imageUrl:
                 "https://thumb16.iclickart.co.kr/Thumb16/1170000/1166261.jpg",
               points: 150,
-              completed: false,
+              completed: true,
             },
             {
               id: 6,
@@ -314,6 +323,26 @@ export default {
               imageUrl:
                 "https://thumb16.iclickart.co.kr/Thumb16/1170000/1166266.jpg",
               points: 180,
+              completed: true,
+            },
+            {
+              id: 11,
+              title: "숨겨진 동궁과 후원 찾기",
+              description:
+                "경복궁에서 가장 아름다운 영역 중 하나인 동궁과 후원의 풍경을 담아보세요.",
+              imageUrl:
+                "https://thumb16.iclickart.co.kr/Thumb16/1170000/1166275.jpg",
+              points: 200,
+              completed: true,
+            },
+            {
+              id: 12,
+              title: "숨겨진 동궁과 후원 찾기",
+              description:
+                "경복궁에서 가장 아름다운 영역 중 하나인 동궁과 후원의 풍경을 담아보세요.",
+              imageUrl:
+                "https://thumb16.iclickart.co.kr/Thumb16/1170000/1166275.jpg",
+              points: 200,
               completed: false,
             },
           ],
@@ -350,7 +379,29 @@ export default {
           ],
         },
       ],
+      isTicking: false,
     };
+  },
+  watch: {
+    selectedMission(newVal, oldVal) {
+      if (newVal) {
+        // 모달이 열린 직후, 다음 틱에 refs가 준비되면 리스너 등록
+        this.$nextTick(() => {
+          const c = this.$refs.container;
+          if (c) {
+            c.addEventListener("mousemove", this.handleMouseMove);
+            c.addEventListener("mouseout", this.handleMouseOut);
+          }
+        });
+      } else if (oldVal) {
+        // 모달이 닫힐 때(=selectedMission가 null로 돌아갈 때) 리스너 제거
+        const c = this.$refs.container;
+        if (c) {
+          c.removeEventListener("mousemove", this.handleMouseMove);
+          c.removeEventListener("mouseout", this.handleMouseOut);
+        }
+      }
+    },
   },
   computed: {
     filteredLocations() {
@@ -389,11 +440,75 @@ export default {
         return false;
       });
     },
-    selectMission(mission) {
+    selectMission(mission, locationId) {
       this.selectedMission = mission;
+      this.selectedLocationId = locationId;
+      // 현재 스크롤 위치 저장
+      this.savedScrollY = window.scrollY;
+      // body를 fixed로 락 (스크롤바는 사라지지 않고, 화면은 고정되면서 스크롤이 안 됩니다)
+      Object.assign(document.body.style, {
+        position: "fixed",
+        top: `-${this.savedScrollY}px`,
+        left: "0",
+        right: "0",
+        overflowY: "scroll", // 스크롤바 자리는 유지
+        width: "100%",
+      });
     },
     closeModal() {
       this.selectedMission = null;
+      this.selectedLocationId = null;
+      // body 스타일 원복
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.left = "";
+      document.body.style.right = "";
+      document.body.style.overflowY = "";
+      document.body.style.width = "";
+      // 원래 스크롤 위치로 복원
+      window.scrollTo(0, this.savedScrollY);
+    },
+    handleMouseMove(e) {
+      const container = this.$refs.container;
+      const overlay = this.$refs.overlay;
+      if (!container || !overlay) {
+        // 모달이 닫혀 refs가 사라졌다면 아무 것도 하지 않고 리턴
+        this.isTicking = false;
+        return;
+      }
+
+      if (!this.isTicking) {
+        this.isTicking = true;
+        window.requestAnimationFrame(() => {
+          const rect = container.getBoundingClientRect();
+          // client 좌표 → container 기준 좌표
+          const x = Math.min(rect.width, Math.max(0, e.clientX - rect.left));
+          const y = Math.min(rect.height, Math.max(0, e.clientY - rect.top));
+
+          const halfW = rect.width / 2;
+          const halfH = rect.height / 2;
+          const dx = x - halfW;
+          const dy = y - halfH;
+
+          const rotateY = (-15 * dx) / halfW;
+          const rotateX = (10 * dy) / halfH;
+
+          container.style.transform = `perspective(350px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+          overlay.style.backgroundPosition = `${x / 5 + y / 5}%`;
+          overlay.style.opacity = Math.min(x / 200, 1);
+
+          this.isTicking = false;
+        });
+      }
+    },
+    handleMouseOut() {
+      const container = this.$refs.container;
+      const overlay = this.$refs.overlay;
+      if (!container || !overlay) return;
+
+      overlay.style.opacity = "0";
+      container.style.transform =
+        "perspective(350px) rotateX(0deg) rotateY(0deg)";
     },
   },
 };
@@ -411,60 +526,4 @@ export default {
   border-radius: 24px 24px 24px 0;
   color: var(--text-deep-light);
 }
-
-.mission-detail {
-  margin: 20px;
-  padding: 16px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-}
-.mission-detail-img {
-  width: 100%;
-  margin: 8px 0;
-  border-radius: 4px;
-}
-
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-}
-
-.modal-content {
-  background: #fff;
-  padding: 24px;
-  border-radius: 8px;
-  width: 90%;
-  max-width: 400px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-  position: relative;
-  text-align: center;
-}
-
-.close-btn {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  border: none;
-  background: transparent;
-  font-size: 20px;
-  cursor: pointer;
-}
-
-.modal-img {
-  width: 100%;
-  border-radius: 4px;
-  margin: 12px 0;
-  object-fit: cover;
-}
-
-.modal-points {
-  font-weight: 600;
-  margin-bottom: 16px;
-}
 </style>
-{}
