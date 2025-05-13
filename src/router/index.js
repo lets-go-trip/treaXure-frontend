@@ -3,8 +3,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 const routes = [
   {
     path: '/',
-    name: 'TreasureHunt',
-    component: () => import('../views/TreasureHunt.vue')
+    name: 'Treasure',
+    component: () => import('../views/Treasure.vue')
   },
   {
     path: '/mission-list',
