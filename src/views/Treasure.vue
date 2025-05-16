@@ -3,8 +3,10 @@
     <!-- 헤더 -->
     <div class="header">
       <div class="header-title">
-        <img class="logo" src="../../src/assets/img/logo_bg.png" alt="" />
-        treaXure
+        <!-- <img class="logo" src="../../src/assets/img/logo_bg.png" alt="" /> -->
+        trea
+        <IconLogo class="logo-svg" />
+        ure
       </div>
       <div class="header-action">
         <button class="icon-btn">
@@ -77,10 +79,11 @@
 import { KakaoMapMixin } from "@/script";
 import { ImageErrorMixin } from "@/script";
 import IconTemple from "@/components/icons/IconTemple.vue";
+import IconLogo from "@/components/icons/IconLogo.vue";
 
 export default {
   name: "Treaure",
-  components: { IconTemple },
+  components: { IconTemple, IconLogo },
   mixins: [KakaoMapMixin, ImageErrorMixin],
   data() {
     return {
