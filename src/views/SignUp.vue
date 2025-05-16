@@ -53,6 +53,9 @@
 </template>
 
 <script>
+// axios를 import하고, 프록시가 설정된 상대 경로로 요청합니다
+import axios from "axios";
+
 export default {
   name: "SignUp",
   data() {
@@ -69,21 +72,24 @@ export default {
         alert("비밀번호가 일치하지 않습니다.");
         return;
       }
+
       try {
-        const response = await this.$axios.post("/api/auth/signup", {
+        // /api는 vue.config.js의 devServer.proxy에 의해 localhost:8081로 프록시 됩니다
+        const { data } = await axios.post("/api/auth/signup", {
           email: this.email,
           password: this.password,
           nickname: this.nickname,
         });
-        alert(response.data);
+
+        alert(data.message || "회원가입이 완료되었습니다.");
         this.$router.push("/signin");
       } catch (error) {
         console.error("회원가입 실패:", error);
-        alert(
-          error.response && error.response.data
-            ? error.response.data
-            : "회원가입 중 오류가 발생했습니다."
-        );
+        const msg =
+          error.response && error.response.data && error.response.data.message
+            ? error.response.data.message
+            : "회원가입 중 오류가 발생했습니다.";
+        alert(msg);
       }
     },
   },

@@ -311,3 +311,6 @@ $RECYCLE.BIN/
 
 # API Keys and Configuration
 src/config.js
+
+### env ###
+.env
