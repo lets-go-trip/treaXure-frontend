@@ -186,11 +186,24 @@ export const KakaoMapMixin = {
               );
               this.map.setCenter(currentPosition);
 
-              // 현재 위치 마커 생성
-              this.marker = new window.kakao.maps.Marker({
+              // 텍스트 라벨 포함한 커스텀 오버레이 생성
+              const labelContent = `
+                <div style="
+                  font-size: 30px;
+                  transform: translateY(-50%);
+                ">
+                  📍
+                </div>
+              `;
+
+              const currentLocationLabel = new window.kakao.maps.CustomOverlay({
                 position: currentPosition,
-                map: this.map,
+                content: labelContent,
+                zIndex: 4,
               });
+
+              // 지도에 오버레이 표시
+              currentLocationLabel.setMap(this.map);
 
               // 반경 원 생성 및 표시
               this.displayCircle(currentPosition);
@@ -261,10 +274,10 @@ export const KakaoMapMixin = {
         center: position,
         radius: 100,
         strokeWeight: 4,
-        strokeColor: "#8B6E4E",
+        strokeColor: "#ccae00",
         strokeOpacity: 1,
         strokeStyle: "dashed",
-        fillColor: "#D9A566",
+        fillColor: "#ffe500",
         fillOpacity: 0.6,
         map: this.map,
       });
@@ -439,7 +452,7 @@ export const KakaoMapMixin = {
         strokeOpacity: 1, // 선의 불투명도
         strokeStyle: "shortdot", // 점선
         fillColor: fillColor, // 채우기 색상
-        fillOpacity: 0.2, // 채우기 불투명도
+        fillOpacity: 0.6, // 채우기 불투명도
       };
 
       // 반경 원 생성
@@ -452,7 +465,7 @@ export const KakaoMapMixin = {
             strokeColor: color,
             strokeOpacity: 0,
             fillColor: color,
-            fillOpacity: 0.5,
+            fillOpacity: 0.6,
             map: this.map,
           },
           circleOptions
