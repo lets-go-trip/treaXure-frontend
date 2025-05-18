@@ -58,8 +58,11 @@ export default {
           password: this.password,
         });
         const token = data.token || data.accessToken;
+        // 1. 토큰 저장
         localStorage.setItem("jwtToken", token);
-        localStorage.setItem("refreshToken", data.refreshToken);
+        // refreshToken은 백엔드에서 HttpOnly Cookie로 설정 (프론트에서는 저장 X)
+
+        // 2. 로그인 성공 후 /treasure로 이동
         this.$router.push("/");
       } catch (e) {
         alert(e.response?.data?.message || "로그인 실패");
@@ -74,7 +77,6 @@ export default {
       )}&response_type=code`;
       window.location.href = url;
     },
-
     // 네이버 OAuth 시작
     loginWithNaver() {
       const { authUrl, clientId, redirectUri, state } = config.naver;

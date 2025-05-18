@@ -191,11 +191,11 @@
           </div>
 
           <div class="settings-list">
-            <router-link
+            <div
               v-for="(setting, index) in settings"
               :key="index"
-              :to="setting.link"
               class="settings-item"
+              @click="handleSettingClick(setting)"
             >
               <div class="settings-icon">
                 <svg
@@ -223,11 +223,10 @@
                   />
                 </svg>
               </div>
-            </router-link>
+            </div>
           </div>
         </div>
 
-        <!-- 여백 공간 -->
         <div class="bottom-space"></div>
       </div>
     </div>
@@ -315,6 +314,25 @@ export default {
         },
       ],
     };
+  },
+  methods: {
+    async handleSettingClick(setting) {
+      if (setting.link === "/logout") {
+        try {
+          await fetch("/api/auth/signout", {
+            method: "POST",
+            credentials: "include", // refreshToken 쿠키 포함
+          });
+          localStorage.removeItem("jwtToken");
+          this.$router.push("/signin");
+        } catch (error) {
+          console.error("로그아웃 실패", error);
+          alert("로그아웃에 실패했습니다.");
+        }
+      } else {
+        this.$router.push(setting.link);
+      }
+    },
   },
 };
 </script>
