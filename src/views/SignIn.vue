@@ -1,4 +1,3 @@
-<!-- src/views/SignIn.vue -->
 <template>
   <div class="sign-in-page">
     <div class="sign-in-container">
@@ -150,6 +149,11 @@ export default {
   border-radius: 0;
 }
 
+.sign-in-footer {
+  text-align: center;
+  margin-top: var(--spacing-md);
+}
+
 .signup {
   color: var(--primary);
   text-decoration: none;
@@ -189,9 +193,5 @@ export default {
 .btn-sns.naver {
   background: #03c75a;
   color: #fff;
-}
-
-.sign-in-footer {
-  text-align: center;
 }
 </style>
