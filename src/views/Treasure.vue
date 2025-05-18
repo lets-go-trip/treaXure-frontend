@@ -179,3 +179,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.header-title {
+  font-family: "Gloria Hallelujah", cursive;
+}
+</style>

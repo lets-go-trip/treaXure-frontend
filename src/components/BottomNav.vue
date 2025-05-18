@@ -5,12 +5,11 @@
       :key="item.path"
       :to="item.path"
       class="nav-item"
-      :class="{ active: currentRoute === item.path }"
+      :class="{ active: isActive(item.path) }"
     >
       <div class="nav-icon">
-        <!-- 현재 경로에 따라 Outline / Filled 컴포넌트 토글 -->
         <component
-          :is="currentRoute === item.path ? item.activeIcon : item.icon"
+          :is="isActive(item.path) ? item.activeIcon : item.icon"
           class="svg-icon"
         />
       </div>
@@ -54,7 +53,7 @@ export default {
     return {
       navItems: [
         {
-          path: "/",
+          path: "/treasure",
           label: "탐험",
           icon: "IconExploreOutline",
           activeIcon: "IconExploreFilled",
@@ -85,6 +84,22 @@ export default {
         },
       ],
     };
+  },
+  methods: {
+    isActive(path) {
+      const route = this.$route.path;
+
+      if (path === "/mission-list") {
+        // "/mission-list", "/mission-list/:id", "/mission-detail/:id" 모두 포함
+        return (
+          route.startsWith("/mission-list") ||
+          route.startsWith("/mission-detail")
+        );
+      }
+
+      // 기본 비교
+      return route === path || route.startsWith(path + "/");
+    },
   },
 };
 </script>
