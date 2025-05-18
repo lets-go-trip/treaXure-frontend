@@ -1,4 +1,5 @@
 import config from "@/config.js";
+import "./assets/css/styles.css";
 
 /**
  * 이미지 에러 핸들링을 위한 Vue 믹스인
@@ -299,7 +300,7 @@ export const KakaoMapMixin = {
           id: 1,
           name: "경복궁",
           position: new window.kakao.maps.LatLng(37.5789, 126.9769),
-          color: "#8B6E4E", // 갈색 (primary)
+          color: "#40c996",
           questCount: 3,
           address: "서울 종로구 사직로 161",
           title: "경복궁 숨겨진 비밀",
@@ -400,13 +401,11 @@ export const KakaoMapMixin = {
     createMarkerImageSrc(color, questCount) {
       // SVG 마커 아이콘 생성
       const svgMarker = `
-      <svg xmlns="http://www.w3.org/2000/svg" width="36" height="40" viewBox="0 0 36 40">
-        <g fill="none" fill-rule="evenodd">
-          <path fill="${color}" d="M18 0C8.1 0 0 8.1 0 18C0 31.5 18 40 18 40C18 40 36 31.5 36 18C36 8.1 27.9 0 18 0Z"/>
-          <circle cx="18" cy="18" r="6" fill="#ffffff"/>
-          <circle cx="27" cy="6" r="10" fill="#ffffff" stroke="${color}" stroke-width="2"/>
-          <text x="27" y="10" font-family="Arial" font-size="10" font-weight="bold" text-anchor="middle" fill="${color}">${questCount}</text>
-        </g>
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="19 18 50 53" xml:space="preserve" preserveAspectRatio="xMinYMin meet"
+        fill="#f07b8a" >
+        <path
+          d="M61.562,18.717c-12.13,9.172-15.244,13.136-22.515,21.412c-0.896-1.376-2.574-3.281-2.615-3.355  c-1.594-3.662-5.048-6.932-6.256-9.995c-1.255-3.265-3.219-4.724-4.858-4.746c-2.109-0.031-3.678,2.324-2.511,6.25  c0.359,1.203,1.26,2.23,1.744,3.386c2.115,5.036,5.172,10.812,8.615,15.844c-2.599,2.905-6.317,7.052-7.479,10.192  c-0.62,1.677-2.417,2.568-3.177,4.177c-0.563,1.183-2.183,3.114-1.651,4.532c0.333,0.885-2.604,4.083-0.63,4.728  c4.578,1.511,6.041-0.619,7.25-3.932c0.692-1.906,2.905-3.719,4-5.49c1.396-2.276,4.859-5.25,6.738-7.407  c1.74,2.491,3.959,5.792,5.496,7.043c2.025,1.645,4.337,1.614,5.041,4.161c0.558,2.005,4.266,2.979,6.23,3.531  c1.426,0.401,3.27,0.115,5.009-0.333c1.614-0.421,2.412-1.964,2.308-3.525c-0.032-0.469,0.333-1.209,0.292-1.646  c-0.125-1.219,0.078-2.858-0.532-3.369c-0.87-0.735-2.515-0.532-3.656-0.995c-6.62-2.708-10.672-6.88-14.688-11.959  c2.355-2.995,8.219-9.193,11.74-11.953c1.751-1.369,3.489-2.749,5.36-4.03c1.937-1.333,3.744-2.86,5.795-3.986  c3.855-2.119,5.38-4.228,1.725-7.109C66.042,18.378,64.01,18.02,61.562,18.717z"
+        />
       </svg>
       `;
 
@@ -426,7 +425,7 @@ export const KakaoMapMixin = {
         strokeColor: color, // 선 색상 (사용되지 않음)
         strokeOpacity: 0, // 선의 불투명도 (0으로 설정)
         fillColor: color, // 채우기 색상
-        fillOpacity: 0.3, // 채우기 불투명도 (매우 투명하게)
+        fillOpacity: 0.6, // 채우기 불투명도 (매우 투명하게)
       };
 
       // 반경 원 생성
