@@ -3,7 +3,6 @@
     <!-- 헤더 -->
     <div class="header">
       <div class="header-title">
-        <!-- <img class="logo" src="../../src/assets/img/logo_bg.png" alt="" /> -->
         trea
         <IconLogo class="logo-svg" />
         ure
