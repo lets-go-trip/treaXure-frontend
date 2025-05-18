@@ -2,37 +2,49 @@
 <template>
   <div class="sign-in-page">
     <div class="sign-in-container">
-      <h2 class="sign-in-title">로그인</h2>
-
-      <!-- 소셜 로그인 -->
-      <div class="social-login">
-        <button class="btn-sns kakao" @click="loginWithKakao">
-          카카오로 로그인
-        </button>
-        <button class="btn-sns naver" @click="loginWithNaver">
-          네이버로 로그인
-        </button>
+      <div class="header-title">
+        trea
+        <IconLogo class="logo-svg" />
+        ure
       </div>
-
-      <hr />
 
       <!-- 기존 이메일/비밀번호 로그인 -->
       <form @submit.prevent="handleSignIn" class="sign-in-form">
         <div class="form-group">
-          <label for="email">이메일</label>
-          <input id="email" v-model="email" type="email" required />
+          <input
+            id="email"
+            v-model="email"
+            type="email"
+            placeholder="이메일"
+            required
+          />
         </div>
         <div class="form-group">
-          <label for="password">비밀번호</label>
-          <input id="password" v-model="password" type="password" required />
+          <input
+            id="password"
+            v-model="password"
+            type="password"
+            placeholder="비밀번호"
+            required
+          />
         </div>
         <button type="submit" class="btn btn-sign-in">로그인</button>
-      </form>
 
-      <div class="sign-in-footer">
-        <router-link to="/signup">회원가입</router-link>
-        <router-link to="/forgot-password">비밀번호 찾기</router-link>
-      </div>
+        <div class="sign-in-footer">
+          아직 회원이 아니신가요?
+          <router-link to="/signup" class="signup">회원가입</router-link>
+        </div>
+
+        <!-- 소셜 로그인 -->
+        <div class="social-login">
+          <button class="btn-sns kakao" @click="loginWithKakao">
+            카카오 로그인
+          </button>
+          <button class="btn-sns naver" @click="loginWithNaver">
+            네이버 로그인
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 </template>
@@ -40,9 +52,11 @@
 <script>
 import config from "@/config";
 import axios from "axios";
+import IconLogo from "@/components/icons/IconLogo.vue";
 
 export default {
   name: "SignIn",
+  components: { IconLogo },
   data() {
     return {
       email: "",
@@ -90,30 +104,94 @@ export default {
 </script>
 
 <style scoped>
-.social-login {
+.header-title {
+  font-family: "Gloria Hallelujah", cursive;
+  font-size: 60px;
   display: flex;
-  gap: 1rem;
-  margin-bottom: 1rem;
+  justify-content: center;
+  margin: 100px 0 60px;
 }
-.btn-sns {
-  flex: 1;
-  padding: 0.5rem;
+
+.logo-svg {
+  color: var(--primary);
+  width: 100px;
+  height: 100px;
+}
+
+.sign-in-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
+}
+
+.form-group {
+  width: 100%;
+}
+
+.form-group input {
+  width: 100%;
+  height: 48px;
+  padding: var(--spacing-sm) var(--spacing-md);
   border: none;
-  border-radius: 4px;
-  color: #fff;
+  border: 1px solid var(--primary);
+  outline: none;
+  color: var(--primary);
+}
+
+.form-group input::placeholder {
+  color: var(--primary);
+}
+
+.btn-sign-in {
+  width: 100%;
+  height: 48px;
+  border-radius: 0;
+}
+
+.signup {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.signup:hover {
+  text-decoration: underline;
+}
+
+.social-login {
+  width: 100%;
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+}
+
+.btn-sns {
+  width: 100%;
+  height: 48px;
+  border: none;
+  border-radius: 0;
   font-weight: bold;
   cursor: pointer;
 }
+
+.btn-sns:hover {
+  filter: brightness(0.7);
+}
+
 .btn-sns.kakao {
   background: #fee500;
   color: #3c1e1e;
 }
+
 .btn-sns.naver {
   background: #03c75a;
+  color: #fff;
 }
-hr {
-  margin: 1rem 0;
-  border: none;
-  border-top: 1px solid #eee;
+
+.sign-in-footer {
+  text-align: center;
 }
 </style>
