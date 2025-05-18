@@ -35,17 +35,43 @@
           <div class="info-wrapper">
             <div>
               <div class="info-title">{{ selectedLocation.title }}</div>
-              <div class="info-status">{{ selectedLocation.status }}</div>
+              <div
+                class="info-status"
+                :style="{
+                  color:
+                    selectedLocation?.status === '미션 완료'
+                      ? 'var(--primary)'
+                      : 'var(--tertiary)',
+                }"
+              >
+                {{ selectedLocation.status }}
+              </div>
               <div class="info-value-container">
                 <div class="info-value-wrapper">
                   미션
-                  <span class="info-value">{{
-                    selectedLocation.questCount
-                  }}</span>
+                  <span
+                    class="info-value"
+                    :style="{
+                      color:
+                        selectedLocation?.status === '미션 완료'
+                          ? 'var(--primary)'
+                          : 'var(--tertiary)',
+                    }"
+                    >{{ selectedLocation.questCount }}</span
+                  >
                 </div>
                 <div class="info-value-wrapper">
                   보상
-                  <span class="info-value">{{ selectedLocation.coins }}</span>
+                  <span
+                    class="info-value"
+                    :style="{
+                      color:
+                        selectedLocation?.status === '미션 완료'
+                          ? 'var(--primary)'
+                          : 'var(--tertiary)',
+                    }"
+                    >{{ selectedLocation.coins }}</span
+                  >
                 </div>
               </div>
             </div>
@@ -98,7 +124,7 @@ export default {
           difficulty: 2,
           questCount: 3,
           coins: 250,
-          status: "미션 접근 가능",
+          status: "미션 수행 필요",
         },
         {
           id: 2,
@@ -107,7 +133,7 @@ export default {
           difficulty: 3,
           questCount: 4,
           coins: 350,
-          status: "미션 접근 가능",
+          status: "미션 수행 필요",
         },
         {
           id: 3,

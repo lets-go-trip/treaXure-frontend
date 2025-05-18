@@ -503,12 +503,12 @@ button,
 .info-wrapper {
   display: flex;
   justify-content: space-between;
-  padding: var(--spacing-md);
+  padding: var(--spacing-md) var(--spacing-xl);
 }
 
 .info-title {
   font-weight: 600;
-  font-size: 26px;
+  font-size: 20px;
   color: var(--text-deep-dark);
   margin-bottom: var(--spacing-md);
 }
@@ -543,8 +543,8 @@ button,
 /* 회전 원근감 부여: wrapper에 적용 */
 .info-icon-wrapper {
   perspective: 1000px;
-  width: 130px;
-  height: 130px;
+  width: 100px;
+  height: 100px;
 }
 
 /* 회전 컨테이너 */
@@ -610,20 +610,20 @@ button,
 
 /* 앞면: 흰 배경 */
 .info-icon.front {
-  box-shadow: 0 0 0 5px var(--primary) inset;
+  box-shadow: 0 0 0 3px var(--primary) inset;
   color: var(--primary);
 }
 
 /* 뒷면: secondary 색상 + 반대 방향 */
 .info-icon.back {
-  box-shadow: 0 0 0 5px var(--secondary) inset;
+  box-shadow: 0 0 0 3px var(--secondary) inset;
   color: var(--secondary);
   transform: rotateY(180deg);
 }
 
 .info-icon svg {
-  width: 100px;
-  height: 100px;
+  width: 50px;
+  height: 50px;
 }
 
 .spin-once {

@@ -6,7 +6,8 @@ import Signin from "@/views/SignIn.vue";
 import Signup from "@/views/SignUp.vue";
 import Treasure from "@/views/Treasure.vue";
 import MissionList from "@/views/MissionList.vue";
-import MissionDetail from "@/views/MissionDetail.vue";
+import MissionListById from "@/views/MissionList.vue";
+import MissionDetailById from "@/views/MissionDetail.vue";
 import AllMissions from "@/views/AllMissions.vue";
 import WeeklyBest from "@/views/WeeklyBest.vue";
 import MyPage from "@/views/MyPage.vue";
@@ -27,9 +28,15 @@ const routes = [
     meta: { requiresAuth: true },
   },
   {
+    path: "/mission-list/:id",
+    name: "MissionListById",
+    component: MissionListById,
+    meta: { requiresAuth: true },
+  },
+  {
     path: "/mission-detail/:id",
-    name: "MissionDetail",
-    component: MissionDetail,
+    name: "MissionDetailById",
+    component: MissionDetailById,
     meta: { requiresAuth: true },
   },
   {
