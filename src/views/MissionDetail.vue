@@ -18,9 +18,9 @@
           </svg>
         </router-link>
       </div>
-      <div class="header-title">{{mission.location}}</div>
+      <div class="header-title">{{ mission.location }}</div>
       <div class="header-action">
-        <button class="icon-btn">⋮</button>
+        <button class="icon-btn"></button>
       </div>
     </div>
 

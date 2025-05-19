@@ -275,10 +275,8 @@ button,
   height: 60px;
   padding: 0 var(--spacing-md);
   background-color: rgba(255, 255, 255, 0.95);
-  border-bottom: var(--border-light);
   backdrop-filter: blur(8px);
   z-index: 10;
-  box-shadow: var(--shadow-sm);
   position: sticky;
   top: 0;
 }
@@ -291,7 +289,7 @@ button,
 }
 
 .header-title {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 400;
   font-style: normal;
   color: var(--text-deep-dark);
@@ -321,7 +319,7 @@ button,
   border: none;
   font-size: 20px;
   padding: 8px;
-  color: var(--text-medium);
+  color: var(--text-deep-dark);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -816,9 +814,8 @@ button,
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  padding: var(--spacing-xl) var(--spacing-md);
+  padding: var(--spacing-md) var(--spacing-md) 0 var(--spacing-md);
   background-color: var(--bg-primary);
-  box-shadow: var(--shadow-sm);
   position: sticky;
   top: 60px;
   z-index: 5;

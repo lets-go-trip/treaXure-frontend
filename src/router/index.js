@@ -86,6 +86,12 @@ router.beforeEach((to, from, next) => {
 
   const jwtToken = localStorage.getItem("jwtToken");
 
+  // 로그인된 사용자가 접근 불가능한 페이지 제한
+  const isGuestOnlyPage = ["/main", "/signin", "/signup"].includes(to.path);
+  if (jwtToken && isGuestOnlyPage) {
+    return next("/treasure");
+  }
+
   // 인증 필요 없는 경로
   if (to.path === "/main" || to.path === "/signin" || to.path === "/signup") {
     return next();
