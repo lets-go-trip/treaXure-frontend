@@ -2,6 +2,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 
 // 페이지 컴포넌트 import
+import Main from "@/views/Main.vue";
 import Signin from "@/views/SignIn.vue";
 import Signup from "@/views/SignUp.vue";
 import Treasure from "@/views/Treasure.vue";
@@ -13,6 +14,7 @@ import WeeklyBest from "@/views/WeeklyBest.vue";
 import MyPage from "@/views/MyPage.vue";
 
 const routes = [
+  { path: "/main", name: "Main", component: Main },
   { path: "/signin", name: "Signin", component: Signin },
   { path: "/signup", name: "Signup", component: Signup },
   {
@@ -82,15 +84,15 @@ router.beforeEach((to, from, next) => {
     return next(to.path); // teasure 페이지
   }
 
-  const accessToken = localStorage.getItem("jwtToken");
+  const jwtToken = localStorage.getItem("jwtToken");
 
   // 인증 필요 없는 경로
-  if (to.path === "/signin" || to.path === "/signup") {
+  if (to.path === "/main" || to.path === "/signin" || to.path === "/signup") {
     return next();
   }
 
   // 인증 필요 시 accessToken 여부 확인
-  if (to.meta.requiresAuth && !accessToken) {
+  if (to.meta.requiresAuth && !jwtToken) {
     return next("/signin");
   }
 

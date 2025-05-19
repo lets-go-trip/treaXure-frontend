@@ -1,11 +1,11 @@
 <template>
   <div class="sign-in-page">
     <div class="sign-in-container">
-      <div class="header-title">
+      <router-link to="/main" class="header-title">
         trea
         <IconLogo class="logo-svg" />
         ure
-      </div>
+      </router-link>
 
       <!-- 기존 이메일/비밀번호 로그인 -->
       <form @submit.prevent="handleSignIn" class="sign-in-form">
@@ -110,12 +110,17 @@ export default {
   display: flex;
   justify-content: center;
   margin: 100px 0 60px;
+  text-decoration: none;
 }
 
 .logo-svg {
   color: var(--primary);
   width: 100px;
   height: 100px;
+}
+
+.header-title:hover .logo-svg {
+  color: var(--text-deep-dark);
 }
 
 .sign-in-form {

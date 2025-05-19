@@ -168,12 +168,10 @@ button,
   width: 100%;
   padding: 20px 24px;
   /* border-radius: var(--radius-lg) var(--radius-lg) 0 0; */
-  background: radial-gradient(
-    circle farthest-side at 10% 20%,
-    var(--primary-light),
-    var(--primary),
-    var(--secondary)
-  );
+  background: radial-gradient(circle farthest-side at 10% 20%,
+      var(--primary-light),
+      var(--primary),
+      var(--secondary));
   color: var(--text-deep-dark);
   font-size: 16px;
   /* font-weight: 500; */
@@ -198,14 +196,12 @@ button,
   /* 초기엔 투명 */
   transition: opacity var(--transition-slow);
   z-index: -1;
-  background: linear-gradient(
-    90deg,
-    var(--primary-light) 0%,
-    var(--primary) 15%,
-    var(--secondary) 50%,
-    var(--primary) 85%,
-    var(--primary-light) 100%
-  );
+  background: linear-gradient(90deg,
+      var(--primary-light) 0%,
+      var(--primary) 15%,
+      var(--secondary) 50%,
+      var(--primary) 85%,
+      var(--primary-light) 100%);
   /* 2) 가로로 500% 늘려서 색이 흘러갈 공간 확보 */
   background-size: 1000% 100%;
   /* 3) 부드럽게 흐르는 애니메이션 */
@@ -268,6 +264,7 @@ button,
 }
 
 @media (min-width: 769px) {
+
   .mypage,
   .quest-screen,
   .all-missions,
@@ -430,6 +427,7 @@ button,
 
 /* 중요한 애니메이션 효과 추가 */
 @keyframes nav-bounce {
+
   0%,
   100% {
     transform: translateY(0);
@@ -555,15 +553,13 @@ button,
   transform-style: preserve-3d;
 
   border-radius: 50%;
-  background: linear-gradient(
-    90deg,
-    var(--primary-light) 0%,
-    var(--secondary-light) 15%,
-    var(--text-deep-light) 40%,
-    var(--text-deep-light) 60%,
-    var(--secondary-light) 85%,
-    var(--primary-light) 100%
-  );
+  background: linear-gradient(90deg,
+      var(--primary-light) 0%,
+      var(--secondary-light) 15%,
+      var(--text-deep-light) 40%,
+      var(--text-deep-light) 60%,
+      var(--secondary-light) 85%,
+      var(--primary-light) 100%);
   /* background: var(--secondary); */
   /* 2) 가로로 500% 늘려서 색이 흘러갈 공간 확보 */
   background-size: 1000% 100%;
@@ -577,15 +573,13 @@ button,
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  background: linear-gradient(
-    90deg,
-    rgba(64, 201, 150, 0.2) 0%,
-    rgba(255, 248, 179, 0.5) 15%,
-    rgba(0, 0, 0, 0) 40%,
-    rgba(0, 0, 0, 0) 60%,
-    rgba(255, 248, 179, 0.2) 85%,
-    rgba(64, 201, 150, 0.2) 100%
-  );
+  background: linear-gradient(90deg,
+      rgba(64, 201, 150, 0.2) 0%,
+      rgba(255, 248, 179, 0.5) 15%,
+      rgba(0, 0, 0, 0) 40%,
+      rgba(0, 0, 0, 0) 60%,
+      rgba(255, 248, 179, 0.2) 85%,
+      rgba(64, 201, 150, 0.2) 100%);
   /* background: var(--secondary); */
   /* 2) 가로로 500% 늘려서 색이 흘러갈 공간 확보 */
   background-size: 1000% 100%;
@@ -665,7 +659,7 @@ button,
 }
 
 /* info-card가 hover 되었을 때 blur-box에 브러 효과 적용 */
-.info-card:hover ~ .blur-box {
+.info-card:hover~.blur-box {
   backdrop-filter: blur(3px);
   background: rgba(0, 0, 0, 0.3);
 }
@@ -765,14 +759,12 @@ button,
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(
-    90deg,
-    var(--primary-light) 0%,
-    var(--primary) 15%,
-    var(--secondary) 50%,
-    var(--primary) 85%,
-    var(--primary-light) 100%
-  );
+  background: linear-gradient(90deg,
+      var(--primary-light) 0%,
+      var(--primary) 15%,
+      var(--secondary) 50%,
+      var(--primary) 85%,
+      var(--primary-light) 100%);
   background-size: 1000% 100%;
   animation: btn-gradient-slide 20s linear infinite;
 }
@@ -976,14 +968,12 @@ button,
 .location-group:hover .location-header,
 .location-header.highlighted {
   border: 1px solid rgba(0, 0, 0, 0);
-  background: linear-gradient(
-    90deg,
-    var(--primary-light) 0%,
-    var(--primary) 15%,
-    var(--secondary) 50%,
-    var(--primary) 85%,
-    var(--primary-light) 100%
-  );
+  background: linear-gradient(90deg,
+      var(--primary-light) 0%,
+      var(--primary) 15%,
+      var(--secondary) 50%,
+      var(--primary) 85%,
+      var(--primary-light) 100%);
   background-size: 1000% 100%;
   animation: btn-gradient-slide 20s linear infinite;
 }
@@ -1092,7 +1082,7 @@ button,
   backface-visibility: hidden;
 }
 
-.modal-container > * {
+.modal-container>* {
   pointer-events: none;
 }
 
@@ -1105,13 +1095,11 @@ button,
   z-index: 2000;
   border-radius: 8px;
   background-color: var(--primary);
-  background: linear-gradient(
-    105deg,
-    transparent 40%,
-    var(--primary-light) 45%,
-    var(--secondary-light) 50%,
-    transparent 54%
-  );
+  background: linear-gradient(105deg,
+      transparent 40%,
+      var(--primary-light) 45%,
+      var(--secondary-light) 50%,
+      transparent 54%);
   filter: brightness(1.1) opacity(0.5);
   mix-blend-mode: color-dodge;
   background-size: 150% 150%;
