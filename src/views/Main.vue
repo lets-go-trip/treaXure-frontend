@@ -7,12 +7,17 @@
         ure
       </router-link>
     </div>
-    <div class="main-content">
-      Welcome to
-      <p class="main-content-h">Seoul</p>
-      It's time to
-      <p class="main-content-h">hunt</p>
+    <div class="main-content-container">
+      <div class="main-content">
+        Welcome to
+        <p class="main-content-h">Seoul</p>
+      </div>
+      <div class="main-content">
+        It's time to
+        <p class="main-content-h">hunt</p>
+      </div>
     </div>
+
     <div class="main-footer">
       <router-link to="/signin" class="signin">시작하기</router-link>
     </div>
@@ -94,12 +99,16 @@ export default {
   justify-content: space-between;
 }
 
+.main-container {
+  flex: 3;
+}
+
 .header-title {
   font-family: "Gloria Hallelujah", cursive;
   font-size: 60px;
   display: flex;
   justify-content: center;
-  margin: 100px 0 60px;
+  margin: 100px 0 20px;
   text-decoration: none;
 }
 
@@ -109,14 +118,31 @@ export default {
   height: 100px;
 }
 
+.main-content-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  flex: 4;
+}
+
 .main-content {
   font-family: "Gloria Hallelujah", cursive;
-  font-size: 30px;
+  font-size: 25px;
+  font-weight: 400;
+}
+
+.main-content-h {
+  display: inline-block;
+  font-family: "Gloria Hallelujah", cursive;
+  font-size: 40px;
+  font-weight: 600;
 }
 
 .main-footer {
   padding: 20px;
   margin-bottom: 100px;
+  flex: 0;
 }
 
 .signin {
