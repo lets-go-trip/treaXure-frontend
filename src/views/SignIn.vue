@@ -66,11 +66,12 @@ export default {
     // 기존 이메일/비번 로그인
     async handleSignIn() {
       try {
-        const { data } = await axios.post("/api/auth/signin", {
+        const res = await axios.post("/api/auth/signin", {
           email: this.email,
           password: this.password,
         });
-        const token = data.token || data.accessToken;
+        // ApiResponseDto<String> 구조: { data: "<accessToken>" }
+        const token = res.data.data;
         // 1. 토큰 저장
         localStorage.setItem("jwtToken", token);
         // refreshToken은 백엔드에서 HttpOnly Cookie로 설정 (프론트에서는 저장 X)

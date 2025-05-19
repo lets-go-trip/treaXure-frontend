@@ -79,7 +79,7 @@ router.beforeEach((to, from, next) => {
     window.history.replaceState({}, "", url.pathname);
 
     // 현재 라우팅으로 재진입
-    return next(to.fullPath); // 같은 경로 다시 접근
+    return next(to.path); // teasure 페이지
   }
 
   const accessToken = localStorage.getItem("jwtToken");
