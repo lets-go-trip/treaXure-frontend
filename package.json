@@ -1,5 +1,5 @@
 {
-  "name": "treasure-hunter-app",
+  "name": "treaxure",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -8,6 +8,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "axios": "^1.9.0",
     "core-js": "^3.29.0",
     "vue": "^3.2.47",
     "vue-router": "^4.1.6",
