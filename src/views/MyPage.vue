@@ -322,6 +322,9 @@ export default {
           await fetch("/api/auth/signout", {
             method: "POST",
             credentials: "include", // refreshToken 쿠키 포함
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
+            },
           });
           localStorage.removeItem("jwtToken");
           this.$router.push("/signin");
