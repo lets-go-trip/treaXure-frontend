@@ -37,7 +37,7 @@ const routes = [
     path: "/mission-detail/:id",
     name: "MissionDetailById",
     component: MissionDetailById,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: false },
   },
   {
     path: "/all-missions",
