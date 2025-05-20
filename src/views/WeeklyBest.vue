@@ -19,9 +19,7 @@
         </router-link>
       </div>
       <div class="header-title">주간 베스트</div>
-      <div class="header-action">
-        <button class="icon-btn">⋮</button>
-      </div>
+      <div class="header-action"></div>
     </div>
 
     <!-- 주간 날짜 선택 -->

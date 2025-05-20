@@ -30,3 +30,19 @@ export function refreshToken(payload) {
 export function signout() {
   return axios.post("/api/auth/signout");
 }
+
+/**
+ * 내 정보 조회
+ * @returns {Promise<MemberResponseDto>}
+ */
+export function getMyInfo() {
+  return axios.get("/api/auth/me"); // Authorization 헤더 자동 포함됨
+}
+
+/**
+ * 계정 비활성화 (회원탈퇴)
+ * @returns {Promise<ApiResponseDto<string>>}
+ */
+export function deactivateAccount() {
+  return axios.delete("/api/auth/me");
+}

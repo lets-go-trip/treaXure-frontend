@@ -115,7 +115,7 @@ export const KakaoMapMixin = {
         };
 
         // 로드 실패 시 처리
-        script.onerror = (e) => {
+        script.onerror = () => {
           reject(new Error("카카오맵 API 로드에 실패했습니다."));
         };
 

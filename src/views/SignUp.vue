@@ -1,11 +1,11 @@
 <template>
   <div class="sign-up-page">
     <div class="sign-up-container">
-      <div class="header-title">
+      <router-link to="/main" class="header-title">
         trea
         <IconLogo class="logo-svg" />
         ure
-      </div>
+      </router-link>
       <form @submit.prevent="handleSignUp" class="sign-up-form">
         <div class="form-group">
           <input
@@ -105,11 +105,16 @@ export default {
   display: flex;
   justify-content: center;
   margin: 100px 0 60px;
+  text-decoration: none;
 }
 
 .logo-svg {
   width: 100px;
   height: 100px;
+}
+
+.header-title:hover .logo-svg {
+  color: var(--text-deep-dark);
 }
 
 .sign-up-form {

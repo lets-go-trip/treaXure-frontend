@@ -24,10 +24,8 @@
           </svg>
         </router-link>
       </div>
-      <div class="header-title">{{mission.location}}</div>
-      <div class="header-action">
-        <button class="icon-btn">⋮</button>
-      </div>
+      <div class="header-title">{{ mission.location }}</div>
+      <div class="header-action"></div>
     </div>
 
     <!-- 미션 상세 컨테이너 -->

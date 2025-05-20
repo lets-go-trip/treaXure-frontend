@@ -2,6 +2,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 
 // 페이지 컴포넌트 import
+import Main from "@/views/Main.vue";
 import Signin from "@/views/SignIn.vue";
 import Signup from "@/views/SignUp.vue";
 import Treasure from "@/views/Treasure.vue";
@@ -11,8 +12,10 @@ import MissionDetailById from "@/views/MissionDetail.vue";
 import AllMissions from "@/views/AllMissions.vue";
 import WeeklyBest from "@/views/WeeklyBest.vue";
 import MyPage from "@/views/MyPage.vue";
+import ProfileEdit from "@/views/ProfileEdit.vue";
 
 const routes = [
+  { path: "/main", name: "Main", component: Main },
   { path: "/signin", name: "Signin", component: Signin },
   { path: "/signup", name: "Signup", component: Signup },
   {
@@ -57,6 +60,12 @@ const routes = [
     component: MyPage,
     meta: { requiresAuth: true },
   },
+  {
+    path: "/profile-edit",
+    name: "ProfileEdit",
+    component: ProfileEdit,
+    meta: { requiresAuth: true },
+  },
   { path: "/", redirect: "/treasure" },
 ];
 
@@ -79,19 +88,25 @@ router.beforeEach((to, from, next) => {
     window.history.replaceState({}, "", url.pathname);
 
     // 현재 라우팅으로 재진입
-    return next(to.fullPath); // 같은 경로 다시 접근
+    return next(to.path); // teasure 페이지
   }
 
-  const accessToken = localStorage.getItem("jwtToken");
+  const jwtToken = localStorage.getItem("jwtToken");
+
+  // 로그인된 사용자가 접근 불가능한 페이지 제한
+  const isGuestOnlyPage = ["/main", "/signin", "/signup"].includes(to.path);
+  if (jwtToken && isGuestOnlyPage) {
+    return next("/treasure");
+  }
 
   // 인증 필요 없는 경로
-  if (to.path === "/signin" || to.path === "/signup") {
+  if (to.path === "/main" || to.path === "/signin" || to.path === "/signup") {
     return next();
   }
 
   // 인증 필요 시 accessToken 여부 확인
-  if (to.meta.requiresAuth && !accessToken) {
-    return next("/signin");
+  if (to.meta.requiresAuth && !jwtToken) {
+    return next("/main");
   }
 
   next();
