@@ -53,7 +53,7 @@
         </p>
 
         <ImageUploader 
-          folder="images/missions/" 
+          folder="missions/" 
           @upload-success="handleUploadSuccess" 
           @upload-error="handleUploadError"
         />
@@ -71,7 +71,7 @@
 
       <div class="action-buttons">
         <router-link to="/mission-list" class="btn-outline">취소</router-link>
-        <button class="btn" @click="submitMission" :disabled="!uploadedImageUrls.original">미션 제출하기</button>
+        <button class="btn" @click="submitMission" :disabled="!uploadedImageUrl">미션 제출하기</button>
       </div>
     </div>
   </div>
@@ -105,25 +105,22 @@ export default {
         exampleImage:
           "https://via.placeholder.com/320x180?text=동궁과+후원+예시",
       },
-      uploadedImageUrls: {
-        original: '',
-        thumbnail: ''
-      },
+      uploadedImageUrl: '',
       comment: "",
       uploadError: ""
     };
   },
   methods: {
-    handleUploadSuccess(imageUrls) {
-      this.uploadedImageUrls = imageUrls;
-      console.log('이미지 업로드 성공:', imageUrls);
+    handleUploadSuccess(imageUrl) {
+      this.uploadedImageUrl = imageUrl;
+      console.log('이미지 업로드 성공:', imageUrl);
     },
     handleUploadError(error) {
       this.uploadError = '이미지 업로드 중 오류가 발생했습니다.';
       console.error('이미지 업로드 실패:', error);
     },
     submitMission() {
-      if (!this.uploadedImageUrls.original) {
+      if (!this.uploadedImageUrl) {
         alert("사진을 업로드해주세요");
         return;
       }
@@ -131,8 +128,7 @@ export default {
       // 실제 구현에서는 API 호출을 통해 미션 제출
       console.log("미션 제출", {
         missionId: this.mission.id,
-        imageUrl: this.uploadedImageUrls.original,
-        thumbnailUrl: this.uploadedImageUrls.thumbnail,
+        imageUrl: this.uploadedImageUrl,
         comment: this.comment,
       });
 
