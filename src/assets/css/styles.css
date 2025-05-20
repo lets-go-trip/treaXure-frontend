@@ -1444,18 +1444,25 @@ button,
 .signout-btn {
   width: 100%;
   height: 48px;
+  background-color: var(--tertiary);
+}
+
+.signout-btn:hover {
+  background-color: var(--tertiary);
+  filter: brightness(90%);
+}
+
+.withdraw-btn {
+  height: 48px;
   color: var(--tertiary);
   background-color: var(--text-deep-light);
   border: 1px solid var(--tertiary);
 }
 
-.signout-btn:hover {
-  height: 48px;
-  background-color: var(--tertiary-light);
+.withdraw-btn:hover {
+  background-color: var(--text-deep-light);
   filter: brightness(90%);
 }
-
-.withdraw-btn {}
 
 /* 주간 베스트 페이지 */
 .weekly-best {
