@@ -38,3 +38,11 @@ export function signout() {
 export function getMyInfo() {
   return axios.get("/api/auth/me"); // Authorization 헤더 자동 포함됨
 }
+
+/**
+ * 계정 비활성화 (회원탈퇴)
+ * @returns {Promise<ApiResponseDto<string>>}
+ */
+export function deactivateAccount() {
+  return axios.delete("/api/auth/me");
+}

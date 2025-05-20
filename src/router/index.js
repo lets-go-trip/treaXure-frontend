@@ -12,6 +12,7 @@ import MissionDetailById from "@/views/MissionDetail.vue";
 import AllMissions from "@/views/AllMissions.vue";
 import WeeklyBest from "@/views/WeeklyBest.vue";
 import MyPage from "@/views/MyPage.vue";
+import ProfileEdit from "@/views/ProfileEdit.vue";
 
 const routes = [
   { path: "/main", name: "Main", component: Main },
@@ -59,6 +60,12 @@ const routes = [
     component: MyPage,
     meta: { requiresAuth: true },
   },
+  {
+    path: "/profile-edit",
+    name: "ProfileEdit",
+    component: ProfileEdit,
+    meta: { requiresAuth: true },
+  },
   { path: "/", redirect: "/treasure" },
 ];
 
@@ -99,7 +106,7 @@ router.beforeEach((to, from, next) => {
 
   // 인증 필요 시 accessToken 여부 확인
   if (to.meta.requiresAuth && !jwtToken) {
-    return next("/signin");
+    return next("/main");
   }
 
   next();

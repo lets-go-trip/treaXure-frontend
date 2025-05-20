@@ -93,7 +93,7 @@
               <div class="location-logo">
                 <IconTemple class="info-icon-svg" />
               </div>
-              <div class="location-title">
+              <div class="location-title-name">
                 {{ location.name }}
               </div>
               <div
@@ -508,9 +508,16 @@ export default {
   align-items: center;
   justify-content: center;
   font-size: 20px;
-  width: 40px;
+  width: 45px;
   height: 40px;
-  border-radius: 24px 24px 24px 0;
-  color: var(--text-deep-light);
+  border-radius: 16px 0 0 0;
+  color: var(--primary);
+  background: var(--text-deep-light);
+  border: 1px solid var(--primary);
+  border-right: none;
+}
+
+.btn-small:hover {
+  border: none;
 }
 </style>

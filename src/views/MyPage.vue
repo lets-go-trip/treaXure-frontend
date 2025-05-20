@@ -19,9 +19,7 @@
         </router-link>
       </div>
       <div class="header-title">마이페이지</div>
-      <div class="header-action">
-        <button class="icon-btn"></button>
-      </div>
+      <div class="header-action"></div>
     </div>
 
     <!-- 스크롤 가능한 컨텐츠 영역 -->
@@ -32,96 +30,39 @@
           <div class="profile-header">
             <div class="profile-avatar">
               <img :src="userData.profileUrl" alt="프로필 이미지" />
-              <div class="edit-avatar-btn">
-                <svg
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M3 17.25V21H6.75L17.81 9.94L14.06 6.19L3 17.25ZM20.71 7.04C21.1 6.65 21.1 6.02 20.71 5.63L18.37 3.29C17.98 2.9 17.35 2.9 16.96 3.29L15.13 5.12L18.88 8.87L20.71 7.04Z"
-                    fill="white"
-                  />
-                </svg>
-              </div>
             </div>
             <div class="profile-info">
               <h2>{{ userData.nickname }}</h2>
               <div>{{ userData.email }}</div>
-              <span class="level-text">{{ userData.point }} 포인트</span>
             </div>
           </div>
-
-          <div class="stats-grid">
-            <div class="stat-box" v-for="(stat, index) in stats" :key="index">
-              <div class="stat-value">{{ stat.value }}</div>
-              <div class="stat-label">{{ stat.label }}</div>
-            </div>
+          <router-link to="/profile-edit" class="profile-edit btn"
+            >프로필 수정</router-link
+          >
+        </div>
+        <div class="stats-wrapper">
+          <div class="stat-container">
+            <div class="stat-value">23</div>
+            <div class="stat-label">방문 장소</div>
+          </div>
+          <div class="stat-container">
+            <div class="stat-value">32</div>
+            <div class="stat-label">완료 미션</div>
+          </div>
+          <div class="stat-container">
+            <div class="stat-value">{{ userData.point }}</div>
+            <div class="stat-label">포인트</div>
           </div>
         </div>
-
-        <div class="section-container">
-          <div class="section-header">
-            <h3>나의 랭킹</h3>
-            <router-link to="/rankings" class="view-all">
-              전체보기
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M8.59 16.59L13.17 12L8.59 7.41L10 6L16 12L10 18L8.59 16.59Z"
-                  fill="currentColor"
-                />
-              </svg>
-            </router-link>
-          </div>
-
-          <div class="card-list">
-            <div
-              class="ranking-card"
-              v-for="(ranking, index) in rankings"
-              :key="index"
-            >
-              <div class="ranking-position">
-                <div class="position-number">{{ ranking.position }}</div>
-                <div class="position-text">{{ ranking.percentile }}</div>
-              </div>
-              <div class="ranking-info">
-                <div class="ranking-icon">
-                  <svg
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path :d="ranking.iconPath" fill="currentColor" />
-                  </svg>
-                </div>
-                <div class="ranking-details">
-                  <div class="ranking-title">{{ ranking.title }}</div>
-                  <div class="ranking-subtitle">{{ ranking.subtitle }}</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
         <div class="section-container">
           <div class="section-header">
             <h3>최근 미션 사진</h3>
             <router-link to="/photos" class="view-all">
               전체보기
               <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
+                width=""
+                height=""
+                viewBox="8 6 7 12"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
               >
@@ -133,65 +74,24 @@
             </router-link>
           </div>
 
-          <div class="photo-grid">
+          <div class="img-grid">
             <div
-              class="photo-item"
+              class="img-item"
               v-for="(photo, index) in recentPhotos"
               :key="index"
             >
               <div class="photo-container">
                 <img :src="photo.url" :alt="photo.alt" />
-                <div
-                  v-if="photo.badge"
-                  class="photo-badge"
-                  :class="{ best: photo.badge === 'best' }"
-                >
-                  {{ photo.badge === "best" ? "베스트" : photo.badge }}
-                </div>
               </div>
             </div>
           </div>
         </div>
-
-        <div class="section-container settings-section">
-          <div class="section-header">
-            <h3>설정</h3>
+        <div class="section-setting">
+          <div class="signout-btn btn" @click="handleSignoutClick('signout')">
+            로그아웃
           </div>
-
-          <div class="settings-list">
-            <div
-              v-for="(setting, index) in settings"
-              :key="index"
-              class="settings-item"
-              @click="handleSettingClick(setting)"
-            >
-              <div class="settings-icon">
-                <svg
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path :d="setting.iconPath" fill="currentColor" />
-                </svg>
-              </div>
-              <span class="settings-title">{{ setting.title }}</span>
-              <div class="settings-arrow">
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M8.59 16.59L13.17 12L8.59 7.41L10 6L16 12L10 18L8.59 16.59Z"
-                    fill="currentColor"
-                  />
-                </svg>
-              </div>
-            </div>
+          <div class="withdraw-btn btn" @click="handleSignoutClick('withdraw')">
+            회원탈퇴
           </div>
         </div>
       </div>
@@ -200,12 +100,10 @@
 </template>
 
 <script>
-import { ImageErrorMixin } from "@/script";
-import { getMyInfo } from "@/api/auth";
+import { getMyInfo, signout, deactivateAccount } from "@/api/auth";
 
 export default {
   name: "MyPage",
-  mixins: [ImageErrorMixin],
   data() {
     return {
       userData: {
@@ -214,12 +112,6 @@ export default {
         point: 0,
         profileUrl: "",
       },
-      stats: [
-        { value: 24, label: "방문 장소" },
-        { value: 42, label: "완료 미션" },
-        { value: 5, label: "베스트 사진" },
-        { value: "3,250", label: "총 포인트" },
-      ],
       rankings: [
         {
           position: 8,
@@ -240,30 +132,20 @@ export default {
       ],
       recentPhotos: [
         {
-          url: "https://via.placeholder.com/150x150?text=미션1",
-          alt: "미션 사진",
-          badge: "best",
-        },
-        {
-          url: "https://via.placeholder.com/150x150?text=미션2",
+          url: "https://thumb16.iclickart.co.kr/Thumb16/1170000/1166254.jpg",
           alt: "미션 사진",
         },
         {
-          url: "https://via.placeholder.com/150x150?text=미션3",
-          alt: "미션 사진",
-          badge: "+100",
-        },
-        {
-          url: "https://via.placeholder.com/150x150?text=미션4",
+          url: "https://thumb16.iclickart.co.kr/Thumb16/1170000/1166273.jpg",
           alt: "미션 사진",
         },
-      ],
-      settings: [
         {
-          title: "로그아웃",
-          iconPath:
-            "M10.09 15.59L11.5 17L16.5 12L11.5 7L10.09 8.41L12.67 11H3V13H12.67L10.09 15.59ZM19 3H5C3.89 3 3 3.9 3 5V9H5V5H19V19H5V15H3V19C3 20.1 3.89 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3Z",
-          link: "/logout",
+          url: "https://thumb16.iclickart.co.kr/Thumb16/1170000/1166267.jpg",
+          alt: "미션 사진",
+        },
+        {
+          url: "https://thumb16.iclickart.co.kr/Thumb16/1170000/1166270.jpg",
+          alt: "미션 사진",
         },
       ],
     };
@@ -280,38 +162,41 @@ export default {
         this.userData.nickname = data.nickname;
         this.userData.point = data.point;
         this.userData.profileUrl = data.profileUrl;
-        this.stats[3].value = data.point.toLocaleString();
       } catch (err) {
         console.error("유저 정보 불러오기 실패", err);
         alert("마이페이지 정보를 불러오는 데 실패했습니다.");
       }
     },
-    async handleSettingClick(setting) {
-      if (setting.link === "/logout") {
+    async handleSignoutClick(btn) {
+      if (btn == "signout") {
         try {
-          await fetch("/api/auth/signout", {
-            method: "POST",
-            credentials: "include", // refreshToken 쿠키 포함
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
-            },
-          });
+          await signout();
           localStorage.removeItem("jwtToken");
           this.$router.push("/signin");
         } catch (error) {
           console.error("로그아웃 실패", error);
           alert("로그아웃에 실패했습니다.");
         }
-      } else {
-        this.$router.push(setting.link);
+      } else if (btn == "withdraw") {
+        // 계정 비활성화 API 호출
+        const confirmed = window.confirm(
+          "정말로 회원 탈퇴를 진행하시겠습니까?\n탈퇴 시 모든 데이터가 삭제됩니다."
+        );
+        if (!confirmed) return;
+        try {
+          await deactivateAccount();
+          await signout();
+          localStorage.removeItem("jwtToken");
+          alert("회원 탈퇴가 완료되었습니다. 이용해 주셔서 감사합니다.");
+          this.$router.push("/main");
+        } catch (error) {
+          console.error("회원 탈퇴 실패", error);
+          return alert("회원 탈퇴 중 오류가 발생했습니다.");
+        }
       }
     },
   },
 };
 </script>
 
-<style scoped>
-.icon-btn:hover {
-  background-color: rgba(0, 0, 0, 0.05);
-}
-</style>
+<style scoped></style>

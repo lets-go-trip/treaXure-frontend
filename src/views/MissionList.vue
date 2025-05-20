@@ -18,9 +18,7 @@
           </svg>
         </router-link>
       </div>
-      <div class="header-action">
-        <button class="icon-btn"></button>
-      </div>
+      <div class="header-action"></div>
     </div>
 
     <!-- 장소 정보 -->

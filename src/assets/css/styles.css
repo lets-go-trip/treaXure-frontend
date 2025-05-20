@@ -168,12 +168,10 @@ button,
   width: 100%;
   padding: 20px 24px;
   /* border-radius: var(--radius-lg) var(--radius-lg) 0 0; */
-  background: radial-gradient(
-    circle farthest-side at 10% 20%,
-    var(--primary-light),
-    var(--primary),
-    var(--secondary)
-  );
+  background: radial-gradient(circle farthest-side at 10% 20%,
+      var(--primary-light),
+      var(--primary),
+      var(--secondary));
   color: var(--text-deep-dark);
   font-size: 16px;
   /* font-weight: 500; */
@@ -198,14 +196,12 @@ button,
   /* 초기엔 투명 */
   transition: opacity var(--transition-slow);
   z-index: -1;
-  background: linear-gradient(
-    90deg,
-    var(--primary-light) 0%,
-    var(--primary) 15%,
-    var(--secondary) 50%,
-    var(--primary) 85%,
-    var(--primary-light) 100%
-  );
+  background: linear-gradient(90deg,
+      var(--primary-light) 0%,
+      var(--primary) 15%,
+      var(--secondary) 50%,
+      var(--primary) 85%,
+      var(--primary-light) 100%);
   /* 2) 가로로 500% 늘려서 색이 흘러갈 공간 확보 */
   background-size: 1000% 100%;
   /* 3) 부드럽게 흐르는 애니메이션 */
@@ -300,7 +296,9 @@ button,
 
 .header-action {
   display: flex;
-  gap: 16px;
+  width: 36px;
+  height: 36px;
+  /* gap: 16px; */
 }
 
 .logo {
@@ -326,12 +324,6 @@ button,
   justify-content: center;
   width: 36px;
   height: 36px;
-  border-radius: 50%;
-  transition: all 0.2s ease;
-}
-
-.icon-btn:hover {
-  background: rgba(0, 0, 0, 0.05);
 }
 
 /****************************** 하단 내비게이션 ******************************/
@@ -402,6 +394,7 @@ button,
 
 /* 중요한 애니메이션 효과 추가 */
 @keyframes nav-bounce {
+
   0%,
   100% {
     transform: translateY(0);
@@ -527,15 +520,13 @@ button,
   transform-style: preserve-3d;
 
   border-radius: 50%;
-  background: linear-gradient(
-    90deg,
-    var(--primary-light) 0%,
-    var(--secondary-light) 15%,
-    var(--text-deep-light) 40%,
-    var(--text-deep-light) 60%,
-    var(--secondary-light) 85%,
-    var(--primary-light) 100%
-  );
+  background: linear-gradient(90deg,
+      var(--primary-light) 0%,
+      var(--secondary-light) 15%,
+      var(--text-deep-light) 40%,
+      var(--text-deep-light) 60%,
+      var(--secondary-light) 85%,
+      var(--primary-light) 100%);
   /* background: var(--secondary); */
   /* 2) 가로로 500% 늘려서 색이 흘러갈 공간 확보 */
   background-size: 1000% 100%;
@@ -549,15 +540,13 @@ button,
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  background: linear-gradient(
-    90deg,
-    rgba(64, 201, 150, 0.2) 0%,
-    rgba(255, 248, 179, 0.5) 15%,
-    rgba(0, 0, 0, 0) 40%,
-    rgba(0, 0, 0, 0) 60%,
-    rgba(255, 248, 179, 0.2) 85%,
-    rgba(64, 201, 150, 0.2) 100%
-  );
+  background: linear-gradient(90deg,
+      rgba(64, 201, 150, 0.2) 0%,
+      rgba(255, 248, 179, 0.5) 15%,
+      rgba(0, 0, 0, 0) 40%,
+      rgba(0, 0, 0, 0) 60%,
+      rgba(255, 248, 179, 0.2) 85%,
+      rgba(64, 201, 150, 0.2) 100%);
   /* background: var(--secondary); */
   /* 2) 가로로 500% 늘려서 색이 흘러갈 공간 확보 */
   background-size: 1000% 100%;
@@ -637,7 +626,7 @@ button,
 }
 
 /* info-card가 hover 되었을 때 blur-box에 브러 효과 적용 */
-.info-card:hover ~ .blur-box {
+.info-card:hover~.blur-box {
   backdrop-filter: blur(3px);
   background: rgba(0, 0, 0, 0.3);
 }
@@ -658,7 +647,7 @@ button,
 }
 
 .location-description {
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 500;
   color: var(--text-light);
 }
@@ -703,13 +692,13 @@ button,
 
 .location-title {
   font-weight: 500;
-  font-size: 15px;
+  font-size: 14px;
   color: var(--text-deep-dark);
 }
 
 .location-value {
   font-weight: 500;
-  font-size: 18px;
+  font-size: 16px;
   color: var(--text-light);
 }
 
@@ -737,14 +726,12 @@ button,
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(
-    90deg,
-    var(--primary-light) 0%,
-    var(--primary) 15%,
-    var(--secondary) 50%,
-    var(--primary) 85%,
-    var(--primary-light) 100%
-  );
+  background: linear-gradient(90deg,
+      var(--primary-light) 0%,
+      var(--primary) 15%,
+      var(--secondary) 50%,
+      var(--primary) 85%,
+      var(--primary-light) 100%);
   background-size: 1000% 100%;
   animation: btn-gradient-slide 20s linear infinite;
 }
@@ -927,18 +914,19 @@ button,
 
 .location-header-wrapper {
   display: flex;
-  gap: var(--spacing-md);
+  gap: var(--spacing-sm);
   align-items: flex-end;
 }
 
 .location-header {
-  width: fit-content;
+  width: 100%;
   display: flex;
   align-items: center;
-  gap: var(--spacing-xl);
-  padding: var(--spacing-sm) var(--spacing-md);
+  gap: var(--spacing-md);
+  padding: 0 var(--spacing-md) 0 0;
   border: 1px solid var(--primary);
-  border-radius: 0 24px 0 0;
+  border-left: none;
+  border-radius: 0 16px 0 0;
   cursor: pointer;
   transition: all var(--transition-normal);
   position: relative;
@@ -947,26 +935,24 @@ button,
 .location-group:hover .location-header,
 .location-header.highlighted {
   border: 1px solid rgba(0, 0, 0, 0);
-  background: linear-gradient(
-    90deg,
-    var(--primary-light) 0%,
-    var(--primary) 15%,
-    var(--secondary) 50%,
-    var(--primary) 85%,
-    var(--primary-light) 100%
-  );
+  background: linear-gradient(90deg,
+      var(--primary-light) 0%,
+      var(--primary) 15%,
+      var(--secondary) 50%,
+      var(--primary) 85%,
+      var(--primary-light) 100%);
   background-size: 1000% 100%;
   animation: btn-gradient-slide 20s linear infinite;
 }
 
-.location-title {
+.location-title-name {
   font-weight: 600;
   font-size: 18px;
   color: var(--primary);
 }
 
-.location-group:hover .location-title,
-.location-header.highlighted .location-title {
+.location-group:hover .location-title-name,
+.location-header.highlighted .location-title-name {
   color: var(--text-deep-light);
 }
 
@@ -974,18 +960,17 @@ button,
   width: 40px;
   height: 40px;
   display: flex;
-  color: var(--text-deep-light);
+  color: var(--primary);
   align-items: center;
   justify-content: center;
-  border-radius: 50%;
   overflow: hidden;
   flex-shrink: 0;
-  background-color: var(--primary);
 }
 
 .location-group:hover .location-logo,
 .location-header.highlighted .location-logo {
   background: none;
+  color: var(--text-deep-light);
 }
 
 .btn-small svg {
@@ -1038,7 +1023,7 @@ button,
 
 .mission-img {
   width: 100%;
-  height: 100%;
+  aspect-ratio: 1;
   object-fit: cover;
   cursor: pointer;
 }
@@ -1063,7 +1048,7 @@ button,
   backface-visibility: hidden;
 }
 
-.modal-container > * {
+.modal-container>* {
   pointer-events: none;
 }
 
@@ -1076,13 +1061,11 @@ button,
   z-index: 2000;
   border-radius: 8px;
   background-color: var(--primary);
-  background: linear-gradient(
-    105deg,
-    transparent 40%,
-    var(--primary-light) 45%,
-    var(--secondary-light) 50%,
-    transparent 54%
-  );
+  background: linear-gradient(105deg,
+      transparent 40%,
+      var(--primary-light) 45%,
+      var(--secondary-light) 50%,
+      transparent 54%);
   filter: brightness(1.1) opacity(0.5);
   mix-blend-mode: color-dodge;
   background-size: 150% 150%;
@@ -1176,7 +1159,7 @@ button,
   color: var(--text-medium);
 }
 
-/* 미션 상세 페이지 */
+/****************************** MissionDetail 페이지 스타일 ******************************/
 .mission-detail {
   display: flex;
   flex-direction: column;
@@ -1332,107 +1315,73 @@ button,
   padding: 12px 0;
 }
 
-/* 마이페이지 */
-.mypage {
-  padding: 0;
-}
-
+/****************************** MyPage 페이지 스타일 ******************************/
 .profile-section {
-  padding: 16px;
-  background: var(--bg-secondary);
-  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
-  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  padding: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
 }
 
 .profile-header {
   display: flex;
   align-items: center;
-  margin-bottom: 20px;
+  gap: var(--spacing-lg);
 }
 
 .profile-avatar {
-  position: relative;
   width: 90px;
   height: 90px;
   border-radius: 50%;
   overflow: hidden;
-  margin-right: 16px;
   box-shadow: var(--shadow-md);
+  background-color: var(--primary);
 }
 
 .profile-avatar img {
-  width: 100%;
-  height: 100%;
   object-fit: cover;
 }
 
-.edit-avatar-btn {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 32px;
-  height: 32px;
-  background: var(--primary);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-}
-
 .profile-info {
-  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
 
 .profile-info h2 {
   font-size: 20px;
   font-weight: 700;
-  margin-bottom: 4px;
+  color: var(--text-deep-dark);
+}
+
+.profile-info div {
+  font-size: 14px;
   color: var(--text-dark);
 }
 
-.profile-info p {
-  font-size: 14px;
-  color: var(--text-medium);
-  margin-bottom: 10px;
+.profile-edit {
+  width: 100%;
+  height: 48px;
+  text-decoration: none;
+  color: var(--text-deep-light);
+  /* background-color: var(--primary-light); */
 }
 
-.level-progress {
+.stats-wrapper {
+  padding: var(--spacing-md);
   display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.level-bar {
-  height: 6px;
-  background: rgba(0, 0, 0, 0.1);
-  border-radius: 3px;
-  overflow: hidden;
-}
-
-.level-fill {
-  height: 100%;
-  background: var(--primary);
-  border-radius: 3px;
-}
-
-.level-progress span {
-  font-size: 12px;
-  color: var(--text-medium);
-}
-
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
   gap: 10px;
+  background-color: var(--bg-secondary);
 }
 
-.stat-box {
-  background: white;
+.stat-container {
+  width: 100%;
   border-radius: var(--radius-sm);
   padding: 10px 5px;
   text-align: center;
   box-shadow: var(--shadow-sm);
+  background-color: var(--text-deep-light);
 }
 
 .stat-label {
@@ -1440,149 +1389,73 @@ button,
   color: var(--text-medium);
 }
 
+.section-container {
+  padding: var(--spacing-md);
+}
+
 .section-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px 16px 10px;
+  padding: 16px 0;
 }
 
 .section-header h3 {
   font-size: 16px;
-  font-weight: 700;
-  color: var(--text-dark);
+  font-weight: 600;
+  color: var(--text-deep-dark);
 }
 
 .view-all {
-  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
   color: var(--primary);
   text-decoration: none;
   font-weight: 500;
 }
 
-.ranking-section {
-  margin-bottom: 20px;
+.view-all svg {
+  width: 10px;
+  height: 10px;
 }
 
-.ranking-card {
-  display: flex;
-  align-items: center;
-  background: white;
-  margin: 0 16px 12px;
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-sm);
-  padding: 16px;
-}
-
-.ranking-position {
-  background: var(--bg-secondary);
-  padding: 10px;
-  border-radius: var(--radius-sm);
-  text-align: center;
-  margin-right: 14px;
-}
-
-.position-number {
-  font-size: 24px;
-  font-weight: 700;
-  color: var(--primary);
-}
-
-.position-text {
-  font-size: 12px;
-  color: var(--text-medium);
-}
-
-.ranking-info {
-  display: flex;
-  align-items: center;
-}
-
-.ranking-info svg {
-  margin-right: 12px;
-  color: var(--primary);
-}
-
-.ranking-title {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--text-dark);
-  margin-bottom: 2px;
-}
-
-.ranking-subtitle {
-  font-size: 12px;
-  color: var(--text-medium);
-}
-
-.photo-grid {
+.img-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 12px;
-  padding: 0 16px;
 }
 
-.photo-item {
-  position: relative;
-  border-radius: var(--radius-md);
-  overflow: hidden;
-  box-shadow: var(--shadow-sm);
-}
-
-.photo-item img {
+.img-item img {
   width: 100%;
-  height: 150px;
+  aspect-ratio: 1;
   object-fit: cover;
   display: block;
 }
 
-.photo-badge {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  background: var(--accent);
-  color: white;
-  font-size: 11px;
-  font-weight: 600;
-  padding: 4px 8px;
-  border-radius: 99px;
-}
-
-.photo-badge.best {
-  background: var(--primary-deep);
-}
-
-.settings-section {
-  margin-top: 24px;
-  padding: 0 16px 16px;
-}
-
-.settings-item {
+.section-setting {
   display: flex;
-  align-items: center;
-  padding: 14px 16px;
-  background: white;
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-sm);
-  margin-bottom: 12px;
-  text-decoration: none;
-  color: var(--text-dark);
+  flex-direction: column;
+  gap: 10px;
+  padding: var(--spacing-md);
 }
 
-.settings-item svg:first-child {
-  margin-right: 16px;
-  color: var(--primary);
+.signout-btn {
+  width: 100%;
+  height: 48px;
+  color: var(--tertiary);
+  background-color: var(--text-deep-light);
+  border: 1px solid var(--tertiary);
 }
 
-.settings-item span {
-  flex: 1;
-  font-size: 15px;
-  font-weight: 500;
+.signout-btn:hover {
+  height: 48px;
+  background-color: var(--tertiary-light);
+  filter: brightness(90%);
 }
 
-.settings-item svg:last-child {
-  color: var(--text-medium);
-}
+.withdraw-btn {}
 
 /* 주간 베스트 페이지 */
 .weekly-best {
