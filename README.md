@@ -87,3 +87,24 @@
 - 시즌별 챌린지
 - 친구 초대 보상
 - 테마별 미션 (봄꽃 명소, 야경 명소 등)
+
+## 🔧 개발 환경 설정
+
+### AWS S3 이미지 업로드 설정
+프로젝트 루트 디렉토리에 `.env.local` 파일을 생성하고 다음 환경 변수를 설정하세요:
+
+```
+# AWS S3 설정
+VUE_APP_AWS_REGION=ap-northeast-2
+VUE_APP_S3_BUCKET_NAME=your-bucket-name
+VUE_APP_AWS_ACCESS_KEY=your-access-key
+VUE_APP_AWS_SECRET_KEY=your-secret-key
+```
+
+각 변수의 의미:
+- `VUE_APP_AWS_REGION`: AWS 리전 (기본값: ap-northeast-2)
+- `VUE_APP_S3_BUCKET_NAME`: S3 버킷 이름
+- `VUE_APP_AWS_ACCESS_KEY`: AWS 액세스 키
+- `VUE_APP_AWS_SECRET_KEY`: AWS 시크릿 키
+
+> ⚠️ 보안 주의: `.env.local` 파일은 절대로 Git에 커밋하지 마세요!

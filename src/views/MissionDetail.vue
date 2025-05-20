@@ -52,32 +52,11 @@
           사진으로 선정될 수 있습니다!
         </p>
 
-        <div
-          class="upload-box"
-          :class="{ 'file-selected': selectedFile }"
-          @click="triggerFileInput"
-        >
-          <svg
-            width="48"
-            height="48"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M19 5V19H5V5H19ZM19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3ZM14.14 11.86L11.14 15.73L9 13.14L6 17H18L14.14 11.86Z"
-              fill="currentColor"
-            />
-          </svg>
-          <p>{{ uploadText }}</p>
-          <input
-            type="file"
-            ref="photoUpload"
-            accept="image/*"
-            style="display: none"
-            @change="handleFileUpload"
-          />
-        </div>
+        <ImageUploader 
+          folder="missions/" 
+          @upload-success="handleUploadSuccess" 
+          @upload-error="handleUploadError"
+        />
 
         <div class="comment-box">
           <h4>코멘트 남기기</h4>
@@ -92,18 +71,22 @@
 
       <div class="action-buttons">
         <router-link to="/mission-list" class="btn-outline">취소</router-link>
-        <button class="btn" @click="submitMission">미션 제출하기</button>
+        <button class="btn" @click="submitMission" :disabled="!uploadedImageUrl">미션 제출하기</button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { ImageErrorMixin, FileUploadMixin } from "@/script";
+import { ImageErrorMixin } from "@/script";
+import ImageUploader from '@/components/ImageUploader.vue';
 
 export default {
   name: "MissionDetail",
-  mixins: [ImageErrorMixin, FileUploadMixin],
+  components: {
+    ImageUploader
+  },
+  mixins: [ImageErrorMixin],
   data() {
     return {
       mission: {
@@ -122,27 +105,22 @@ export default {
         exampleImage:
           "https://via.placeholder.com/320x180?text=동궁과+후원+예시",
       },
-      selectedFile: null,
-      uploadText: "여기를 클릭하여 사진을 업로드하세요",
+      uploadedImageUrl: '',
       comment: "",
+      uploadError: ""
     };
   },
   methods: {
-    triggerFileInput() {
-      this.$refs.photoUpload.click();
+    handleUploadSuccess(imageUrl) {
+      this.uploadedImageUrl = imageUrl;
+      console.log('이미지 업로드 성공:', imageUrl);
     },
-    handleFileUpload(event) {
-      // FileUploadMixin의 메서드를 직접 호출
-      this.FileUploadMixin_handleFileUpload(event);
-
-      const files = event.target.files;
-      if (files.length > 0) {
-        this.selectedFile = files[0];
-        this.uploadText = `${files[0].name} 선택됨`;
-      }
+    handleUploadError(error) {
+      this.uploadError = '이미지 업로드 중 오류가 발생했습니다.';
+      console.error('이미지 업로드 실패:', error);
     },
     submitMission() {
-      if (!this.selectedFile) {
+      if (!this.uploadedImageUrl) {
         alert("사진을 업로드해주세요");
         return;
       }
@@ -150,7 +128,7 @@ export default {
       // 실제 구현에서는 API 호출을 통해 미션 제출
       console.log("미션 제출", {
         missionId: this.mission.id,
-        file: this.selectedFile,
+        imageUrl: this.uploadedImageUrl,
         comment: this.comment,
       });
 
