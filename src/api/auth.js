@@ -40,6 +40,14 @@ export function getMyInfo() {
 }
 
 /**
+ * 내 정보 수정
+ * @param {{ nickname: string, profileUrl?: string }} payload
+ */
+export function updateMyInfo(payload) {
+  return axios.patch("/api/auth/me", payload);
+}
+
+/**
  * 계정 비활성화 (회원탈퇴)
  * @returns {Promise<ApiResponseDto<string>>}
  */
