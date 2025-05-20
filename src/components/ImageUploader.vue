@@ -105,7 +105,10 @@ export default {
       // CloudFront 설정
       cloudFrontDomain: process.env.VUE_APP_CLOUDFRONT_DOMAIN || 'd8h3hut1jkl2n.cloudfront.net',
       // 사용자 정보
-      userNickname: 'user' // 나중에 사용자 정보에서 가져오도록 수정 필요
+      userNickname: 'user', // 나중에 사용자 정보에서 가져오도록 수정 필요
+      // 객체 키 저장
+      originalObjectKey: '',
+      thumbnailObjectKey: ''
     };
   },
   created() {
@@ -117,15 +120,16 @@ export default {
     async getCloudFrontCookies() {
       try {
         // 개발 환경에서는 백엔드가 준비되지 않았을 수 있으므로 요청을 건너뛰거나 처리합니다
-        if (process.env.NODE_ENV === 'development') {
+        if (process.env.NODE_ENV === 'development' && !this.apiBaseUrl.includes('localhost')) {
           console.log('개발 환경: CloudFront 인증 쿠키 요청을 건너뜁니다.');
           return;
         }
         
-        await axios.get(`${this.apiBaseUrl}/api/auth/cloudfront`, {
+        const response = await axios.get(`${this.apiBaseUrl}/api/auth/cloudfront`, {
           withCredentials: true
         });
-        console.log('CloudFront 인증 쿠키가 설정되었습니다.');
+        
+        console.log('CloudFront 인증 쿠키가 설정되었습니다. 만료: ', response.data.expiresAt);
       } catch (error) {
         console.error('CloudFront 인증 쿠키 설정 실패:', error);
         // 실패해도 계속 진행하도록 오류를 무시합니다
@@ -186,7 +190,7 @@ export default {
       
       try {
         // 백엔드 API가 준비되지 않았으므로 로컬 미리보기 URL 사용
-        if (process.env.NODE_ENV === 'development' || !this.apiBaseUrl) {
+        if (process.env.NODE_ENV === 'development' && !this.apiBaseUrl.includes('localhost')) {
           // 시뮬레이션된 업로드 진행
           this.uploadProgress = 30;
           await new Promise(resolve => setTimeout(resolve, 500));
@@ -209,15 +213,24 @@ export default {
           return;
         }
         
-        // 실제 백엔드 API 호출 (백엔드가 준비된 경우)
-        const response = await axios.post(`${this.apiBaseUrl}/api/presigned-upload`, {
-          filename: this.selectedFile.name,
-          contentType: this.selectedFile.type,
+        // 실제 백엔드 API 호출
+        const presignedResponse = await axios.post(`${this.apiBaseUrl}/api/presigned-upload`, {
           userNickname: this.userNickname,
-          folder: this.currentFolder
+          fileName: this.selectedFile.name,
+          contentType: this.selectedFile.type
         });
         
-        const { presignedUrl, imageUrl, thumbnailUrl, key } = response.data;
+        // API 응답 데이터 추출
+        const { 
+          presignedUrl, 
+          originalObjectKey, 
+          thumbnailObjectKey, 
+          bucketName 
+        } = presignedResponse.data;
+        
+        // 객체 키 저장
+        this.originalObjectKey = originalObjectKey;
+        this.thumbnailObjectKey = thumbnailObjectKey;
         
         // S3에 직접 업로드
         await axios.put(presignedUrl, this.selectedFile, {
@@ -231,11 +244,15 @@ export default {
           }
         });
         
-        // 업로드 성공 처리
-        this.uploadedImageUrl = imageUrl;
+        // 원본 이미지 서명된 URL 획득
+        const originalSignedResponse = await axios.post(`${this.apiBaseUrl}/api/signed-url`, {
+          objectKey: this.originalObjectKey
+        });
+        
+        this.uploadedImageUrl = originalSignedResponse.data.signedUrl;
         
         // 썸네일 생성 확인을 위한 폴링 시작
-        this.startPollingForThumbnail(thumbnailUrl, key);
+        this.startPollingForThumbnail();
       } catch (error) {
         console.error('업로드 오류:', error);
         this.error = `업로드 중 오류가 발생했습니다: ${error.message || '알 수 없는 오류'}`;
@@ -245,7 +262,7 @@ export default {
     },
     
     // 썸네일 생성 완료 확인을 위한 폴링 함수
-    startPollingForThumbnail(thumbnailUrl, key) {
+    startPollingForThumbnail() {
       this.pollingCount = 0;
       
       // 이전 폴링 인터벌이 있다면 정리
@@ -253,19 +270,19 @@ export default {
         clearInterval(this.pollingInterval);
       }
       
-      // 정기적으로 썸네일 존재 여부 확인
+      // 정기적으로 썸네일 URL 획득 시도
       this.pollingInterval = setInterval(async () => {
         this.pollingCount++;
         
         try {
-          // HEAD 요청으로 썸네일 존재 여부 확인
-          const response = await axios.head(thumbnailUrl, {
-            withCredentials: true // CloudFront 쿠키를 전송하기 위해
+          // 썸네일 서명된 URL 요청
+          const thumbnailSignedResponse = await axios.post(`${this.apiBaseUrl}/api/signed-url`, {
+            objectKey: this.thumbnailObjectKey
           });
           
-          if (response.status === 200) {
-            // 썸네일이 생성됨
-            this.uploadedThumbnailUrl = thumbnailUrl;
+          if (thumbnailSignedResponse.data.signedUrl) {
+            // 썸네일 URL 획득 성공
+            this.uploadedThumbnailUrl = thumbnailSignedResponse.data.signedUrl;
             clearInterval(this.pollingInterval);
             this.isUploading = false;
             
@@ -277,45 +294,21 @@ export default {
           }
         } catch (error) {
           // 아직 썸네일이 생성되지 않음
+          console.log(`썸네일 확인 시도 ${this.pollingCount}/${this.maxPollingAttempts}`);
+          
           if (this.pollingCount >= this.maxPollingAttempts) {
-            try {
-              // 썸네일이 아직 없으므로 백엔드에 직접 서명된 URL 요청
-              const thumbnailKey = key.replace(/^images\/(.+?)\//, `images/thumb/$1/`);
-              const signedUrlResponse = await axios.post(`${this.apiBaseUrl}/api/signed-url`, {
-                filePath: thumbnailKey
-              });
-              
-              if (signedUrlResponse.data.signedUrl) {
-                this.uploadedThumbnailUrl = signedUrlResponse.data.signedUrl;
-                
-                // 업로드 성공 이벤트 발생
-                this.$emit('upload-success', {
-                  original: this.uploadedImageUrl,
-                  thumbnail: this.uploadedThumbnailUrl
-                });
-              } else {
-                // 썸네일 URL을 얻지 못한 경우, 원본 이미지 URL만 전달
-                this.$emit('upload-success', {
-                  original: this.uploadedImageUrl,
-                  thumbnail: null
-                });
-              }
-            } catch (signError) {
-              console.error('썸네일 URL 서명 오류:', signError);
-              
-              // 썸네일 URL을 얻지 못한 경우, 원본 이미지 URL만 전달
-              this.$emit('upload-success', {
-                original: this.uploadedImageUrl,
-                thumbnail: null
-              });
-            }
-            
-            // 폴링 중단
+            // 최대 시도 횟수 초과, 썸네일 없이 완료
             clearInterval(this.pollingInterval);
             this.isUploading = false;
+            
+            // 원본 이미지 URL만 전달
+            this.$emit('upload-success', {
+              original: this.uploadedImageUrl,
+              thumbnail: null
+            });
           }
         }
-      }, 1000); // 1초마다 확인
+      }, 1500); // 1.5초마다 확인
     },
 
     removeImage() {
@@ -325,6 +318,8 @@ export default {
       this.error = '';
       this.uploadedImageUrl = '';
       this.uploadedThumbnailUrl = '';
+      this.originalObjectKey = '';
+      this.thumbnailObjectKey = '';
     }
   }
 };
