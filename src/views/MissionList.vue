@@ -147,11 +147,20 @@
 </template>
 
 <script>
-import { ImageErrorMixin } from "@/script";
+import { getPlaceById } from "@/api/place";
+import { getMissionsByPlaceId } from "@/api/mission";
+import { getMyInfo } from "@/api/auth";
+import { getMyBoards } from "@/api/board";
 
 export default {
   name: "MissionList",
-  mixins: [ImageErrorMixin],
+  data() {
+    return {
+      locationInfo: {},
+      quests: [],
+      userId: null,
+    };
+  },
   computed: {
     availableQuests() {
       return this.quests.filter((q) => !q.completed);
@@ -160,66 +169,42 @@ export default {
       return this.quests.filter((q) => q.completed);
     },
   },
-  data() {
-    return {
-      locationInfo: {
-        id: 1,
-        name: "경복궁",
-        address: "서울 종로구 사직로 161",
-        completedCount: 3,
-        totalCount: 5,
-        status: "방문 완료",
-        description: `경복궁은 조선왕조의 법궁으로, 1395년 태조 이성계가 창건했습니다. 고려 말 개성에서 한양으로 수도를 옮긴 후 가장 먼저 지어진 궁궐입니다. 경복(景福)이란 이름은 '큰 복을 누리라'는 의미를 담고 있습니다.`,
-        visitors: "3,250",
-        avgCompletionTime: "2.5시간",
-      },
-      quests: [
-        {
-          id: 1,
-          title: "경복궁 방문하기",
-          description: "경복궁에 방문하세요.",
-          points: 100,
-          completed: true,
-        },
-        {
-          id: 2,
-          title: "경복궁 근정전 인증하기",
-          description: "경복궁의 정전인 근정전 앞에서 인증샷을 찍어보세요.",
-          points: 100,
-          completed: true,
-        },
-        {
-          id: 3,
-          title: "향원정의 연못 찾기",
-          description:
-            "경복궁 후원에 있는 향원정 연못의 아름다운 모습을 담아보세요.",
-          points: 150,
-          completed: true,
-        },
-        {
-          id: 4,
-          title: "숨겨진 동궁과 후원 찾기",
-          description:
-            "경복궁에서 가장 아름다운 영역 중 하나인 동궁과 후원의 풍경을 담아보세요.",
-          points: 200,
-          completed: false,
-        },
-        {
-          id: 5,
-          title: "핫플 따라 찍기",
-          description: "경복궁에서 하늘과 함께 후원의 풍경을 담아보세요.",
-          points: 200,
-          completed: false,
-        },
-      ],
-    };
-  },
-  mounted() {
-    // 라우터에서 전달된 장소 ID를 기반으로 미션 데이터 로드
-    const locationId = this.$route.params.id;
-    if (locationId) {
-      // 실제 구현에서는 API를 호출하여 해당 장소의 미션 목록을 가져올 것
-      console.log("Loading missions for location ID:", locationId);
+  async mounted() {
+    const placeId = this.$route.params.id;
+
+    try {
+      const me = await getMyInfo();
+      this.userId = me.data?.data.memberId;
+
+      const place = await getPlaceById(placeId);
+      this.locationInfo = place.data?.data;
+
+      const missionRes = await getMissionsByPlaceId(placeId);
+      const missions = missionRes.data?.data || [];
+
+      const boardRes = await getMyBoards();
+      const myBoards = boardRes.data?.data || [];
+      const completedMissionIds = new Set(myBoards.map((b) => b.missionId));
+
+      const questsWithCompletion = missions.map((mission) => ({
+        ...mission,
+        completed: completedMissionIds.has(mission.missionId),
+      }));
+
+      this.quests = questsWithCompletion;
+
+      const completedCount = questsWithCompletion.filter(
+        (q) => q.completed
+      ).length;
+      const totalCount = questsWithCompletion.length;
+
+      this.locationInfo = {
+        ...this.locationInfo,
+        completedCount,
+        totalCount,
+      };
+    } catch (err) {
+      console.error("미션 정보 로딩 실패", err);
     }
   },
 };
