@@ -150,7 +150,7 @@
 import { getPlaceById } from "@/api/place";
 import { getMissionsByPlaceId } from "@/api/mission";
 import { getMyInfo } from "@/api/auth";
-import { getMyBoardByMissionId } from "@/api/board";
+import { getMyBoards } from "@/api/board";
 
 export default {
   name: "MissionList",
@@ -173,46 +173,38 @@ export default {
     const placeId = this.$route.params.id;
 
     try {
-      // 1. 로그인한 사용자 정보 가져오기
       const me = await getMyInfo();
       this.userId = me.data?.data.memberId;
 
-      // 2. 장소 정보 가져오기
       const place = await getPlaceById(placeId);
       this.locationInfo = place.data?.data;
 
-      // 3. 미션 목록 가져오기 (방어 처리)
       const missionRes = await getMissionsByPlaceId(placeId);
-      const missions = missionRes.data?.data;
+      const missions = missionRes.data?.data || [];
 
-      if (!missions || missions.length === 0) {
-        console.warn("미션 목록 없음");
-        this.quests = [];
-        return;
-      }
+      const boardRes = await getMyBoards();
+      const myBoards = boardRes.data?.data || [];
+      const completedMissionIds = new Set(myBoards.map((b) => b.missionId));
 
-      // 4. 미션별 게시물 존재 여부 확인
-      const questsWithCompletion = await Promise.all(
-        missions.map(async (mission) => {
-          try {
-            const boardRes = await getMyBoardByMissionId(mission.missionId);
-            return {
-              ...mission,
-              completed: boardRes.data?.data !== null,
-            };
-          } catch (err) {
-            console.warn(`미션 ${mission.missionId} board 조회 실패`, err);
-            return {
-              ...mission,
-              completed: false,
-            };
-          }
-        })
-      );
+      const questsWithCompletion = missions.map((mission) => ({
+        ...mission,
+        completed: completedMissionIds.has(mission.missionId),
+      }));
 
       this.quests = questsWithCompletion;
+
+      const completedCount = questsWithCompletion.filter(
+        (q) => q.completed
+      ).length;
+      const totalCount = questsWithCompletion.length;
+
+      this.locationInfo = {
+        ...this.locationInfo,
+        completedCount,
+        totalCount,
+      };
     } catch (err) {
-      console.error("미션 정보 로딩 전체 실패", err);
+      console.error("미션 정보 로딩 실패", err);
     }
   },
 };

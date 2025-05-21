@@ -4,6 +4,10 @@ export function getAllMissions() {
   return axios.get("/api/missions");
 }
 
+export function getMissionsByPlaceId(placeId) {
+  return axios.get(`/api/missions/place/${placeId}`);
+}
+
 export function getMissionById(id) {
   return axios.get(`/api/missions/${id}`);
 }
