@@ -164,7 +164,11 @@ export default {
         this.userData.profileUrl = data.profileUrl;
       } catch (err) {
         console.error("유저 정보 불러오기 실패", err);
+        localStorage.removeItem("jwtToken");
+        document.cookie =
+          "refreshToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC";
         alert("마이페이지 정보를 불러오는 데 실패했습니다.");
+        this.$router.push("/signin");
       }
     },
     async handleSignoutClick(btn) {
