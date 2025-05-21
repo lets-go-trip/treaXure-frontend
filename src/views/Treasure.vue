@@ -197,4 +197,8 @@ export default {
 .header-title {
   font-family: "Gloria Hallelujah", cursive;
 }
+
+.btn-small {
+  height: 64px;
+}
 </style>

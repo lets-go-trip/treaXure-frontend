@@ -163,10 +163,13 @@ button,
 .btn-small {
   position: relative;
   /* ::before 위치 기준 */
-  z-index: 0;
-  display: block;
   width: 100%;
-  padding: 20px 24px;
+  height: 48px;
+  z-index: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* padding: 20px 24px; */
   /* border-radius: var(--radius-lg) var(--radius-lg) 0 0; */
   background: radial-gradient(circle farthest-side at 10% 20%,
       var(--primary-light),
@@ -183,7 +186,6 @@ button,
   /* hue-rotate 애니메이션 */
   /* animation: hue-cycle 5s linear infinite; */
   border-radius: 10px;
-  text-align: center;
 }
 
 /* ::before로 그라디언트 레이어 생성 */
