@@ -275,8 +275,8 @@ export default {
 
           // 업로드 성공 이벤트 (개발용)
           this.$emit("upload-success", {
-            original: localImageUrl,
-            thumbnail: this.uploadedThumbnailUrl,
+            original: localImageUrl.split("?")[0],
+            thumbnail: this.uploadedThumbnailUrl.split("?")[0],
           });
 
           this.isUploading = false;
@@ -376,8 +376,8 @@ export default {
 
           // 업로드 성공 이벤트 (개발용)
           this.$emit("upload-success", {
-            original: localImageUrl,
-            thumbnail: this.uploadedThumbnailUrl,
+            original: localImageUrl.split("?")[0],
+            thumbnail: this.uploadedThumbnailUrl.split("?")[0],
           });
 
           this.isUploading = false;
@@ -468,8 +468,8 @@ export default {
 
           // 업로드 성공 이벤트 발생
           this.$emit("upload-success", {
-            original: this.uploadedImageUrl,
-            thumbnail: this.uploadedThumbnailUrl,
+            original: this.uploadedImageUrl.split("?")[0],
+            thumbnail: this.uploadedThumbnailUrl.split("?")[0],
           });
         }, 1500);
 
@@ -501,8 +501,8 @@ export default {
 
             // 업로드 성공 이벤트 발생
             this.$emit("upload-success", {
-              original: this.uploadedImageUrl,
-              thumbnail: this.uploadedThumbnailUrl,
+              original: this.uploadedImageUrl.split("?")[0],
+              thumbnail: this.uploadedThumbnailUrl.split("?")[0],
             });
           }
         } catch (error) {
@@ -519,8 +519,10 @@ export default {
 
             // 원본 이미지 URL만 전달 (원본을 썸네일로도 사용)
             this.$emit("upload-success", {
-              original: this.uploadedImageUrl,
-              thumbnail: this.createThumbnailUrl(this.uploadedImageUrl), // 람다 오류가 있을 경우 원본 이미지 기반 썸네일 URL 생성
+              original: this.uploadedImageUrl.split("?")[0],
+              thumbnail: this.createThumbnailUrl(this.uploadedImageUrl).split(
+                "?"
+              )[0], // 람다 오류가 있을 경우 원본 이미지 기반 썸네일 URL 생성
             });
           }
         }
