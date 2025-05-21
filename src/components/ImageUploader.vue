@@ -16,6 +16,8 @@
         style="display: none"
       />
 
+      <p v-if="isUploading" class="uploading-indicator">업로드 중...</p>
+
       <div v-if="!previewUrl" class="upload-placeholder">
         <i class="upload-icon">📁</i>
         <p>이미지를 드래그하거나 클릭하여 업로드하세요</p>
@@ -48,25 +50,6 @@
     </div>
 
     <p v-if="error" class="error-message">{{ error }}</p>
-
-    <div v-if="!previewUrl && !isUploading" class="upload-btn-container">
-      <button
-        class="upload-btn"
-        @click="triggerFileInput"
-        :disabled="isUploading"
-      >
-        파일 선택
-      </button>
-    </div>
-
-    <div
-      v-if="previewUrl && !isUploading && !uploadedImageUrl"
-      class="upload-btn-container"
-    >
-      <button class="upload-btn" @click="uploadImage" :disabled="isUploading">
-        업로드
-      </button>
-    </div>
   </div>
 </template>
 
@@ -89,7 +72,7 @@ export default {
       default: false,
     },
   },
-  emits: ["upload-success", "upload-error"],
+  emits: ["upload-success", "upload-error", "upload-start", "upload-end"],
   data() {
     return {
       fileInput: null,
@@ -169,13 +152,13 @@ export default {
 
     handleFileChange(event) {
       const file = event.target.files[0];
-      this.validateAndProcessFile(file);
+      this.validateAndProcessFile(file).then(() => this.uploadImage());
     },
 
     handleDrop(event) {
       this.isDragging = false;
       const file = event.dataTransfer.files[0];
-      this.validateAndProcessFile(file);
+      this.validateAndProcessFile(file).then(() => this.uploadImage());
     },
 
     // 파일 → WebP 변환 헬퍼
@@ -252,6 +235,8 @@ export default {
       }
 
       this.isUploading = true;
+      this.$emit("upload-start"); // 업로드 시작 시점에 emit 추가
+
       this.uploadProgress = 0;
       this.error = "";
 
@@ -280,6 +265,7 @@ export default {
           });
 
           this.isUploading = false;
+          this.$emit("upload-end");
           return;
         }
 
@@ -381,6 +367,7 @@ export default {
           });
 
           this.isUploading = false;
+          this.$emit("upload-end"); // 성공 시 종료 emit
           return;
         }
 
@@ -442,8 +429,9 @@ export default {
           }`;
         }
 
-        this.isUploading = false;
         this.$emit("upload-error", error);
+        this.isUploading = false;
+        this.$emit("upload-end"); // 실패 시에도 종료 emit
       }
     },
 
@@ -471,6 +459,8 @@ export default {
             original: this.uploadedImageUrl.split("?")[0],
             thumbnail: this.uploadedThumbnailUrl.split("?")[0],
           });
+
+          this.$emit("upload-end");
         }, 1500);
 
         return;
@@ -504,6 +494,8 @@ export default {
               original: this.uploadedImageUrl.split("?")[0],
               thumbnail: this.uploadedThumbnailUrl.split("?")[0],
             });
+
+            this.$emit("upload-end"); // 썸네일까지 업로드 완료 시점에 emit
           }
         } catch (error) {
           // 아직 썸네일이 생성되지 않음
@@ -524,6 +516,8 @@ export default {
                 "?"
               )[0], // 람다 오류가 있을 경우 원본 이미지 기반 썸네일 URL 생성
             });
+
+            this.$emit("upload-end"); // 폴링 실패 시에도 종료 emit
           }
         }
       }, 2000); // 2초마다 확인 (시간 증가)
@@ -564,10 +558,26 @@ export default {
   position: relative;
 }
 
+/* ProfileEdit에서만 적용될 스타일 */
+.visually-hidden-uploader {
+  display: none;
+}
+
 .upload-area:hover,
 .upload-area.is-dragging {
-  border-color: #4caf50;
+  border-color: var(--primary);
   background-color: rgba(76, 175, 80, 0.05);
+}
+
+.uploading-indicator {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-weight: bold;
+  background-color: var(--text-deep-light);
+  color: var(--primary);
+  z-index: 10;
 }
 
 .upload-placeholder {
@@ -598,10 +608,11 @@ export default {
   position: absolute;
   top: -10px;
   right: -10px;
+  padding: 10px;
   background: #ff4444;
   color: white;
   border: none;
-  border-radius: 50%;
+  border-radius: 0;
   width: 24px;
   height: 24px;
   font-size: 16px;
@@ -621,7 +632,7 @@ export default {
 
 .progress {
   height: 100%;
-  background-color: #4caf50;
+  background-color: var(--primary);
   transition: width 0.3s ease;
 }
 
@@ -645,7 +656,7 @@ export default {
 
 .upload-btn {
   padding: 8px 16px;
-  background-color: #4caf50;
+  background-color: var(--primary);
   color: white;
   border: none;
   border-radius: 4px;

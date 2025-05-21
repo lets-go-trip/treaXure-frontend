@@ -25,31 +25,48 @@
     <div class="profile-edit-container">
       <div class="profile-header">
         <ImageUploader
+          ref="hiddenUploader"
+          class="visually-hidden-uploader"
           :folder="'profile/'"
           :showFolderSelector="false"
           @upload-success="handleImageUpload"
+          @upload-start="isUploading = true"
+          @upload-end="isUploading = false"
         />
-        <div class="profile-avatar" v-if="uploadedImageUrl">
-          <img :src="uploadedImageUrl" alt="업로드된 이미지" />
-        </div>
-        <div class="profile-avatar" v-else>
-          <img :src="userData.profileUrl" alt="기존 프로필 이미지" />
-        </div>
-      </div>
-
-      <form @submit.prevent="handleProfileEdit" class="profile-edit-form">
-        <div class="form-group">
-          {{ userData.email }}
-        </div>
-        <div class="form-group">
-          <input
-            id="nickname"
-            type="text"
-            v-model="nickname"
-            :placeholder="userData.nickname"
+        프로필 사진
+        <div class="profile-avatar" @click="triggerUpload">
+          <img
+            :src="uploadedImageUrl || userData.profileUrl"
+            alt="프로필 이미지"
           />
         </div>
-        <button type="submit" class="btn btn-profile-edit">수정 완료</button>
+        <div v-if="isUploading" class="uploading-message">업로드 중...</div>
+      </div>
+      <form @submit.prevent="handleProfileEdit" class="profile-edit-form">
+        <div class="profile-group">
+          <div class="from-label">아이디</div>
+          <div class="form-group user-email-container">
+            {{ userData.email }}
+          </div>
+        </div>
+        <div class="profile-group">
+          <div class="from-label">닉네임</div>
+          <div class="form-group">
+            <input
+              id="nickname"
+              type="text"
+              v-model="nickname"
+              :placeholder="userData.nickname"
+            />
+          </div>
+        </div>
+        <button
+          type="submit"
+          class="btn btn-profile-edit"
+          :disabled="isUploading"
+        >
+          수정 완료
+        </button>
       </form>
     </div>
   </div>
@@ -73,6 +90,7 @@ export default {
       },
       nickname: "",
       uploadedImageUrl: "", // 새로 업로드된 이미지 URL
+      isUploading: false, // 사진 업로드 중 상태
     };
   },
   async mounted() {
@@ -93,6 +111,9 @@ export default {
     },
     async handleImageUpload({ original }) {
       this.uploadedImageUrl = original;
+    },
+    triggerUpload() {
+      this.$refs.hiddenUploader?.triggerFileInput();
     },
     async handleProfileEdit() {
       try {
@@ -116,13 +137,28 @@ export default {
 
 <style scoped>
 .profile-header {
+  position: relative;
   display: flex;
   padding: var(--spacing-md);
-  justify-content: center;
+  justify-content: flex-start;
 }
+
 .profile-avatar {
+  position: relative;
   width: 150px;
   height: 150px;
+  cursor: pointer;
+}
+
+.uploading-message {
+  position: absolute;
+  top: 50%;
+  left: 60%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  font-weight: bold;
+  color: var(--primary);
+  z-index: 10;
 }
 
 .profile-edit-form {
@@ -133,8 +169,32 @@ export default {
   padding: 20px;
 }
 
-.form-group {
+.profile-group {
+  display: flex;
   width: 100%;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.from-label {
+  width: 50px;
+}
+
+.form-group {
+  display: flex;
+  width: 350px;
+}
+
+.user-email-container {
+  display: flex;
+  align-items: center;
+  width: 350px;
+  height: 48px;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: none;
+  border: 1px solid var(--text-medium);
+  outline: none;
+  color: var(--text-dark);
 }
 
 .form-group input {
