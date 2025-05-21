@@ -24,8 +24,16 @@
 
     <div class="profile-edit-container">
       <div class="profile-header">
-        <div class="profile-avatar">
-          <img :src="userData.profileUrl" alt="프로필 이미지" />
+        <ImageUploader
+          :folder="'profile/'"
+          :showFolderSelector="false"
+          @upload-success="handleImageUpload"
+        />
+        <div class="profile-avatar" v-if="uploadedImageUrl">
+          <img :src="uploadedImageUrl" alt="업로드된 이미지" />
+        </div>
+        <div class="profile-avatar" v-else>
+          <img :src="userData.profileUrl" alt="기존 프로필 이미지" />
         </div>
       </div>
 
@@ -39,7 +47,6 @@
             type="text"
             v-model="nickname"
             :placeholder="userData.nickname"
-            required
           />
         </div>
         <button type="submit" class="btn btn-profile-edit">수정 완료</button>
@@ -49,10 +56,14 @@
 </template>
 
 <script>
-import { getMyInfo } from "@/api/auth";
+import { getMyInfo, updateMyInfo } from "@/api/auth";
+import ImageUploader from "@/components/ImageUploader.vue";
 
 export default {
   name: "ProfileEdit",
+  components: {
+    ImageUploader,
+  },
   data() {
     return {
       userData: {
@@ -60,6 +71,8 @@ export default {
         nickname: "",
         profileUrl: "",
       },
+      nickname: "",
+      uploadedImageUrl: "", // 새로 업로드된 이미지 URL
     };
   },
   async mounted() {
@@ -76,6 +89,25 @@ export default {
       } catch (err) {
         console.error("유저 정보 불러오기 실패", err);
         alert("마이페이지 정보를 불러오는 데 실패했습니다.");
+      }
+    },
+    async handleImageUpload({ original }) {
+      this.uploadedImageUrl = original;
+    },
+    async handleProfileEdit() {
+      try {
+        const payload = {
+          nickname: this.nickname || this.userData.nickname,
+          profileUrl: this.uploadedImageUrl || this.userData.profileUrl,
+        };
+
+        await updateMyInfo(payload);
+
+        alert("프로필이 성공적으로 수정되었습니다.");
+        this.$router.push("/mypage");
+      } catch (error) {
+        console.error("프로필 수정 실패", error);
+        alert("프로필 수정 중 오류가 발생했습니다.");
       }
     },
   },
