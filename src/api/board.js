@@ -15,3 +15,11 @@ export function createBoard({ missionId, imageUrl, title }) {
 export function deleteBoard(id) {
   return axios.delete(`/api/boards/${id}`);
 }
+
+export function getMyBoardByMissionId(missionId) {
+  return axios.get(`/api/boards/my/${missionId}`);
+}
+
+export function getMyBoards() {
+  return axios.get("/api/boards/my");
+}
