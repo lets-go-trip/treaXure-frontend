@@ -17,7 +17,7 @@
         <div class="info-card" v-if="selectedLocation">
           <div class="info-wrapper">
             <div>
-              <div class="info-title">{{ selectedLocation.title }}</div>
+              <div class="info-title">{{ selectedLocation.name }}</div>
               <div
                 class="info-status"
                 :style="{
@@ -72,7 +72,7 @@
           </div>
           <div class="info-action">
             <router-link
-              :to="'/mission-list/' + selectedLocation.id"
+              :to="'/mission-list/' + selectedLocation.placeId"
               class="btn-small"
               >미션 보기</router-link
             >
@@ -85,6 +85,8 @@
 </template>
 
 <script>
+import { getAllPlaces } from "@/api/place";
+import { getMissionsByPlaceId } from "@/api/mission";
 import { KakaoMapMixin } from "@/script";
 import { ImageErrorMixin } from "@/script";
 import IconTemple from "@/components/icons/IconTemple.vue";
@@ -98,53 +100,27 @@ export default {
     return {
       // 현재 선택된 궁궐 정보
       selectedLocation: null,
-      // 카카오맵에서 사용할 궁궐 데이터
-      palaceData: [
-        {
-          id: 1,
-          title: "경복궁",
-          address: "서울 종로구 사직로 161",
-          difficulty: 2,
-          questCount: 3,
-          coins: 250,
-          status: "미션 수행 필요",
-        },
-        {
-          id: 2,
-          title: "덕수궁",
-          address: "서울 중구 세종대로 99",
-          difficulty: 3,
-          questCount: 4,
-          coins: 350,
-          status: "미션 수행 필요",
-        },
-        {
-          id: 3,
-          title: "창덕궁",
-          address: "서울 종로구 율곡로 99",
-          difficulty: 4,
-          questCount: 2,
-          coins: 500,
-          status: "미션 완료",
-        },
-      ],
+      // 카카오맵에서 사용할 장소 데이터
+      placeData: [],
     };
   },
-  mounted() {
-    this.$nextTick(() => {
+  async mounted() {
+    try {
+      const res = await getAllPlaces();
+      this.placeData = res.data?.data || [];
+
       if (this.$refs.kakaoMap) {
-        this.initMap(this.$refs.kakaoMap);
-        window.addEventListener("palaceSelected", this.handlePalaceSelected);
-        window.addEventListener(
-          "clearSelectedPalace",
-          this.clearSelectedPalace
-        );
+        await this.initMap(this.$refs.kakaoMap);
+        window.addEventListener("placeSelected", this.handlePlaceSelected);
+        window.addEventListener("clearSelectedPlace", this.clearSelectedPlace);
       }
-    });
+    } catch (err) {
+      console.error("장소 로딩 실패", err);
+    }
   },
   beforeUnmount() {
-    window.removeEventListener("palaceSelected", this.handlePalaceSelected);
-    window.removeEventListener("clearSelectedPalace", this.clearSelectedPalace);
+    window.removeEventListener("placeSelected", this.handlePlaceSelected);
+    window.removeEventListener("clearSelectedPlace", this.clearSelectedPlace);
   },
   watch: {
     // selectedLocation이 바뀔 때마다 코인 회전 재시작
@@ -153,15 +129,30 @@ export default {
     },
   },
   methods: {
-    // 마커 클릭 시 선택된 궁궐 설정
-    selectPalace(palace) {
-      const selectedData = this.palaceData.find(
-        (item) => item.id === palace.id
+    async selectPlace(place) {
+      const selectedData = this.placeData.find(
+        (item) => item.placeId === place.placeId
       );
       if (selectedData) {
-        // 동일 참조 문제 방지: 새로운 객체로 할당
-        this.selectedLocation = { ...selectedData };
-        console.log(`${palace.name} 정보가 표시됩니다.`);
+        try {
+          const missionRes = await getMissionsByPlaceId(place.placeId);
+          const missions = missionRes.data?.data || [];
+          const totalScore = missions.reduce(
+            (sum, mission) => sum + (mission.score || 0),
+            0
+          );
+
+          const enriched = {
+            ...selectedData,
+            questCount: missions.length,
+            coins: totalScore,
+            status: missions.length > 0 ? "미션 수행 필요" : "미션 없음",
+          };
+
+          this.selectedLocation = enriched;
+        } catch (err) {
+          console.error("미션 불러오기 실패:", err);
+        }
       }
     },
 
@@ -177,12 +168,12 @@ export default {
     },
 
     // 글로벌 이벤트 핸들러
-    handlePalaceSelected(event) {
-      this.selectPalace(event.detail.palace);
+    handlePlaceSelected(event) {
+      this.selectPlace(event.detail.place);
     },
 
     // 빈 공간 클릭 시 선택 해제
-    clearSelectedPalace() {
+    clearSelectedPlace() {
       this.selectedLocation = null;
     },
   },
@@ -196,9 +187,5 @@ export default {
 
 .header-title {
   font-family: "Gloria Hallelujah", cursive;
-}
-
-.btn-small {
-  height: 64px;
 }
 </style>

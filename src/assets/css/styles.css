@@ -171,11 +171,8 @@ button,
   justify-content: center;
   /* padding: 20px 24px; */
   /* border-radius: var(--radius-lg) var(--radius-lg) 0 0; */
-  background: radial-gradient(circle farthest-side at 10% 20%,
-      var(--primary-light),
-      var(--primary),
-      var(--secondary));
-  color: var(--text-deep-dark);
+  background: var(--primary);
+  color: var(--text-deep-light);
   font-size: 16px;
   /* font-weight: 500; */
   text-decoration: none;
@@ -437,6 +434,7 @@ button,
   transform: translateX(-50%);
   width: 100%;
   max-width: 480px;
+  padding: var(--spacing-md);
   backdrop-filter: blur(10px);
   border-radius: var(--radius-lg) var(--radius-lg) 0 0;
   padding-top: 10px;
@@ -470,7 +468,7 @@ button,
 .info-wrapper {
   display: flex;
   justify-content: space-between;
-  padding: var(--spacing-md) var(--spacing-xl);
+  padding: var(--spacing-md);
 }
 
 .info-title {
@@ -482,7 +480,7 @@ button,
 
 .info-status {
   font-weight: 600;
-  font-size: 18px;
+  font-size: 16px;
   color: var(--primary);
   margin-bottom: var(--spacing-md);
 }
@@ -1735,14 +1733,14 @@ img.error::before {
 /* 
  * 카카오맵 및 마커 관련 스타일
  */
-.palace-marker {
+.place-marker {
   cursor: pointer;
   filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.15));
   transition: all var(--transition-normal) ease;
   z-index: 5;
 }
 
-.palace-marker:hover {
+.place-marker:hover {
   transform: translate(-50%, -105%) scale(1.08) !important;
   filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.25));
   z-index: 10;

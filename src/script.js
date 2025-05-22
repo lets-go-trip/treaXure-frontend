@@ -78,8 +78,8 @@ export const KakaoMapMixin = {
       circle: null,
       marker: null,
       mapLoadError: false,
-      palaceMarkers: [], // 궁궐 마커 배열
-      palaceCircles: [], // 궁궐 반경 원 배열
+      placeMarkers: [], // 궁궐 마커 배열
+      placeCircles: [], // 궁궐 반경 원 배열
       isMapScriptLoaded: false,
     };
   },
@@ -155,7 +155,7 @@ export const KakaoMapMixin = {
 
         // 지도 빈 공간 클릭 시 info-card 제거 이벤트 발생
         window.kakao.maps.event.addListener(this.map, "click", () => {
-          const event = new CustomEvent("clearSelectedPalace");
+          const event = new CustomEvent("clearSelectedPlace");
           window.dispatchEvent(event);
         });
 
@@ -166,8 +166,8 @@ export const KakaoMapMixin = {
           window.kakao.maps.ControlPosition.RIGHT
         );
 
-        // 경복궁, 창덕궁, 덕수궁 마커 추가
-        this.addPalaceMarkers();
+        // 장소 마커 추가
+        this.addPlaceMarkers();
 
         // 반응형 마커 기능
         window.kakao.maps.event.addListener(this.map, "zoom_changed", () => {
@@ -283,69 +283,36 @@ export const KakaoMapMixin = {
       });
     },
 
-    addPalaceMarkers() {
-      const palaces = [
-        {
-          id: 1,
-          name: "경복궁",
-          position: new window.kakao.maps.LatLng(37.5789, 126.9769),
-          color: "#40c996",
-          questCount: 3,
-          address: "서울 종로구 사직로 161",
-          title: "경복궁 숨겨진 비밀",
-          difficulty: 2,
-          coins: 250,
-          status: "수행 필요",
-        },
-        {
-          id: 3,
-          name: "창덕궁",
-          position: new window.kakao.maps.LatLng(37.5826, 126.991),
-          color: "#7D9D6F", // 초록색 (completed)
-          questCount: 2,
-          address: "서울 종로구 율곡로 99",
-          title: "창덕궁 신비로운 길",
-          difficulty: 4,
-          coins: 500,
-          status: "완료",
-        },
-        {
-          id: 2,
-          name: "덕수궁",
-          position: new window.kakao.maps.LatLng(37.5657, 126.9751),
-          color: "#D9A566", // 황금빛 (accent)
-          questCount: 4,
-          address: "서울 중구 세종대로 99",
-          title: "덕수궁 보물 찾기",
-          difficulty: 3,
-          coins: 350,
-          status: "수행 필요",
-        },
-      ];
-
-      // 각 궁궐에 마커와 반경 추가
-      palaces.forEach((palace) => {
-        const markerImage = this.createMarkerImage(
-          palace.color,
-          palace.questCount,
-          this.map.getLevel()
+    addPlaceMarkers() {
+      this.placeData.forEach((place) => {
+        const latlng = new window.kakao.maps.LatLng(
+          place.latitude,
+          place.longitude
         );
+
+        const markerImage = this.createMarkerImage(
+          "#40c996", // 색상은 기본값 또는 category 기반 설정 가능
+          1, // questCount를 place에 없다면 기본값 사용
+          this.map.getLevel(),
+          "수행 필요"
+        );
+
         const marker = new window.kakao.maps.Marker({
-          position: palace.position,
+          position: latlng,
           image: markerImage,
           map: this.map,
           zIndex: 3,
           clickable: true,
         });
 
-        this.palaceMarkers.push({ marker, palace });
-        this.addPalaceCircle(palace.position, palace.color, palace.status);
+        this.placeMarkers.push({ marker, place: place });
+        this.addPlaceCircle(latlng, "#40c996", "수행 필요");
 
         window.kakao.maps.event.addListener(marker, "click", () => {
-          this.map.setCenter(palace.position);
+          this.map.setCenter(latlng);
           this.map.setLevel(3);
-          const event = new CustomEvent("palaceSelected", {
-            detail: { palace },
+          const event = new CustomEvent("placeSelected", {
+            detail: { place: place },
           });
           window.dispatchEvent(event);
         });
@@ -355,7 +322,7 @@ export const KakaoMapMixin = {
     updateCircleVisibility(level) {
       const hiddenLevels = [7, 8, 9, 10, 11, 12, 13, 14];
 
-      this.palaceCircles.forEach((circle) => {
+      this.placeCircles.forEach((circle) => {
         if (hiddenLevels.includes(level)) {
           circle.setMap(null); // 지도에서 제거
         } else {
@@ -383,12 +350,12 @@ export const KakaoMapMixin = {
       };
       const [width, height] = sizeMap[level] || [24, 28];
 
-      this.palaceMarkers.forEach(({ marker, palace }) => {
+      this.placeMarkers.forEach(({ marker, place }) => {
         const newImage = this.createMarkerImage(
-          palace.color,
-          palace.questCount,
+          place.color,
+          place.questCount,
           level,
-          palace.status
+          place.status
         );
         marker.setImage(newImage);
       });
@@ -438,7 +405,7 @@ export const KakaoMapMixin = {
     },
 
     // 궁궐 반경 원 표시 함수
-    addPalaceCircle(position, color, status) {
+    addPlaceCircle(position, color, status) {
       if (!this.map || !window.kakao) return;
 
       const strokeColor = status === "완료" ? "#40c996" : "#f07b8a";
@@ -473,7 +440,7 @@ export const KakaoMapMixin = {
       );
 
       // 원 배열에 추가
-      this.palaceCircles.push(circle);
+      this.placeCircles.push(circle);
     },
   },
 };
