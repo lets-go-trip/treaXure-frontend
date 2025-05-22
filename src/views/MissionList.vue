@@ -173,17 +173,18 @@ export default {
     const placeId = this.$route.params.id;
 
     try {
-      const me = await getMyInfo();
+      const [me, place, missionRes, boardRes] = await Promise.all([
+        getMyInfo(),
+        getPlaceById(placeId),
+        getMissionsByPlaceId(placeId),
+        getMyBoards(),
+      ]);
+
       this.userId = me.data?.data.memberId;
-
-      const place = await getPlaceById(placeId);
       this.locationInfo = place.data?.data;
-
-      const missionRes = await getMissionsByPlaceId(placeId);
       const missions = missionRes.data?.data || [];
-
-      const boardRes = await getMyBoards();
       const myBoards = boardRes.data?.data || [];
+
       const completedMissionIds = new Set(myBoards.map((b) => b.missionId));
 
       const questsWithCompletion = missions.map((mission) => ({
