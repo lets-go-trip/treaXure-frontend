@@ -1,6 +1,3 @@
-// 파일 위치: src/api/member.js
-// 파일명: member.js
-
 import axios from "@/plugins/axios";
 
 export function getAllMembers() {

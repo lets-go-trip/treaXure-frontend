@@ -171,11 +171,8 @@ button,
   justify-content: center;
   /* padding: 20px 24px; */
   /* border-radius: var(--radius-lg) var(--radius-lg) 0 0; */
-  background: radial-gradient(circle farthest-side at 10% 20%,
-      var(--primary-light),
-      var(--primary),
-      var(--secondary));
-  color: var(--text-deep-dark);
+  background: var(--primary);
+  color: var(--text-deep-light);
   font-size: 16px;
   /* font-weight: 500; */
   text-decoration: none;
@@ -232,6 +229,7 @@ button,
 }
 
 .badge {
+  height: fit-content;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -437,6 +435,7 @@ button,
   transform: translateX(-50%);
   width: 100%;
   max-width: 480px;
+  padding: var(--spacing-md);
   backdrop-filter: blur(10px);
   border-radius: var(--radius-lg) var(--radius-lg) 0 0;
   padding-top: 10px;
@@ -470,7 +469,7 @@ button,
 .info-wrapper {
   display: flex;
   justify-content: space-between;
-  padding: var(--spacing-md) var(--spacing-xl);
+  padding: var(--spacing-md);
 }
 
 .info-title {
@@ -482,7 +481,7 @@ button,
 
 .info-status {
   font-weight: 600;
-  font-size: 18px;
+  font-size: 16px;
   color: var(--primary);
   margin-bottom: var(--spacing-md);
 }
@@ -761,7 +760,32 @@ button,
   box-shadow: var(--shadow-sm);
   transition: transform var(--transition-normal),
     box-shadow var(--transition-normal);
-  border: 1px solid var(--primary);
+  border: 1px solid var(--tertiary);
+}
+
+.incomplete-btn-small {
+  background-color: var(--tertiary);
+}
+
+.incomplete-btn-small::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  /* top:0; right:0; bottom:0; left:0; */
+  opacity: 0;
+  /* 초기엔 투명 */
+  transition: opacity var(--transition-slow);
+  z-index: -1;
+  background: linear-gradient(90deg,
+      var(--tertiary) 0%,
+      var(--tertiary-light) 25%,
+      var(--tertiary) 50%,
+      var(--tertiary-light) 75%,
+      var(--tertiary) 100%);
+  /* 2) 가로로 500% 늘려서 색이 흘러갈 공간 확보 */
+  background-size: 1000% 100%;
+  /* 3) 부드럽게 흐르는 애니메이션 */
+  animation: btn-gradient-slide 20s linear infinite;
 }
 
 .mission-card:hover {
@@ -769,7 +793,13 @@ button,
 }
 
 .mission-card.completed {
-  border: 1px solid var(--primary-light);
+  border: 1px solid var(--primary);
+}
+
+.mission-title-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .mission-title {
@@ -779,10 +809,6 @@ button,
   color: var(--text-deep-dark);
 }
 
-.mission-card.completed .mission-title {
-  color: var(--text-dark);
-}
-
 .mission-desc {
   font-size: 14px;
   color: var(--text-medium);
@@ -790,10 +816,15 @@ button,
   line-height: 1.5;
 }
 
-.mission-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.mission-completed-image {
+  width: 100%;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.score-badge {
+  background-color: var(--tertiary-light);
+  color: var(--tertiary);
 }
 
 /****************************** AllMissions 페이지 스타일 ******************************/
@@ -1735,14 +1766,14 @@ img.error::before {
 /* 
  * 카카오맵 및 마커 관련 스타일
  */
-.palace-marker {
+.place-marker {
   cursor: pointer;
   filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.15));
   transition: all var(--transition-normal) ease;
   z-index: 5;
 }
 
-.palace-marker:hover {
+.place-marker:hover {
   transform: translate(-50%, -105%) scale(1.08) !important;
   filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.25));
   z-index: 10;

@@ -84,7 +84,9 @@
             </div>
             <div class="location-title">평균 완료</div>
           </div>
-          <div class="location-value">{{ locationInfo.avgCompletionTime }}</div>
+          <div class="location-value">
+            {{ locationInfo.avgCompletionTime }}개
+          </div>
         </div>
       </div>
     </div>
@@ -121,13 +123,16 @@
         :key="'available-' + index"
         class="mission-card"
       >
-        <div class="mission-title">{{ quest.title }}</div>
-        <div class="mission-desc">{{ quest.description }}</div>
-        <div class="mission-footer">
-          <router-link :to="'/mission-detail/' + quest.id" class="btn-small"
-            >도전하기</router-link
-          >
+        <div class="mission-title-wrapper">
+          <div class="mission-title">{{ quest.title }}</div>
+          <div class="badge score-badge">{{ quest.score }}점</div>
         </div>
+        <div class="mission-desc">{{ quest.description }}</div>
+        <router-link
+          :to="'/mission-detail/' + quest.id"
+          class="btn-small incomplete-btn-small"
+          >도전하기</router-link
+        >
       </div>
 
       <h4 class="mission-section-title completed">완료한 미션</h4>
@@ -136,19 +141,25 @@
         :key="'completed-' + index"
         class="mission-card completed"
       >
-        <div class="mission-title">{{ quest.title }}</div>
-        <div class="mission-desc">{{ quest.description }}</div>
-        <div class="mission-footer">
+        <div class="mission-title-wrapper">
+          <div class="mission-title">{{ quest.title }}</div>
           <div class="badge completed">완료</div>
         </div>
+        <div class="mission-desc">{{ quest.description }}</div>
+        <!-- 인증 사진 표시 -->
+        <img
+          v-if="quest.boardImageUrl"
+          :src="quest.boardImageUrl"
+          alt="인증 사진"
+          class="mission-completed-image"
+        />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { getPlaceById } from "@/api/place";
-import { getMissionsByPlaceId } from "@/api/mission";
+import { getVisitMissionsByMember } from "@/api/visit";
 import { getMyInfo } from "@/api/auth";
 import { getMyBoards } from "@/api/board";
 
@@ -170,26 +181,36 @@ export default {
     },
   },
   async mounted() {
-    const placeId = this.$route.params.id;
-
     try {
-      const me = await getMyInfo();
+      const [me, boardRes] = await Promise.all([getMyInfo(), getMyBoards()]);
+
       this.userId = me.data?.data.memberId;
+      const visitMissionsRes = await getVisitMissionsByMember(this.userId);
+      const placeId = parseInt(this.$route.params.id);
 
-      const place = await getPlaceById(placeId);
-      this.locationInfo = place.data?.data;
+      const place = visitMissionsRes.data?.data.find(
+        (v) => v.placeId === placeId
+      );
+      if (!place) throw new Error("해당 장소의 방문 기록이 없습니다.");
 
-      const missionRes = await getMissionsByPlaceId(placeId);
-      const missions = missionRes.data?.data || [];
-
-      const boardRes = await getMyBoards();
+      const missions = place.missions || [];
       const myBoards = boardRes.data?.data || [];
-      const completedMissionIds = new Set(myBoards.map((b) => b.missionId));
 
-      const questsWithCompletion = missions.map((mission) => ({
-        ...mission,
-        completed: completedMissionIds.has(mission.missionId),
-      }));
+      // boardMap 구성: missionId → board 객체
+      const boardMap = new Map();
+      myBoards.forEach((board) => {
+        boardMap.set(board.missionId, board);
+      });
+
+      // 미션에 completed 여부 및 board imageUrl 연결
+      const questsWithCompletion = missions.map((mission) => {
+        const board = boardMap.get(mission.missionId);
+        return {
+          ...mission,
+          completed: !!board,
+          boardImageUrl: board?.imageUrl || null,
+        };
+      });
 
       this.quests = questsWithCompletion;
 
@@ -199,9 +220,16 @@ export default {
       const totalCount = questsWithCompletion.length;
 
       this.locationInfo = {
-        ...this.locationInfo,
+        name: place.placeName,
+        description: place.placeDescription,
+        thumbnailUrl: place.thumbnailUrl,
         completedCount,
         totalCount,
+        visitors: place.visitorCount || 0,
+        avgCompletionTime:
+          place.visitorCount > 0
+            ? Math.round(place.boardCount / place.visitorCount)
+            : 0,
       };
     } catch (err) {
       console.error("미션 정보 로딩 실패", err);

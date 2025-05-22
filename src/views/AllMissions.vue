@@ -192,6 +192,8 @@
 </template>
 
 <script>
+import { getMyInfo } from "@/api/auth";
+import { getVisitMissionsByMember } from "@/api/visit";
 import { ImageErrorMixin } from "@/script";
 import IconTemple from "@/components/icons/IconTemple.vue";
 
@@ -211,161 +213,7 @@ export default {
         showComplete: true,
       },
       sortOption: "recent",
-      locations: [
-        {
-          id: 1,
-          name: "경복궁",
-          address: "서울 종로구 사직로 161",
-          imageUrl: "https://via.placeholder.com/60x60?text=경복궁",
-          completedCount: 2,
-          totalCount: 3,
-          collapsed: false,
-          missions: [
-            {
-              id: 1,
-              title: "경복궁 근정전 인증하기",
-              description: "경복궁의 정전인 근정전 앞에서 인증샷을 찍어보세요.",
-              imageUrl:
-                "https://thumb16.iclickart.co.kr/Thumb16/1170000/1166254.jpg",
-              points: 100,
-              completed: true,
-            },
-            {
-              id: 2,
-              title: "향원정의 연못 찾기",
-              description:
-                "경복궁 후원에 있는 향원정 연못의 아름다운 모습을 담아보세요.",
-              imageUrl:
-                "https://thumb16.iclickart.co.kr/Thumb16/1170000/1166273.jpg",
-              points: 150,
-              completed: true,
-            },
-            {
-              id: 3,
-              title: "숨겨진 동궁과 후원 찾기",
-              description:
-                "경복궁에서 가장 아름다운 영역 중 하나인 동궁과 후원의 풍경을 담아보세요.",
-              imageUrl:
-                "https://thumb16.iclickart.co.kr/Thumb16/1170000/1166267.jpg",
-              points: 200,
-              completed: false,
-            },
-            {
-              id: 9,
-              title: "숨겨진 동궁과 후원 찾기",
-              description:
-                "경복궁에서 가장 아름다운 영역 중 하나인 동궁과 후원의 풍경을 담아보세요.",
-              imageUrl:
-                "https://thumb16.iclickart.co.kr/Thumb16/1170000/1166270.jpg",
-              points: 200,
-              completed: false,
-            },
-            {
-              id: 10,
-              title: "숨겨진 동궁과 후원 찾기",
-              description:
-                "경복궁에서 가장 아름다운 영역 중 하나인 동궁과 후원의 풍경을 담아보세요.",
-              imageUrl:
-                "https://thumb16.iclickart.co.kr/Thumb16/1170000/1166275.jpg",
-              points: 200,
-              completed: false,
-            },
-          ],
-        },
-        {
-          id: 2,
-          name: "창덕궁",
-          address: "서울 종로구 율곡로 99",
-          imageUrl:
-            "https://thumb16.iclickart.co.kr/Thumb16/1170000/1166257.jpg",
-          completedCount: 1,
-          totalCount: 3,
-          collapsed: false,
-          missions: [
-            {
-              id: 4,
-              title: "부용지 연꽃 촬영하기",
-              description:
-                "창덕궁의 후원에 있는 부용지에 피어있는 연꽃을 촬영해보세요.",
-              imageUrl:
-                "https://thumb16.iclickart.co.kr/Thumb16/1170000/1166273.jpg",
-              points: 120,
-              completed: true,
-            },
-            {
-              id: 5,
-              title: "대조전 찾아가기",
-              description:
-                "왕비의 처소였던 대조전을 찾아 그 아름다운 건축양식을 담아보세요.",
-              imageUrl:
-                "https://thumb16.iclickart.co.kr/Thumb16/1170000/1166261.jpg",
-              points: 150,
-              completed: true,
-            },
-            {
-              id: 6,
-              title: "낙선재 문고 탐방",
-              description:
-                "조선시대 왕실 도서관이었던 낙선재 문고를 찾아 인증샷을 찍어보세요.",
-              imageUrl:
-                "https://thumb16.iclickart.co.kr/Thumb16/1170000/1166266.jpg",
-              points: 180,
-              completed: true,
-            },
-            {
-              id: 11,
-              title: "숨겨진 동궁과 후원 찾기",
-              description:
-                "경복궁에서 가장 아름다운 영역 중 하나인 동궁과 후원의 풍경을 담아보세요.",
-              imageUrl:
-                "https://thumb16.iclickart.co.kr/Thumb16/1170000/1166275.jpg",
-              points: 200,
-              completed: true,
-            },
-            {
-              id: 12,
-              title: "숨겨진 동궁과 후원 찾기",
-              description:
-                "경복궁에서 가장 아름다운 영역 중 하나인 동궁과 후원의 풍경을 담아보세요.",
-              imageUrl:
-                "https://thumb16.iclickart.co.kr/Thumb16/1170000/1166275.jpg",
-              points: 200,
-              completed: false,
-            },
-          ],
-        },
-        {
-          id: 3,
-          name: "덕수궁",
-          address: "서울 중구 세종대로 99",
-          imageUrl: "https://via.placeholder.com/60x60?text=덕수궁",
-          completedCount: 0,
-          totalCount: 2,
-          collapsed: false,
-          missions: [
-            {
-              id: 7,
-              title: "정관헌 촬영하기",
-              description:
-                "서양식 건물인 정관헌의 독특한 건축 양식을 담아보세요.",
-              imageUrl:
-                "https://thumb16.iclickart.co.kr/Thumb16/1170000/1166283.jpg",
-              points: 130,
-              completed: false,
-            },
-            {
-              id: 8,
-              title: "중화전 찾기",
-              description:
-                "덕수궁의 정전인 중화전을 찾아 그 웅장한 모습을 촬영해보세요.",
-              imageUrl:
-                "https://thumb16.iclickart.co.kr/Thumb16/1170000/1166261.jpg",
-              points: 170,
-              completed: false,
-            },
-          ],
-        },
-      ],
+      locations: [],
       isTicking: false,
     };
   },
@@ -415,6 +263,58 @@ export default {
 
       return sortedLocations;
     },
+  },
+  async mounted() {
+    try {
+      // 사용자 정보 및 방문 기록 조회
+      const me = await getMyInfo();
+      const memberId = me.data?.data?.memberId;
+
+      // 방문한 장소 + 미션 목록 조회
+      const res = await getVisitMissionsByMember(memberId);
+      const placeMissions = res.data?.data || [];
+
+      // 사용자의 게시글 목록 (미션 완료 여부 및 이미지 확인용)
+      const myBoardsRes = await import("@/api/board").then((mod) =>
+        mod.getMyBoards()
+      );
+      const myBoards = myBoardsRes.data?.data || [];
+
+      this.locations = placeMissions.map((place) => {
+        const missions = place.missions.map((mission) => {
+          // 해당 미션에 대응하는 게시글이 있는지 확인
+          const matchingBoard = myBoards.find(
+            (b) => b.missionId === mission.missionId
+          );
+
+          return {
+            ...mission,
+            id: mission.missionId, // UI 용 키
+            points: mission.score,
+            completed: !!matchingBoard,
+            imageUrl: matchingBoard
+              ? matchingBoard.imageUrl
+              : mission.referenceUrl,
+            description: matchingBoard
+              ? matchingBoard.title
+              : mission.description,
+          };
+        });
+
+        return {
+          id: place.placeId,
+          name: place.placeName,
+          address: place.address,
+          imageUrl: place.thumbnailUrl,
+          completedCount: missions.filter((m) => m.completed).length,
+          totalCount: missions.length,
+          collapsed: false,
+          missions,
+        };
+      });
+    } catch (err) {
+      console.error("탐험 기록 로딩 실패:", err);
+    }
   },
   methods: {
     toggleLocation(index) {
