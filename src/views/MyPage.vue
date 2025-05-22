@@ -42,11 +42,11 @@
         </div>
         <div class="stats-wrapper">
           <div class="stat-container">
-            <div class="stat-value">23</div>
+            <div class="stat-value">{{ visitCount }}</div>
             <div class="stat-label">방문 장소</div>
           </div>
           <div class="stat-container">
-            <div class="stat-value">32</div>
+            <div class="stat-value">{{ completedMissionCount }}</div>
             <div class="stat-label">완료 미션</div>
           </div>
           <div class="stat-container">
@@ -101,35 +101,22 @@
 
 <script>
 import { getMyInfo, signout, deactivateAccount } from "@/api/auth";
+import { getVisitsByMember } from "@/api/visit";
+import { getMyBoards } from "@/api/board";
 
 export default {
   name: "MyPage",
   data() {
     return {
       userData: {
+        memberId: null,
         email: "",
         nickname: "",
         point: 0,
         profileUrl: "",
       },
-      rankings: [
-        {
-          position: 8,
-          percentile: "상위 5% 탐험가",
-          iconPath:
-            "M19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3ZM9 17H7V10H9V17ZM13 17H11V7H13V17ZM17 17H15V13H17V17Z",
-          title: "지역 랭킹",
-          subtitle: "서울 종로구 기준",
-        },
-        {
-          position: 42,
-          percentile: "상위 15% 탐험가",
-          iconPath:
-            "M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13 15.87 2 12 2ZM12 11.5C10.62 11.5 9.5 10.38 9.5 9C9.5 7.62 10.62 6.5 12 6.5C13.38 6.5 14.5 7.62 14.5 9C14.5 10.38 13.38 11.5 12 11.5Z",
-          title: "전국 랭킹",
-          subtitle: "최근 30일 기준",
-        },
-      ],
+      visitCount: 0, // 방문 장소 수
+      completedMissionCount: 0, // 완료된 미션 수
       recentPhotos: [
         {
           url: "https://thumb16.iclickart.co.kr/Thumb16/1170000/1166254.jpg",
@@ -152,12 +139,17 @@ export default {
   },
   async mounted() {
     await this.fetchUserData();
+    await Promise.all([
+      this.fetchVisitData(),
+      this.fetchcompletedMissionCount(),
+    ]);
   },
   methods: {
     async fetchUserData() {
       try {
         const response = await getMyInfo();
         const data = response.data.data;
+        this.userData.memberId = data.memberId;
         this.userData.email = data.email;
         this.userData.nickname = data.nickname;
         this.userData.point = data.point;
@@ -169,6 +161,25 @@ export default {
           "refreshToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC";
         alert("마이페이지 정보를 불러오는 데 실패했습니다.");
         this.$router.push("/signin");
+      }
+    },
+    async fetchVisitData() {
+      try {
+        const res = await getVisitsByMember(this.userData.memberId);
+        this.visitCount = res.data.data.length;
+      } catch (err) {
+        console.error("방문 기록 불러오기 실패", err);
+        this.visitCount = 0;
+      }
+    },
+    async fetchcompletedMissionCount() {
+      try {
+        const res = await getMyBoards(this.userData.memberId);
+        const missions = res.data.data;
+        this.completedMissionCount = missions.length;
+      } catch (err) {
+        console.error("완료 미션 불러오기 실패", err);
+        this.completedMissionCount = 0;
       }
     },
     async handleSignoutClick(btn) {
