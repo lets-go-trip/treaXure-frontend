@@ -229,6 +229,7 @@ button,
 }
 
 .badge {
+  height: fit-content;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -759,7 +760,32 @@ button,
   box-shadow: var(--shadow-sm);
   transition: transform var(--transition-normal),
     box-shadow var(--transition-normal);
-  border: 1px solid var(--primary);
+  border: 1px solid var(--tertiary);
+}
+
+.incomplete-btn-small {
+  background-color: var(--tertiary);
+}
+
+.incomplete-btn-small::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  /* top:0; right:0; bottom:0; left:0; */
+  opacity: 0;
+  /* 초기엔 투명 */
+  transition: opacity var(--transition-slow);
+  z-index: -1;
+  background: linear-gradient(90deg,
+      var(--tertiary) 0%,
+      var(--tertiary-light) 25%,
+      var(--tertiary) 50%,
+      var(--tertiary-light) 75%,
+      var(--tertiary) 100%);
+  /* 2) 가로로 500% 늘려서 색이 흘러갈 공간 확보 */
+  background-size: 1000% 100%;
+  /* 3) 부드럽게 흐르는 애니메이션 */
+  animation: btn-gradient-slide 20s linear infinite;
 }
 
 .mission-card:hover {
@@ -767,7 +793,13 @@ button,
 }
 
 .mission-card.completed {
-  border: 1px solid var(--primary-light);
+  border: 1px solid var(--primary);
+}
+
+.mission-title-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .mission-title {
@@ -777,10 +809,6 @@ button,
   color: var(--text-deep-dark);
 }
 
-.mission-card.completed .mission-title {
-  color: var(--text-dark);
-}
-
 .mission-desc {
   font-size: 14px;
   color: var(--text-medium);
@@ -788,10 +816,15 @@ button,
   line-height: 1.5;
 }
 
-.mission-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.mission-completed-image {
+  width: 100%;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.score-badge {
+  background-color: var(--tertiary-light);
+  color: var(--tertiary);
 }
 
 /****************************** AllMissions 페이지 스타일 ******************************/
