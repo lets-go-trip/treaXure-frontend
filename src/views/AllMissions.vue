@@ -266,27 +266,41 @@ export default {
   },
   async mounted() {
     try {
+      // 사용자 정보 및 방문 기록 조회
       const me = await getMyInfo();
       const memberId = me.data?.data?.memberId;
 
+      // 방문한 장소 + 미션 목록 조회
       const res = await getVisitMissionsByMember(memberId);
       const placeMissions = res.data?.data || [];
 
-      // 미션별 완료 여부 계산을 위해 사용자 게시글 목록 가져오기
+      // 사용자의 게시글 목록 (미션 완료 여부 및 이미지 확인용)
       const myBoardsRes = await import("@/api/board").then((mod) =>
         mod.getMyBoards()
       );
-      const myBoardMissions =
-        myBoardsRes.data?.data?.map((b) => b.missionId) || [];
+      const myBoards = myBoardsRes.data?.data || [];
 
       this.locations = placeMissions.map((place) => {
-        const missions = place.missions.map((mission) => ({
-          ...mission,
-          id: mission.missionId, // UI용 key
-          points: mission.score,
-          completed: myBoardMissions.includes(mission.missionId),
-          imageUrl: mission.referenceUrl, // 이미지 URL 정리
-        }));
+        const missions = place.missions.map((mission) => {
+          // 해당 미션에 대응하는 게시글이 있는지 확인
+          const matchingBoard = myBoards.find(
+            (b) => b.missionId === mission.missionId
+          );
+
+          return {
+            ...mission,
+            id: mission.missionId, // UI 용 키
+            points: mission.score,
+            completed: !!matchingBoard,
+            imageUrl: matchingBoard
+              ? matchingBoard.imageUrl
+              : mission.referenceUrl,
+            description: matchingBoard
+              ? matchingBoard.title
+              : mission.description,
+          };
+        });
+
         return {
           id: place.placeId,
           name: place.placeName,
