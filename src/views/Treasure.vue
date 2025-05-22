@@ -71,11 +71,12 @@
             </div>
           </div>
           <div class="info-action">
-            <router-link
-              :to="'/mission-list/' + selectedLocation.placeId"
+            <div
+              @click="handleVisitAndGo(selectedLocation.placeId)"
               class="btn-small"
-              >미션 보기</router-link
             >
+              미션 보기
+            </div>
           </div>
         </div>
       </transition>
@@ -85,6 +86,8 @@
 </template>
 
 <script>
+import { getMyInfo } from "@/api/auth";
+import { recordVisit } from "@/api/visit";
 import { getAllPlaces } from "@/api/place";
 import { getMissionsByPlaceId } from "@/api/mission";
 import { KakaoMapMixin } from "@/script";
@@ -98,16 +101,18 @@ export default {
   mixins: [KakaoMapMixin, ImageErrorMixin],
   data() {
     return {
-      // 현재 선택된 궁궐 정보
       selectedLocation: null,
-      // 카카오맵에서 사용할 장소 데이터
       placeData: [],
+      memberId: null,
     };
   },
   async mounted() {
     try {
-      const res = await getAllPlaces();
-      this.placeData = res.data?.data || [];
+      const userRes = await getMyInfo();
+      this.memberId = userRes.data?.data?.memberId;
+
+      const placeRes = await getAllPlaces();
+      this.placeData = placeRes.data?.data || [];
 
       if (this.$refs.kakaoMap) {
         await this.initMap(this.$refs.kakaoMap);
@@ -156,6 +161,16 @@ export default {
         } catch (err) {
           console.error("미션 불러오기 실패:", err);
         }
+      }
+    },
+
+    async handleVisitAndGo(placeId) {
+      try {
+        if (!this.memberId) return;
+        await recordVisit(this.memberId, placeId);
+        this.$router.push(`/mission-list/${placeId}`);
+      } catch (err) {
+        console.error("방문 기록 저장 실패", err);
       }
     },
 
