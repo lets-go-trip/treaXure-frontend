@@ -1,11 +1,11 @@
 <template>
   <div class="bottom-nav">
-    <router-link
+    <div
       v-for="item in navItems"
       :key="item.path"
-      :to="item.path"
       class="nav-item"
       :class="{ active: isActive(item.path) }"
+      @click="handleNavClick(item)"
     >
       <div class="nav-icon">
         <component
@@ -14,7 +14,7 @@
         />
       </div>
       <span>{{ item.label }}</span>
-    </router-link>
+    </div>
   </div>
 </template>
 
@@ -90,15 +90,35 @@ export default {
       const route = this.$route.path;
 
       if (path === "/mission-list") {
-        // "/mission-list", "/mission-list/:id", "/mission-detail/:id" 모두 포함
         return (
           route.startsWith("/mission-list") ||
           route.startsWith("/mission-detail")
         );
       }
 
-      // 기본 비교
       return route === path || route.startsWith(path + "/");
+    },
+
+    handleNavClick(item) {
+      if (item.path === "/mission-list") {
+        const recentPlaceId = this.getCookie("recentPlaceId");
+
+        if (recentPlaceId) {
+          this.$router.push(`/mission-list/${recentPlaceId}`);
+        } else {
+          alert("현재 미션을 진행 중인 장소가 없습니다.");
+          this.$router.back();
+        }
+      } else {
+        this.$router.push(item.path);
+      }
+    },
+
+    getCookie(name) {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(";").shift();
+      return null;
     },
   },
 };

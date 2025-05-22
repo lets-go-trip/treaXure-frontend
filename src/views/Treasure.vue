@@ -142,6 +142,9 @@ export default {
             0
           );
 
+          // recentPlaceId를 쿠키에 저장
+          document.cookie = `recentPlaceId=${place.placeId}; path=/; max-age=86400`;
+
           const enriched = {
             ...selectedData,
             questCount: missions.length,

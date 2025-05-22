@@ -176,6 +176,7 @@ export default {
         try {
           await signout();
           localStorage.removeItem("jwtToken");
+          document.cookie = "recentPlaceId=; path=/; max-age=0";
           this.$router.push("/signin");
         } catch (error) {
           console.error("로그아웃 실패", error);
