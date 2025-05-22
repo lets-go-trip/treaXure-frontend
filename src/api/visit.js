@@ -27,3 +27,12 @@ export function getVisitsByPlace(placeId) {
 export function getVisitsByMember(memberId) {
   return axios.get(`/api/visits/member/${memberId}`);
 }
+
+/**
+ * 사용자의 방문 기록 기반 장소 + 미션 목록 조회
+ * @param {number} memberId
+ * @returns {Promise<ApiResponseDto<VisitMissionDto[]>>}
+ */
+export function getVisitMissionsByMember(memberId) {
+  return axios.get(`/api/visits/member/${memberId}/missions`);
+}

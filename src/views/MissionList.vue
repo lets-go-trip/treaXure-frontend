@@ -151,6 +151,7 @@ import { getPlaceById } from "@/api/place";
 import { getMissionsByPlaceId } from "@/api/mission";
 import { getMyInfo } from "@/api/auth";
 import { getMyBoards } from "@/api/board";
+import { getVisitsByPlace } from "@/api/visit";
 
 export default {
   name: "MissionList",
@@ -173,17 +174,19 @@ export default {
     const placeId = this.$route.params.id;
 
     try {
-      const [me, place, missionRes, boardRes] = await Promise.all([
+      const [me, placeRes, missionRes, boardRes, visitRes] = await Promise.all([
         getMyInfo(),
         getPlaceById(placeId),
         getMissionsByPlaceId(placeId),
         getMyBoards(),
+        getVisitsByPlace(placeId),
       ]);
 
       this.userId = me.data?.data.memberId;
-      this.locationInfo = place.data?.data;
+      this.locationInfo = placeRes.data?.data;
       const missions = missionRes.data?.data || [];
       const myBoards = boardRes.data?.data || [];
+      const visitors = visitRes.data?.data?.length || 0;
 
       const completedMissionIds = new Set(myBoards.map((b) => b.missionId));
 
@@ -203,6 +206,7 @@ export default {
         ...this.locationInfo,
         completedCount,
         totalCount,
+        visitors, // ← 방문자 수 추가
       };
     } catch (err) {
       console.error("미션 정보 로딩 실패", err);
