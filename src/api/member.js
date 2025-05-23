@@ -15,3 +15,7 @@ export function createMember({ email, password, nickname }) {
 export function deleteMember(id) {
   return axios.delete(`/api/members/${id}`);
 }
+
+export function addPointToMember(memberId, point) {
+  return axios.post(`/api/members/${memberId}/add-point`, { point });
+}

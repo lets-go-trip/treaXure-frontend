@@ -290,11 +290,13 @@ export const KakaoMapMixin = {
           place.longitude
         );
 
+        const isCompleted = place.missionStatus?.allCompleted === true;
+
         const markerImage = this.createMarkerImage(
-          "#40c996", // 색상은 기본값 또는 category 기반 설정 가능
-          1, // questCount를 place에 없다면 기본값 사용
+          isCompleted ? "#40c996" : "#f07b8a",
+          place.questCount,
           this.map.getLevel(),
-          "수행 필요"
+          isCompleted
         );
 
         const marker = new window.kakao.maps.Marker({
@@ -305,8 +307,12 @@ export const KakaoMapMixin = {
           clickable: true,
         });
 
-        this.placeMarkers.push({ marker, place: place });
-        this.addPlaceCircle(latlng, "#40c996", "수행 필요");
+        this.placeMarkers.push({ marker, place });
+        this.addPlaceCircle(
+          latlng,
+          isCompleted ? "#40c996" : "#f07b8a",
+          isCompleted
+        );
 
         window.kakao.maps.event.addListener(marker, "click", () => {
           this.map.setCenter(latlng);
@@ -351,17 +357,18 @@ export const KakaoMapMixin = {
       const [width, height] = sizeMap[level] || [24, 28];
 
       this.placeMarkers.forEach(({ marker, place }) => {
+        const isCompleted = place.missionStatus?.allCompleted === true;
         const newImage = this.createMarkerImage(
-          place.color,
+          isCompleted ? "#40c996" : "#f07b8a",
           place.questCount,
           level,
-          place.status
+          isCompleted
         );
         marker.setImage(newImage);
       });
     },
 
-    createMarkerImage(color, questCount, level = 5, status = "") {
+    createMarkerImage(color, questCount, level = 5, isCompleted = false) {
       const sizeMap = {
         1: [70, 70],
         2: [60, 60],
@@ -380,15 +387,14 @@ export const KakaoMapMixin = {
       };
       const [width, height] = sizeMap[level] || [24, 28];
 
-      const svg =
-        status === "완료"
-          ? `<svg
+      const svg = isCompleted
+        ? `<svg
             xmlns="http://www.w3.org/2000/svg" data-name="Layer 1" viewBox="12 13 38 36" x="0px" y="0px"
             fill="#40c996" >
           >
             <path d="M21.6335,47.1864C19.7408,45.06,18.2119,42.98,16.735,40.9656a35.467,35.467,0,0,1-3.4943-5.8448c-.61-1.2474-.88-2.5105.4413-3.3226,3.7867-2.3271,4.5627-.1051,6.6209,2.4731,1.22,1.5277,3.019,4.0469,4.1462,5.6386,1.0767,1.52,2.3893-1.2234,2.9133-1.9975,1.8624-2.7511,6.7029-9.4863,8.7032-11.9759,1.899-2.3634,8.0285-8.9844,9.1711-10.0375.9726-.8967,3.0261-2.8635,4.407-1.7785,1.4511,1.14,2.16,3.307,1.14,4.716-1.7764,2.453-4.5667,4.7865-6.4974,7.1222-3.9082,4.728-7.6083,9.8244-11.16,14.8988-1.2069,1.7244-2.9014,4.6125-3.9534,6.4826C27.205,50.8386,25.4765,51.5044,21.6335,47.1864Z" />
           </svg>`
-          : `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="19 18 50 53" xml:space="preserve" preserveAspectRatio="xMinYMin meet"
+        : `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="19 18 50 53" xml:space="preserve" preserveAspectRatio="xMinYMin meet"
             fill="#f07b8a" >
             <path
               d="M61.562,18.717c-12.13,9.172-15.244,13.136-22.515,21.412c-0.896-1.376-2.574-3.281-2.615-3.355  c-1.594-3.662-5.048-6.932-6.256-9.995c-1.255-3.265-3.219-4.724-4.858-4.746c-2.109-0.031-3.678,2.324-2.511,6.25  c0.359,1.203,1.26,2.23,1.744,3.386c2.115,5.036,5.172,10.812,8.615,15.844c-2.599,2.905-6.317,7.052-7.479,10.192  c-0.62,1.677-2.417,2.568-3.177,4.177c-0.563,1.183-2.183,3.114-1.651,4.532c0.333,0.885-2.604,4.083-0.63,4.728  c4.578,1.511,6.041-0.619,7.25-3.932c0.692-1.906,2.905-3.719,4-5.49c1.396-2.276,4.859-5.25,6.738-7.407  c1.74,2.491,3.959,5.792,5.496,7.043c2.025,1.645,4.337,1.614,5.041,4.161c0.558,2.005,4.266,2.979,6.23,3.531  c1.426,0.401,3.27,0.115,5.009-0.333c1.614-0.421,2.412-1.964,2.308-3.525c-0.032-0.469,0.333-1.209,0.292-1.646  c-0.125-1.219,0.078-2.858-0.532-3.369c-0.87-0.735-2.515-0.532-3.656-0.995c-6.62-2.708-10.672-6.88-14.688-11.959  c2.355-2.995,8.219-9.193,11.74-11.953c1.751-1.369,3.489-2.749,5.36-4.03c1.937-1.333,3.744-2.86,5.795-3.986  c3.855-2.119,5.38-4.228,1.725-7.109C66.042,18.378,64.01,18.02,61.562,18.717z"
@@ -405,11 +411,11 @@ export const KakaoMapMixin = {
     },
 
     // 궁궐 반경 원 표시 함수
-    addPlaceCircle(position, color, status) {
+    addPlaceCircle(position, color, isCompleted) {
       if (!this.map || !window.kakao) return;
 
-      const strokeColor = status === "완료" ? "#40c996" : "#f07b8a";
-      const fillColor = status === "완료" ? "#a5f5de" : "#ffc7ce";
+      const strokeColor = isCompleted ? "#40c996" : "#f07b8a";
+      const fillColor = isCompleted ? "#a5f5de" : "#ffc7ce";
 
       // 반경 원 스타일 정의
       const circleOptions = {

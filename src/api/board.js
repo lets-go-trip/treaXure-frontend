@@ -16,8 +16,13 @@ export function getMyBoardByMissionId(missionId) {
   return axios.get(`/api/boards/my/${missionId}`);
 }
 
-export function createBoard({ missionId, imageUrl, title }) {
-  return axios.post("/api/boards", { missionId, imageUrl, title });
+export function createBoard({ missionId, imageUrl, title, memberId }) {
+  return axios.post("/api/boards", {
+    missionId,
+    imageUrl,
+    title,
+    memberId,
+  });
 }
 
 export function deleteBoard(id) {

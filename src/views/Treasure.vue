@@ -21,10 +21,9 @@
               <div
                 class="info-status"
                 :style="{
-                  color:
-                    selectedLocation?.status === '미션 완료'
-                      ? 'var(--primary)'
-                      : 'var(--tertiary)',
+                  color: selectedLocation.isCompleted
+                    ? 'var(--primary)'
+                    : 'var(--tertiary)',
                 }"
               >
                 {{ selectedLocation.status }}
@@ -35,10 +34,9 @@
                   <span
                     class="info-value"
                     :style="{
-                      color:
-                        selectedLocation?.status === '미션 완료'
-                          ? 'var(--primary)'
-                          : 'var(--tertiary)',
+                      color: selectedLocation.isCompleted
+                        ? 'var(--primary)'
+                        : 'var(--tertiary)',
                     }"
                     >{{ selectedLocation.questCount }}</span
                   >
@@ -48,10 +46,9 @@
                   <span
                     class="info-value"
                     :style="{
-                      color:
-                        selectedLocation?.status === '미션 완료'
-                          ? 'var(--primary)'
-                          : 'var(--tertiary)',
+                      color: selectedLocation.isCompleted
+                        ? 'var(--primary)'
+                        : 'var(--tertiary)',
                     }"
                     >{{ selectedLocation.coins }}</span
                   >
@@ -89,7 +86,7 @@
 import { getMyInfo } from "@/api/auth";
 import { recordVisit } from "@/api/visit";
 import { getAllPlaces } from "@/api/place";
-import { getMissionsByPlaceId } from "@/api/mission";
+import { getMissionsByPlaceId, getMissionStatusByPlace } from "@/api/mission";
 import { KakaoMapMixin } from "@/script";
 import { ImageErrorMixin } from "@/script";
 import IconTemple from "@/components/icons/IconTemple.vue";
@@ -111,8 +108,26 @@ export default {
       const userRes = await getMyInfo();
       this.memberId = userRes.data?.data?.memberId;
 
-      const placeRes = await getAllPlaces();
-      this.placeData = placeRes.data?.data || [];
+      const [placeRes, statusRes] = await Promise.all([
+        getAllPlaces(),
+        getMissionStatusByPlace(this.memberId),
+      ]);
+
+      const places = placeRes.data?.data || [];
+      const statuses = statusRes.data?.data || [];
+
+      // 장소별 미션 완료 상태 병합
+      this.placeData = places.map((place) => {
+        const status = statuses.find((s) => s.placeId === place.placeId);
+        return {
+          ...place,
+          missionStatus: status || {
+            totalMissions: 0,
+            completedMissions: 0,
+            allCompleted: false,
+          },
+        };
+      });
 
       if (this.$refs.kakaoMap) {
         await this.initMap(this.$refs.kakaoMap);
@@ -128,7 +143,6 @@ export default {
     window.removeEventListener("clearSelectedPlace", this.clearSelectedPlace);
   },
   watch: {
-    // selectedLocation이 바뀔 때마다 코인 회전 재시작
     selectedLocation() {
       this.restartCoinSpin();
     },
@@ -147,14 +161,18 @@ export default {
             0
           );
 
-          // recentPlaceId를 쿠키에 저장
           document.cookie = `recentPlaceId=${place.placeId}; path=/; max-age=86400`;
 
           const enriched = {
             ...selectedData,
             questCount: missions.length,
             coins: totalScore,
-            status: missions.length > 0 ? "미션 수행 필요" : "미션 없음",
+            isCompleted: selectedData.missionStatus.allCompleted,
+            status: selectedData.missionStatus.allCompleted
+              ? "미션 완료"
+              : missions.length > 0
+              ? "미션 수행 필요"
+              : "미션 없음",
           };
 
           this.selectedLocation = enriched;
@@ -174,23 +192,20 @@ export default {
       }
     },
 
-    // 코인 회전 애니메이션 리셋 및 재시작
     restartCoinSpin() {
       this.$nextTick(() => {
         const el = this.$el.querySelector(".info-icon-spin");
         if (!el) return;
         el.classList.remove("spin-once");
-        void el.offsetWidth; // reflow 발생
+        void el.offsetWidth;
         el.classList.add("spin-once");
       });
     },
 
-    // 글로벌 이벤트 핸들러
     handlePlaceSelected(event) {
       this.selectPlace(event.detail.place);
     },
 
-    // 빈 공간 클릭 시 선택 해제
     clearSelectedPlace() {
       this.selectedLocation = null;
     },
