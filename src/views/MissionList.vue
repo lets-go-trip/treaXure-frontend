@@ -1,5 +1,5 @@
 <template>
-  <div class="quest-screen">
+  <div class="mission-screen">
     <!-- 헤더 -->
     <div class="header">
       <div class="header-back">
@@ -119,17 +119,17 @@
       <!-- 미션 카드 목록 -->
       <h4 class="mission-section-title">도전 가능한 미션</h4>
       <div
-        v-for="(quest, index) in availableQuests"
+        v-for="(mission, index) in availableMissions"
         :key="'available-' + index"
         class="mission-card"
       >
         <div class="mission-title-wrapper">
-          <div class="mission-title">{{ quest.title }}</div>
-          <div class="badge score-badge">{{ quest.score }}점</div>
+          <div class="mission-title">{{ mission.title }}</div>
+          <div class="badge score-badge">{{ mission.score }}점</div>
         </div>
-        <div class="mission-desc">{{ quest.description }}</div>
+        <div class="mission-desc">{{ mission.description }}</div>
         <router-link
-          :to="'/mission-detail/' + quest.id"
+          :to="'/mission-detail/' + mission.missionId"
           class="btn-small incomplete-btn-small"
           >도전하기</router-link
         >
@@ -137,19 +137,19 @@
 
       <h4 class="mission-section-title completed">완료한 미션</h4>
       <div
-        v-for="(quest, index) in completedQuests"
+        v-for="(mission, index) in completedMissions"
         :key="'completed-' + index"
         class="mission-card completed"
       >
         <div class="mission-title-wrapper">
-          <div class="mission-title">{{ quest.title }}</div>
+          <div class="mission-title">{{ mission.title }}</div>
           <div class="badge completed">완료</div>
         </div>
-        <div class="mission-desc">{{ quest.description }}</div>
+        <div class="mission-desc">{{ mission.description }}</div>
         <!-- 인증 사진 표시 -->
         <img
-          v-if="quest.boardImageUrl"
-          :src="quest.boardImageUrl"
+          v-if="mission.boardImageUrl"
+          :src="mission.boardImageUrl"
           alt="인증 사진"
           class="mission-completed-image"
         />
@@ -168,16 +168,16 @@ export default {
   data() {
     return {
       locationInfo: {},
-      quests: [],
+      missions: [],
       userId: null,
     };
   },
   computed: {
-    availableQuests() {
-      return this.quests.filter((q) => !q.completed);
+    availableMissions() {
+      return this.missions.filter((q) => !q.completed);
     },
-    completedQuests() {
-      return this.quests.filter((q) => q.completed);
+    completedMissions() {
+      return this.missions.filter((q) => q.completed);
     },
   },
   async mounted() {
@@ -203,7 +203,7 @@ export default {
       });
 
       // 미션에 completed 여부 및 board imageUrl 연결
-      const questsWithCompletion = missions.map((mission) => {
+      const missionsWithCompletion = missions.map((mission) => {
         const board = boardMap.get(mission.missionId);
         return {
           ...mission,
@@ -212,12 +212,12 @@ export default {
         };
       });
 
-      this.quests = questsWithCompletion;
+      this.missions = missionsWithCompletion;
 
-      const completedCount = questsWithCompletion.filter(
+      const completedCount = missionsWithCompletion.filter(
         (q) => q.completed
       ).length;
-      const totalCount = questsWithCompletion.length;
+      const totalCount = missionsWithCompletion.length;
 
       this.locationInfo = {
         name: place.placeName,

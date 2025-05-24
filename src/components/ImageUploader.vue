@@ -281,19 +281,8 @@ export default {
 
         console.log("프리사인드 URL 요청 데이터:", requestData);
 
-        // 인증 관련 헤더 문제를 해결하기 위한 axios 인스턴스 생성
-        const api = axios.create();
-
-        // Authorization 헤더가 undefined인 경우 삭제
-        if (
-          api.defaults.headers.common["Authorization"] === "Bearer undefined" ||
-          api.defaults.headers.common["Authorization"] === undefined
-        ) {
-          delete api.defaults.headers.common["Authorization"];
-        }
-
         // 실제 백엔드 API 호출
-        const presignedResponse = await api.post(
+        const presignedResponse = await axios.post(
           `${this.apiBaseUrl}/api/presigned-upload`,
           requestData
         );
@@ -324,7 +313,7 @@ export default {
         });
 
         // 원본 이미지 서명된 URL 획득 (인증 헤더 문제 해결)
-        const originalSignedResponse = await api.post(
+        const originalSignedResponse = await axios.post(
           `${this.apiBaseUrl}/api/signed-url`,
           {
             objectKey: this.originalObjectKey,
@@ -540,14 +529,13 @@ export default {
 <style scoped>
 .image-uploader {
   width: 100%;
-  max-width: 500px;
+  /* max-width: 500px; */
   margin: 0 auto;
 }
 
 .upload-area {
   border: 2px dashed #ccc;
-  border-radius: 8px;
-  padding: 20px;
+  border-radius: var(--spacing-md);
   text-align: center;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -596,18 +584,21 @@ export default {
   position: relative;
   width: 100%;
   height: 100%;
+  font-size: 0;
 }
 
 .preview-image {
-  max-width: 100%;
-  max-height: 300px;
+  border-radius: var(--spacing-md);
+  height: fit-content;
+  /* max-width: 100%; */
+  /* max-height: 300px; */
   object-fit: contain;
 }
 
 .remove-button {
   position: absolute;
-  top: -10px;
-  right: -10px;
+  top: 10px;
+  right: 10px;
   padding: 10px;
   background: #ff4444;
   color: white;

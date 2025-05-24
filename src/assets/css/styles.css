@@ -183,6 +183,7 @@ button,
   /* hue-rotate 애니메이션 */
   /* animation: hue-cycle 5s linear infinite; */
   border-radius: 10px;
+  cursor: pointer;
 }
 
 /* ::before로 그라디언트 레이어 생성 */
@@ -248,7 +249,7 @@ button,
 
 /****************************** 콘텐츠 영역 공통 스타일 ******************************/
 .mypage,
-.quest-screen,
+.mission-screen,
 .all-missions,
 .mission-detail,
 .weekly-best {
@@ -363,6 +364,7 @@ button,
   font-weight: 500;
   transition: all var(--transition-fast);
   text-decoration: none;
+  cursor: pointer;
 }
 
 .nav-item.active {
@@ -1036,7 +1038,6 @@ button,
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 8px;
-  /* 카드 간 여백 */
 }
 
 .mission-img-card {
@@ -1201,20 +1202,33 @@ button,
   padding: 0;
 }
 
-.mission-header {
+.mission-header-wrapper {
   display: flex;
   padding: var(--spacing-md);
-  background: var(--bg-secondary);
+  /* background: var(--bg-secondary); */
   border-bottom: var(--border-light);
   flex-direction: column;
-  align-items: flex-start;
+  /* align-items: flex-start; */
   gap: var(--spacing-md);
 }
 
-.mission-header h2 {
+.mission-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mission-name {
+  font-weight: 600;
   font-size: 26px;
-  font-weight: 700;
   color: var(--text-deep-dark);
+}
+
+.mission-description {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-dark);
 }
 
 .mission-location {
@@ -1223,41 +1237,24 @@ button,
 }
 
 .mission-content {
-  padding: 16px;
+  padding: var(--spacing-md);
 }
 
-.mission-desc {
-  margin-bottom: 24px;
+.image-wrapper,
+.upload-wrapper,
+.comment-wrapper,
+.uploaded-image-preview {
+  display: flex;
+  margin-bottom: var(--spacing-xl);
+  flex-direction: column;
+  gap: var(--spacing-md);
 }
 
-.mission-desc p {
-  font-size: 15px;
-  line-height: 1.6;
-  margin-bottom: 16px;
-  color: var(--text-dark);
-}
-
-.mission-desc ul {
-  padding-left: 20px;
-  margin-bottom: 16px;
-}
-
-.mission-desc li {
-  font-size: 14px;
-  color: var(--text-medium);
-  margin-bottom: 8px;
-  line-height: 1.5;
-}
-
-.example-image {
-  margin-bottom: 24px;
-}
-
-.example-image h4,
-.upload-section h4 {
+.image-wrapper h4,
+.upload-wrapper h4,
+.comment-wrapper h4 {
   font-size: 16px;
   font-weight: 600;
-  margin-bottom: 12px;
   color: var(--primary);
 }
 
@@ -1274,11 +1271,7 @@ button,
   display: block;
 }
 
-.upload-section {
-  margin-bottom: 24px;
-}
-
-.upload-section p {
+.upload-wrapper p {
   font-size: 14px;
   color: var(--text-medium);
   margin-bottom: 16px;
@@ -1318,34 +1311,43 @@ button,
   font-weight: 500;
 }
 
-.comment-box {
-  margin-top: 24px;
-}
-
-.comment-box textarea {
+.comment-wrapper textarea {
   width: 100%;
-  border: 1px solid var(--primary-light);
+  border: 1px solid var(--primary);
   border-radius: var(--radius-sm);
-  padding: 12px;
+  padding: var(--spacing-md);
   font-size: 14px;
   resize: none;
   font-family: "Noto Sans KR", sans-serif;
 }
 
-.comment-box textarea:focus {
+.comment-wrapper textarea::placeholder {
+  color: var(--text-medium);
+}
+
+.comment-wrapper textarea:focus {
   outline: none;
-  border-color: var(--primary);
+  border-color: var(--primary-light);
 }
 
 .action-buttons {
   display: flex;
+  flex-direction: column;
   gap: 12px;
-  margin-top: 24px;
 }
 
 .action-buttons button {
-  flex: 1;
   padding: 12px 0;
+}
+
+.cancel-btn {
+  background-color: var(--tertiary);
+  text-decoration: none;
+}
+
+.cancel-btn:hover {
+  background-color: var(--tertiary);
+  filter: brightness(80%);
 }
 
 /****************************** MyPage 페이지 스타일 ******************************/

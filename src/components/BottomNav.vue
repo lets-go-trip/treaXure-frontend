@@ -107,7 +107,7 @@ export default {
           this.$router.push(`/mission-list/${recentPlaceId}`);
         } else {
           alert("현재 미션을 진행 중인 장소가 없습니다.");
-          this.$router.back();
+          this.$router.push("/treasure");
         }
       } else {
         this.$router.push(item.path);

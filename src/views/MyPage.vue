@@ -57,7 +57,7 @@
         <div class="section-container">
           <div class="section-header">
             <h3>최근 미션 사진</h3>
-            <router-link to="/photos" class="view-all">
+            <router-link to="/all-missions" class="view-all">
               전체보기
               <svg
                 width=""
@@ -117,24 +117,7 @@ export default {
       },
       visitCount: 0, // 방문 장소 수
       completedMissionCount: 0, // 완료된 미션 수
-      recentPhotos: [
-        {
-          url: "https://thumb16.iclickart.co.kr/Thumb16/1170000/1166254.jpg",
-          alt: "미션 사진",
-        },
-        {
-          url: "https://thumb16.iclickart.co.kr/Thumb16/1170000/1166273.jpg",
-          alt: "미션 사진",
-        },
-        {
-          url: "https://thumb16.iclickart.co.kr/Thumb16/1170000/1166267.jpg",
-          alt: "미션 사진",
-        },
-        {
-          url: "https://thumb16.iclickart.co.kr/Thumb16/1170000/1166270.jpg",
-          alt: "미션 사진",
-        },
-      ],
+      recentPhotos: [],
     };
   },
   async mounted() {
@@ -142,6 +125,7 @@ export default {
     await Promise.all([
       this.fetchVisitData(),
       this.fetchcompletedMissionCount(),
+      this.fetchRecentPhotos(),
     ]);
   },
   methods: {
@@ -180,6 +164,26 @@ export default {
       } catch (err) {
         console.error("완료 미션 불러오기 실패", err);
         this.completedMissionCount = 0;
+      }
+    },
+    async fetchRecentPhotos() {
+      try {
+        const res = await getMyBoards(this.userData.memberId);
+        const boards = res.data.data;
+
+        // 최신순 정렬 (createdAt 기준, 내림차순)
+        const sorted = boards.sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        );
+
+        // 최대 4개까지만
+        this.recentPhotos = sorted.slice(0, 4).map((board) => ({
+          url: board.imageUrl,
+          alt: board.title || "미션 사진",
+        }));
+      } catch (err) {
+        console.error("최근 미션 사진 불러오기 실패", err);
+        this.recentPhotos = [];
       }
     },
     async handleSignoutClick(btn) {
