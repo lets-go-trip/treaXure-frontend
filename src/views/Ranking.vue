@@ -176,22 +176,6 @@
           </div>
         </div>
       </div>
-
-      <!-- 투표 참여 안내 -->
-      <div class="vote-info">
-        <div class="vote-header">
-          <h3>이번 주 미션 투표에 참여하세요!</h3>
-          <div class="vote-stats">
-            <div class="vote-count">
-              현재 {{ voteInfo.participants }}명 참여
-            </div>
-            <div class="time-left">남은 시간: {{ voteInfo.timeLeft }}</div>
-          </div>
-        </div>
-        <div class="vote-action">
-          <button class="btn" @click="participateVote">투표 참여하기</button>
-        </div>
-      </div>
     </div>
   </div>
 </template>

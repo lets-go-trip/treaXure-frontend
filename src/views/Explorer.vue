@@ -25,8 +25,45 @@
     <!-- 스크롤 가능한 컨텐츠 영역 -->
     <div class="scrollable-content">
       <div class="photo-grid">
-        <div v-for="(photo, index) in photos" :key="index" class="photo-item">
+        <div
+          v-for="(photo, index) in photos"
+          :key="index"
+          class="photo-item"
+          @click="openModal(photo)"
+        >
           <img :src="photo.imageUrl" :alt="photo.title" />
+        </div>
+      </div>
+    </div>
+
+    <!-- 모달 -->
+    <div v-if="selectedPhoto" class="modal-overlay" @click.self="closeModal">
+      <div class="modal-card">
+        <img
+          class="modal-img completed"
+          :src="selectedPhoto.imageUrl"
+          :alt="selectedPhoto.title"
+        />
+        <div class="modal-wrapper">
+          <div class="modal-favorites">
+            💗🤍 {{ selectedPhoto.favoriteCount }}
+          </div>
+          <div class="modal-points">
+            🍀 {{ Math.floor(selectedPhoto.similarityScore * 100) }}
+          </div>
+        </div>
+        <div class="modal-title">{{ selectedPhoto.title }}</div>
+        <div class="modal-description">
+          <img :src="selectedPhoto.profileUrl" class="modal-avatar" />
+          <div class="modal-info-wrapper">
+            <div class="modal-nickname">{{ selectedPhoto.nickname }}</div>
+            <div class="modal-info">
+              <div class="modal-member">
+                {{ formattedDate(selectedPhoto.createdAt) }}
+              </div>
+              <div class="modal-place">{{ selectedPhoto.placeName }}</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -41,6 +78,8 @@ export default {
   data() {
     return {
       photos: [],
+      selectedPhoto: null,
+      savedScrollY: 0,
     };
   },
   async mounted() {
@@ -50,6 +89,32 @@ export default {
     } catch (error) {
       console.error("게시물 목록을 불러오는 데 실패했습니다.", error);
     }
+  },
+  methods: {
+    openModal(photo) {
+      this.savedScrollY = window.scrollY;
+      this.selectedPhoto = photo;
+      document.body.style.position = "fixed";
+      document.body.style.top = `-${this.savedScrollY}px`;
+      document.body.style.overflowY = "scroll";
+      document.body.style.width = "100%";
+    },
+    closeModal() {
+      this.selectedPhoto = null;
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.overflowY = "";
+      document.body.style.width = "";
+      window.scrollTo(0, this.savedScrollY);
+    },
+    formattedDate(dateStr) {
+      const date = new Date(dateStr);
+      return date.toLocaleDateString("ko-KR", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
+    },
   },
 };
 </script>
@@ -69,5 +134,32 @@ export default {
   width: 100%;
   aspect-ratio: 1 / 1;
   object-fit: cover;
+  cursor: pointer;
+}
+
+.modal-description {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.modal-avatar {
+  width: 35px;
+  height: 35px;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.modal-info-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-info {
+  display: flex;
+  gap: 10px;
+  font-size: 12px;
+  color: var(--text-dark);
 }
 </style>

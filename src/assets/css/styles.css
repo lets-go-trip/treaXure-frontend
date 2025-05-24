@@ -1135,7 +1135,6 @@ button,
   background: var(--text-deep-light);
   padding: 36px 24px;
   max-width: 90vw;
-  max-height: 582px;
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
