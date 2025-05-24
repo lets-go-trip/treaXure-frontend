@@ -200,7 +200,7 @@
 import { ImageErrorMixin } from "@/script";
 
 export default {
-  name: "WeeklyBest",
+  name: "Ranking",
   mixins: [ImageErrorMixin],
   data() {
     return {
@@ -302,68 +302,6 @@ export default {
 </script>
 
 <style scoped>
-.weekly-best {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  background-color: var(--bg-secondary);
-  position: relative;
-  overflow: hidden;
-}
-
-/* 헤더 스타일 */
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 60px;
-  min-height: 60px;
-  padding: 0 var(--spacing-md);
-  background-color: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(8px);
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  box-shadow: var(--shadow-sm);
-  flex-shrink: 0;
-}
-
-.header-back,
-.header-action {
-  width: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.header-title {
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--text-dark);
-}
-
-.icon-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  background: none;
-  border: none;
-  border-radius: 50%;
-  color: var(--text-medium);
-  cursor: pointer;
-  transition: all var(--transition-fast);
-}
-
-.icon-btn:hover {
-  background-color: rgba(0, 0, 0, 0.05);
-}
-
-.icon-btn:active {
-  transform: scale(0.95);
-}
-
 /* 스크롤 가능한 컨텐츠 영역 */
 .scrollable-content {
   flex: 1;
