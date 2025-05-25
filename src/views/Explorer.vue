@@ -24,9 +24,18 @@
 
     <!-- 스크롤 가능한 컨텐츠 영역 -->
     <div class="scrollable-content">
+      <div class="search-box">
+        <input
+          type="text"
+          v-model="searchQuery"
+          placeholder="검색어를 입력하세요"
+          @input="filterPhotos"
+        />
+      </div>
+
       <div class="photo-grid">
         <div
-          v-for="(photo, index) in photos"
+          v-for="(photo, index) in filteredPhotos"
           :key="index"
           class="photo-item"
           @click="openModal(photo)"
@@ -87,11 +96,13 @@ export default {
   name: "Explorer",
   data() {
     return {
-      photos: [],
+      photos: [], // 전체 게시물
+      filteredPhotos: [], // 검색 필터된 게시물
       selectedPhoto: null,
       savedScrollY: 0,
       memberId: null,
       myFavorites: [],
+      searchQuery: "", // 검색어
     };
   },
   async mounted() {
@@ -108,11 +119,13 @@ export default {
       // 현재 사용자 좋아요만 필터링
       this.myFavorites =
         favRes.data?.data?.filter((f) => f.memberId === this.memberId) || [];
+
+      // 초기 검색 필터 대상 설정
+      this.filteredPhotos = this.photos;
     } catch (error) {
       console.error("탐색 데이터 로딩 실패:", error);
     }
   },
-
   methods: {
     openModal(photo) {
       this.savedScrollY = window.scrollY;
@@ -162,8 +175,41 @@ export default {
         console.error("좋아요 처리 실패:", err);
       }
     },
+    filterPhotos() {
+      const query = this.searchQuery.trim().toLowerCase();
+      if (!query) {
+        this.filteredPhotos = this.photos;
+        return;
+      }
+
+      this.filteredPhotos = this.photos.filter((photo) => {
+        return (
+          (photo.nickname || "").toLowerCase().includes(query) ||
+          (photo.placeName || "").toLowerCase().includes(query) ||
+          (photo.title || "").toLowerCase().includes(query)
+        );
+      });
+    },
   },
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.search-box {
+  padding: 0 16px 16px 16px;
+}
+
+.search-box input {
+  width: 100%;
+  padding: 16px;
+  border-radius: 6px;
+  border: 1px solid var(--primary);
+  font-size: 14px;
+  color: var(--primary);
+  outline: none;
+}
+
+.search-box input::placeholder {
+  color: var(--primary);
+}
+</style>
