@@ -14,6 +14,7 @@ import Explorer from "@/views/Explorer.vue";
 import Ranking from "@/views/Ranking.vue";
 import MyPage from "@/views/MyPage.vue";
 import ProfileEdit from "@/views/ProfileEdit.vue";
+import Favorite from "@/views/Favorite.vue";
 
 const routes = [
   { path: "/main", name: "Main", component: Main },
@@ -71,6 +72,12 @@ const routes = [
     path: "/profile-edit",
     name: "ProfileEdit",
     component: ProfileEdit,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/favorite",
+    name: "Favorite",
+    component: Favorite,
     meta: { requiresAuth: true },
   },
   { path: "/", redirect: "/treasure" },

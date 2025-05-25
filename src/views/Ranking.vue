@@ -235,7 +235,7 @@ export default {
 .ranking-buttons {
   display: flex;
   justify-content: center;
-  padding: var(--spacing-md) 0;
+  padding-bottom: var(--spacing-md);
 }
 
 .ranking-buttons button {
@@ -297,6 +297,14 @@ export default {
   font-size: 12px;
   display: flex;
   gap: 10px;
+}
+
+.ranking-favorite {
+  color: var(--tertiary);
+}
+
+.ranking-similarity {
+  color: var(--primary);
 }
 
 .ranking-title {

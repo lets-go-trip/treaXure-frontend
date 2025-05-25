@@ -86,6 +86,38 @@
             </div>
           </div>
         </div>
+        <div class="section-container">
+          <div class="section-header">
+            <h3>좋아요한 사진</h3>
+            <router-link to="/favorite" class="view-all">
+              전체보기
+              <svg
+                width=""
+                height=""
+                viewBox="8 6 7 12"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M8.59 16.59L13.17 12L8.59 7.41L10 6L16 12L10 18L8.59 16.59Z"
+                  fill="currentColor"
+                />
+              </svg>
+            </router-link>
+          </div>
+
+          <div class="img-grid">
+            <div
+              class="img-item"
+              v-for="(photo, index) in likedBoards"
+              :key="index"
+            >
+              <div class="photo-container">
+                <img :src="photo.imageUrl" :alt="photo.title" />
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="section-setting">
           <div class="signout-btn btn" @click="handleSignoutClick('signout')">
             로그아웃
@@ -103,6 +135,7 @@
 import { getMyInfo, signout, deactivateAccount } from "@/api/auth";
 import { getVisitsByMember } from "@/api/visit";
 import { getMyBoards } from "@/api/board";
+import { getAllFavorites } from "@/api/favorite";
 
 export default {
   name: "MyPage",
@@ -118,6 +151,7 @@ export default {
       visitCount: 0, // 방문 장소 수
       completedMissionCount: 0, // 완료된 미션 수
       recentPhotos: [],
+      likedBoards: [], // 좋아요한 게시물
     };
   },
   async mounted() {
@@ -126,6 +160,7 @@ export default {
       this.fetchVisitData(),
       this.fetchcompletedMissionCount(),
       this.fetchRecentPhotos(),
+      this.fetchLikedBoards(),
     ]);
   },
   methods: {
@@ -184,6 +219,23 @@ export default {
       } catch (err) {
         console.error("최근 미션 사진 불러오기 실패", err);
         this.recentPhotos = [];
+      }
+    },
+    async fetchLikedBoards() {
+      try {
+        const res = await getAllFavorites();
+        const allFavorites = res.data.data;
+
+        // 현재 로그인한 사용자의 좋아요만 필터링
+        const myFavorites = allFavorites.filter(
+          (f) => f.memberId === this.userData.memberId
+        );
+
+        // board 정보만 추출하고 최대 4개까지
+        this.likedBoards = myFavorites.map((fav) => fav.board).slice(0, 4); // 최대 4개만 추출
+      } catch (err) {
+        console.error("좋아요한 게시물 불러오기 실패", err);
+        this.likedBoards = [];
       }
     },
     async handleSignoutClick(btn) {
