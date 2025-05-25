@@ -6,13 +6,15 @@ import Main from "@/views/Main.vue";
 import Signin from "@/views/SignIn.vue";
 import Signup from "@/views/SignUp.vue";
 import Treasure from "@/views/Treasure.vue";
+import AllMissions from "@/views/AllMissions.vue";
 import MissionList from "@/views/MissionList.vue";
 import MissionListById from "@/views/MissionList.vue";
 import MissionDetailById from "@/views/MissionDetail.vue";
-import AllMissions from "@/views/AllMissions.vue";
-import WeeklyBest from "@/views/WeeklyBest.vue";
+import Explorer from "@/views/Explorer.vue";
+import Ranking from "@/views/Ranking.vue";
 import MyPage from "@/views/MyPage.vue";
 import ProfileEdit from "@/views/ProfileEdit.vue";
+import Favorite from "@/views/Favorite.vue";
 
 const routes = [
   { path: "/main", name: "Main", component: Main },
@@ -22,6 +24,12 @@ const routes = [
     path: "/treasure",
     name: "Treasure",
     component: Treasure,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/all-missions",
+    name: "AllMissions",
+    component: AllMissions,
     meta: { requiresAuth: true },
   },
   {
@@ -43,15 +51,15 @@ const routes = [
     meta: { requiresAuth: false },
   },
   {
-    path: "/all-missions",
-    name: "AllMissions",
-    component: AllMissions,
+    path: "/explorer",
+    name: "Explorer",
+    component: Explorer,
     meta: { requiresAuth: true },
   },
   {
-    path: "/weekly-best",
-    name: "WeeklyBest",
-    component: WeeklyBest,
+    path: "/ranking",
+    name: "Ranking",
+    component: Ranking,
     meta: { requiresAuth: true },
   },
   {
@@ -64,6 +72,12 @@ const routes = [
     path: "/profile-edit",
     name: "ProfileEdit",
     component: ProfileEdit,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/favorite",
+    name: "Favorite",
+    component: Favorite,
     meta: { requiresAuth: true },
   },
   { path: "/", redirect: "/treasure" },

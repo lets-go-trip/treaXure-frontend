@@ -59,19 +59,19 @@ export default {
           activeIcon: "IconExploreFilled",
         },
         {
-          path: "/mission-list",
-          label: "진행",
-          icon: "IconProgressOutline",
-          activeIcon: "IconProgressFilled",
-        },
-        {
           path: "/all-missions",
           label: "기록",
           icon: "IconRecordsOutline",
           activeIcon: "IconRecordsFilled",
         },
         {
-          path: "/weekly-best",
+          path: "/explorer",
+          label: "탐색",
+          icon: "IconProgressOutline",
+          activeIcon: "IconProgressFilled",
+        },
+        {
+          path: "/ranking",
           label: "랭킹",
           icon: "IconRankingOutline",
           activeIcon: "IconRankingFilled",
@@ -89,8 +89,9 @@ export default {
     isActive(path) {
       const route = this.$route.path;
 
-      if (path === "/mission-list") {
+      if (path === "/all-missions") {
         return (
+          route === "/all-missions" ||
           route.startsWith("/mission-list") ||
           route.startsWith("/mission-detail")
         );

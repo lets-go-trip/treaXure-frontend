@@ -3,7 +3,7 @@
     <!-- 헤더 -->
     <div class="header">
       <div class="header-back">
-        <router-link to="/" class="icon-btn">
+        <router-link to="/all-missions" class="icon-btn">
           <svg
             width="24"
             height="24"
