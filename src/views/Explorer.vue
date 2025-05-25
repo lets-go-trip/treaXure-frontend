@@ -45,8 +45,12 @@
           :alt="selectedPhoto.title"
         />
         <div class="modal-wrapper">
-          <div class="modal-favorites">
-            💗🤍 {{ selectedPhoto.favoriteCount }}
+          <div
+            class="modal-favorites"
+            @click.stop="toggleFavorite(selectedPhoto)"
+          >
+            {{ isFavorited(selectedPhoto.boardId) ? "💗" : "🤍" }}
+            {{ selectedPhoto.favoriteCount }}
           </div>
           <div class="modal-points">
             🍀 {{ Math.floor(selectedPhoto.similarityScore * 100) }}
@@ -72,6 +76,12 @@
 
 <script>
 import { getAllBoards } from "@/api/board";
+import { getMyInfo } from "@/api/auth";
+import {
+  createFavorite,
+  deleteFavorite,
+  getAllFavorites,
+} from "@/api/favorite";
 
 export default {
   name: "Explorer",
@@ -80,14 +90,24 @@ export default {
       photos: [],
       selectedPhoto: null,
       savedScrollY: 0,
+      memberId: null,
+      myFavorites: [],
     };
   },
   async mounted() {
     try {
+      const userRes = await getMyInfo();
+      this.memberId = userRes.data?.data?.memberId;
+
       const res = await getAllBoards();
       this.photos = res.data.data || [];
+
+      const favRes = await getAllFavorites();
+      this.myFavorites = favRes.data.data.filter(
+        (f) => f.memberId === this.memberId
+      );
     } catch (error) {
-      console.error("게시물 목록을 불러오는 데 실패했습니다.", error);
+      console.error("탐색 데이터 로딩 실패:", error);
     }
   },
   methods: {
@@ -115,6 +135,30 @@ export default {
         day: "numeric",
       });
     },
+    isFavorited(boardId) {
+      return this.myFavorites.some((f) => f.boardId === boardId);
+    },
+    async toggleFavorite(photo) {
+      const target = this.myFavorites.find((f) => f.boardId === photo.boardId);
+      try {
+        if (target) {
+          await deleteFavorite(target.favoriteId);
+          this.myFavorites = this.myFavorites.filter(
+            (f) => f.favoriteId !== target.favoriteId
+          );
+          photo.favoriteCount--;
+        } else {
+          const res = await createFavorite({
+            boardId: photo.boardId,
+            memberId: this.memberId,
+          });
+          this.myFavorites.push(res.data.data);
+          photo.favoriteCount++;
+        }
+      } catch (err) {
+        console.error("좋아요 처리 실패:", err);
+      }
+    },
   },
 };
 </script>
@@ -134,6 +178,10 @@ export default {
   width: 100%;
   aspect-ratio: 1 / 1;
   object-fit: cover;
+  cursor: pointer;
+}
+
+.modal-favorites {
   cursor: pointer;
 }
 
