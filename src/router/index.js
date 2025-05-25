@@ -56,7 +56,7 @@ const routes = [
     meta: { requiresAuth: true },
   },
   {
-    path: "/weekly-best",
+    path: "/ranking",
     name: "Ranking",
     component: Ranking,
     meta: { requiresAuth: true },

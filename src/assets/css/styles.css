@@ -254,7 +254,7 @@ button,
 .mission-screen,
 .all-missions,
 .mission-detail,
-.weekly-best {
+.ranking {
   flex: 1;
   overflow-y: auto;
   padding-bottom: 64px;
@@ -1186,6 +1186,55 @@ button,
   font-weight: 500;
 }
 
+/****************************** Exeplorer 페이지 스타일 ******************************/
+
+.photo-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+}
+
+.photo-item {
+  display: contents;
+}
+
+.photo-item img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  cursor: pointer;
+}
+
+.modal-favorites {
+  cursor: pointer;
+}
+
+.modal-description {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.modal-avatar {
+  width: 35px;
+  height: 35px;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.modal-info-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-info {
+  display: flex;
+  gap: 10px;
+  font-size: 12px;
+  color: var(--text-dark);
+}
+
 /****************************** Ranking 페이지 스타일 ******************************/
 
 .info-address {
@@ -1523,48 +1572,7 @@ button,
   filter: brightness(90%);
 }
 
-/* 주간 베스트 페이지 */
-.weekly-best {
-  padding: 0;
-}
-
-.date-selector {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 14px 16px;
-  background: var(--bg-secondary);
-  border-bottom: var(--border-light);
-}
-
-.date-display {
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--primary);
-}
-
-.date-nav {
-  background: transparent;
-  border: none;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  color: var(--primary);
-  transition: all var(--transition-fast) ease;
-}
-
-.date-nav:hover {
-  background: rgba(0, 0, 0, 0.05);
-}
-
-.best-content {
-  padding: 16px;
-}
-
+/****************************** Ranking 페이지 스타일 ******************************/
 .best-photo {
   position: relative;
   margin-bottom: 24px;

@@ -96,20 +96,23 @@ export default {
   },
   async mounted() {
     try {
-      const userRes = await getMyInfo();
+      const [userRes, boardRes, favRes] = await Promise.all([
+        getMyInfo(),
+        getAllBoards(),
+        getAllFavorites(),
+      ]);
+
       this.memberId = userRes.data?.data?.memberId;
+      this.photos = boardRes.data?.data || [];
 
-      const res = await getAllBoards();
-      this.photos = res.data.data || [];
-
-      const favRes = await getAllFavorites();
-      this.myFavorites = favRes.data.data.filter(
-        (f) => f.memberId === this.memberId
-      );
+      // 현재 사용자 좋아요만 필터링
+      this.myFavorites =
+        favRes.data?.data?.filter((f) => f.memberId === this.memberId) || [];
     } catch (error) {
       console.error("탐색 데이터 로딩 실패:", error);
     }
   },
+
   methods: {
     openModal(photo) {
       this.savedScrollY = window.scrollY;
@@ -163,51 +166,4 @@ export default {
 };
 </script>
 
-<style scoped>
-.photo-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-}
-
-.photo-item {
-  display: contents;
-}
-
-.photo-item img {
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  object-fit: cover;
-  cursor: pointer;
-}
-
-.modal-favorites {
-  cursor: pointer;
-}
-
-.modal-description {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.modal-avatar {
-  width: 35px;
-  height: 35px;
-  aspect-ratio: 1 / 1;
-  object-fit: cover;
-  border-radius: 50%;
-}
-
-.modal-info-wrapper {
-  display: flex;
-  flex-direction: column;
-}
-
-.modal-info {
-  display: flex;
-  gap: 10px;
-  font-size: 12px;
-  color: var(--text-dark);
-}
-</style>
+<style scoped></style>

@@ -16,6 +16,10 @@ export function getMyBoardByMissionId(missionId) {
   return axios.get(`/api/boards/my/${missionId}`);
 }
 
+export function getRankingBoards(days = 7) {
+  return axios.get(`/api/boards/ranking?days=${days}`);
+}
+
 export function createBoard({ missionId, imageUrl, title, memberId }) {
   return axios.post("/api/boards", {
     missionId,

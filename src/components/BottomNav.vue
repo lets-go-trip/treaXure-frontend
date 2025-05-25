@@ -71,7 +71,7 @@ export default {
           activeIcon: "IconProgressFilled",
         },
         {
-          path: "/weekly-best",
+          path: "/ranking",
           label: "랭킹",
           icon: "IconRankingOutline",
           activeIcon: "IconRankingFilled",
