@@ -85,7 +85,9 @@ export default {
       uploadedImageUrl: "",
       uploadedThumbnailUrl: "",
       currentFolder: this.folder,
-      apiBaseUrl: process.env.VUE_APP_API_URL || "http://localhost:8081",
+      apiBaseUrl:
+        process.env.VUE_APP_API_URL ||
+        "http://ec2-54-180-217-227.ap-northeast-2.compute.amazonaws.com:8081/",
       pollingInterval: null,
       maxPollingAttempts: 10,
       pollingCount: 0,
@@ -234,7 +236,7 @@ export default {
         console.log("받은 ObjectKey들:", {
           originalObjectKey,
           thumbnailObjectKey,
-          presignedUrl
+          presignedUrl,
         });
 
         this.originalObjectKey = originalObjectKey;
@@ -263,8 +265,14 @@ export default {
           }
         );
 
-        console.log("원본 이미지 서명된 URL 응답:", originalSignedResponse.data);
-        console.log("최종 업로드된 이미지 URL:", originalSignedResponse.data.signedUrl);
+        console.log(
+          "원본 이미지 서명된 URL 응답:",
+          originalSignedResponse.data
+        );
+        console.log(
+          "최종 업로드된 이미지 URL:",
+          originalSignedResponse.data.signedUrl
+        );
 
         this.uploadedImageUrl = originalSignedResponse.data.signedUrl;
 
@@ -284,8 +292,7 @@ export default {
               this.error =
                 "서버 내부 오류가 발생했습니다. 잠시 후 다시 시도해주세요.";
             }
-          }
-          else if (
+          } else if (
             typeof error.response.data === "string" &&
             error.response.data.includes("<?xml")
           ) {
