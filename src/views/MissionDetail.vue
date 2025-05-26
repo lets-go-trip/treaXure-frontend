@@ -97,6 +97,7 @@
       :useOpenAI="false"
       :uploadedImageUrl="uploadedImageUrls.original"
       :missionImageUrl="mission.exampleImage"
+      :placeId="currentPlaceId"
       @close="handleModalClose"
       @action="handleModalAction"
     />
@@ -132,6 +133,7 @@ export default {
         tips: [],
         referenceUrl: "",
         exampleImage: "",
+        placeId: null,
       },
       uploadedImageUrls: {
         original: "",
@@ -147,6 +149,12 @@ export default {
       memberId: null,
       imageLoadError: false
     };
+  },
+  computed: {
+    currentPlaceId() {
+      // 라우트에서 placeId를 가져오거나, mission 데이터에서 가져오거나, 기본값 사용
+      return this.$route.params.placeId || this.mission.placeId || '1';
+    }
   },
   methods: {
     handleUploadSuccess(imageUrls) {
@@ -199,7 +207,8 @@ export default {
               description: missionData.description,
               tips: [], // API에서 팁 정보가 없어서 빈 배열로 설정
               referenceUrl: missionData.referenceUrl,
-              exampleImage: missionData.referenceUrl
+              exampleImage: missionData.referenceUrl,
+              placeId: missionData.placeId || '1' // API에서 placeId 가져오기, 없으면 기본값
             };
             
             console.log('매핑된 미션 데이터:', this.mission);
@@ -247,6 +256,7 @@ export default {
           ],
           referenceUrl: "https://via.placeholder.com/320x180?text=동궁과+후원+예시",
           exampleImage: "https://via.placeholder.com/320x180?text=동궁과+후원+예시",
+          placeId: '1' // 샘플 데이터에서 placeId 설정
         };
       } catch (error) {
         console.error("미션 정보 로드 중 오류 발생:", error);
@@ -297,8 +307,9 @@ export default {
       } catch (error) {
         console.error('미션 제출 중 오류 발생:', error);
         
-        // 에러 상황에서도 개발용 모달 띄우기 (선택사항)
+        // 개발 환경에서는 항상 모달을 띄워서 테스트할 수 있도록 함
         if (process.env.NODE_ENV === 'development') {
+          console.log('개발 환경: 샘플 유사도 점수로 모달 표시');
           this.similarityScore = 0.75 + Math.random() * 0.2; // 0.75-0.95 사이 랜덤 점수
           this.showSimilarityModal = true;
         } else {
@@ -310,16 +321,16 @@ export default {
       this.showSimilarityModal = false;
     },
     handleModalAction(level) {
-      // 모달 액션 처리 - 점수 레벨에 관계없이 미션 리스트로 이동
+      // 모달에서 직접 이동 처리하므로 단순화
       this.showSimilarityModal = false;
       
-      // 현재 플레이스로 돌아가기 (MissionList에서 온 경우)
-      const currentPlaceId = this.$route.params.placeId;
-      if (currentPlaceId) {
-        this.$router.push(`/mission-list/${currentPlaceId}`);
+      if (level === 'low') {
+        // 낮은 점수의 경우에만 다시 시도 (페이지 새로고침)
+        console.log('낮은 점수 - 다시 시도');
+        window.location.reload();
       } else {
-        // 기본적으로 미션 리스트로 이동
-        this.$router.push('/mission-list');
+        // 높은/중간 점수는 모달에서 직접 Explorer로 이동 처리
+        console.log('높은/중간 점수 - 모달에서 이동 처리됨:', level);
       }
     },
     handleImageError(event) {
