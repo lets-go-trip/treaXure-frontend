@@ -11,8 +11,7 @@ function getCookie(name) {
 // (1) 백엔드 서버 기본 URL 설정 (포트가 다르다면 환경변수 또는 직접 URL 기입)
 if (process.env.NODE_ENV === "production") {
   axios.defaults.baseURL =
-    process.env.VUE_APP_API_BASE_URL ||
-    "http://ec2-54-180-217-227.ap-northeast-2.compute.amazonaws.com:8081/";
+    process.env.VUE_APP_API_BASE_URL || "https://treaxure.kro.kr/";
 } else {
   // 개발 환경에서는 프록시를 사용하므로 baseURL을 빈 문자열로 설정
   axios.defaults.baseURL = "";

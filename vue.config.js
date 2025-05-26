@@ -8,8 +8,7 @@ module.exports = {
   devServer: {
     proxy: {
       "/api": {
-        target:
-          "http://ec2-54-180-217-227.ap-northeast-2.compute.amazonaws.com:8081/",
+        target: "https://treaxure.kro.kr/",
         changeOrigin: true,
         secure: false,
         logLevel: "debug",
@@ -51,8 +50,7 @@ module.exports = {
         },
       },
       "/oauth": {
-        target:
-          "http://ec2-54-180-217-227.ap-northeast-2.compute.amazonaws.com:8081/",
+        target: "https://treaxure.kro.kr/",
         changeOrigin: true,
         secure: false,
         logLevel: "debug",

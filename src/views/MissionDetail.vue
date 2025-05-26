@@ -142,9 +142,7 @@ export default {
       comment: "",
       uploadError: "",
       isLoading: true,
-      apiBaseUrl:
-        process.env.VUE_APP_API_URL ||
-        "http://ec2-54-180-217-227.ap-northeast-2.compute.amazonaws.com:8081/",
+      apiBaseUrl: process.env.VUE_APP_API_URL || "https://treaxure.kro.kr/",
       // SimilarityScoreModal 관련 데이터
       showSimilarityModal: false,
       similarityScore: 0,
