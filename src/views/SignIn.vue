@@ -50,7 +50,7 @@
 
 <script>
 import config from "@/config";
-import axios from "axios";
+import { signin } from "@/api/auth";
 import IconLogo from "@/components/icons/IconLogo.vue";
 
 export default {
@@ -66,7 +66,7 @@ export default {
     // 기존 이메일/비번 로그인
     async handleSignIn() {
       try {
-        const res = await axios.post("/api/auth/signin", {
+        const res = await signin({
           email: this.email,
           password: this.password,
         });

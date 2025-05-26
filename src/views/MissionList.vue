@@ -207,6 +207,7 @@ export default {
         const board = boardMap.get(mission.missionId);
         return {
           ...mission,
+          id: mission.missionId,
           completed: !!board,
           boardImageUrl: board?.imageUrl || null,
         };

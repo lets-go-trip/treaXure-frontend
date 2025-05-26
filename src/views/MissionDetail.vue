@@ -87,18 +87,32 @@
         </div>
       </div>
     </div>
+
+    <!-- SimilarityScoreModal -->
+    <SimilarityScoreModal
+      :isOpen="showSimilarityModal"
+      :similarityScore="similarityScore"
+      :useOpenAI="false"
+      :uploadedImageUrl="uploadedImageUrls.original"
+      :missionImageUrl="mission.exampleImage"
+      @close="handleModalClose"
+      @action="handleModalAction"
+    />
   </div>
 </template>
 
 <script>
 import { ImageErrorMixin } from "@/script";
 import ImageUploader from '@/components/ImageUploader.vue';
+import SimilarityScoreModal from '@/components/SimilarityScoreModal.vue';
+import { getMyInfo } from "@/api/auth";
 import axios from 'axios';
 
 export default {
   name: "MissionDetail",
   components: {
-    ImageUploader
+    ImageUploader,
+    SimilarityScoreModal
   },
   mixins: [ImageErrorMixin],
   data() {
@@ -120,7 +134,11 @@ export default {
       comment: "",
       uploadError: "",
       isLoading: true,
-      apiBaseUrl: process.env.VUE_APP_API_URL || 'http://localhost:8081'
+      apiBaseUrl: process.env.VUE_APP_API_URL || 'http://localhost:8081',
+      // SimilarityScoreModal 관련 데이터
+      showSimilarityModal: false,
+      similarityScore: 0,
+      memberId: null
     };
   },
   methods: {
@@ -144,7 +162,19 @@ export default {
         if (!(process.env.NODE_ENV === 'development' && !this.apiBaseUrl.includes('localhost'))) {
           try {
             const response = await axios.get(`${this.apiBaseUrl}/api/missions/${missionId}`);
-            this.mission = response.data;
+            const missionData = response.data.data; // 실제 미션 데이터는 data 속성에 있음
+            
+            // API 응답 데이터를 템플릿에서 사용하는 구조로 매핑
+            this.mission = {
+              id: missionData.missionId,
+              title: missionData.title,
+              location: "장소 정보", // API에서 장소 정보가 없어서 기본값 설정
+              address: "",
+              points: missionData.score,
+              description: missionData.description,
+              tips: [], // API에서 팁 정보가 없어서 빈 배열로 설정
+              exampleImage: missionData.referenceUrl
+            };
             
             // 예시 이미지 URL이 상대 경로인 경우 서명된 URL로 변환
             if (this.mission.exampleImage && !this.mission.exampleImage.startsWith('http')) {
@@ -199,42 +229,81 @@ export default {
       }
 
       try {
-        // 실제 API 호출 시도
-        if (!(process.env.NODE_ENV === 'development' && !this.apiBaseUrl.includes('localhost'))) {
-          try {
-            await axios.post(`${this.apiBaseUrl}/api/missions/${this.mission.id}/submit`, {
-              imageUrl: this.uploadedImageUrls.original,
-              thumbnailUrl: this.uploadedImageUrls.thumbnail || null,
-              comment: this.comment
-            });
-            
-            alert("미션이 성공적으로 제출되었습니다!");
-            this.$router.push("/mission-list");
-            return;
-          } catch (apiError) {
-            console.error('미션 제출 API 호출 실패, 개발용 시뮬레이션으로 진행합니다:', apiError);
-            // API 호출 실패 시 개발용 시뮬레이션 진행
-          }
+        // 사용자 정보 가져오기 (memberId가 없는 경우)
+        if (!this.memberId) {
+          const userInfo = await getMyInfo();
+          this.memberId = userInfo.data?.data?.memberId;
         }
-        
-        // 개발 환경이거나 API 호출 실패 시 시뮬레이션
-        console.log("미션 제출 시뮬레이션:", {
+
+        if (!this.memberId) {
+          alert("사용자 정보를 가져올 수 없습니다.");
+          return;
+        }
+
+        // 게시물 생성 API 호출
+        const requestData = {
+          memberId: this.memberId,
           missionId: this.mission.id,
           imageUrl: this.uploadedImageUrls.original,
-          thumbnailUrl: this.uploadedImageUrls.thumbnail,
-          comment: this.comment,
-        });
+          title: this.comment || `${this.mission.title} 미션 완료`
+        };
+
+        const response = await axios.post(`${this.apiBaseUrl}/api/boards?useOpenAI=false`, requestData);
         
-        alert("미션이 성공적으로 제출되었습니다! (개발 모드)");
-        this.$router.push("/mission-list");
+        if (response.data.success) {
+          const boardData = response.data.data;
+          
+          // 유사도 점수 설정
+          this.similarityScore = boardData.similarityScore || 0;
+          
+          // SimilarityScoreModal 띄우기
+          this.showSimilarityModal = true;
+        } else {
+          alert("미션 제출에 실패했습니다.");
+        }
       } catch (error) {
         console.error('미션 제출 중 오류 발생:', error);
-        alert(`미션 제출 실패: ${error.message || '알 수 없는 오류가 발생했습니다.'}`);
+        
+        // 에러 상황에서도 개발용 모달 띄우기 (선택사항)
+        if (process.env.NODE_ENV === 'development') {
+          this.similarityScore = 0.75 + Math.random() * 0.2; // 0.75-0.95 사이 랜덤 점수
+          this.showSimilarityModal = true;
+        } else {
+          alert(`미션 제출 실패: ${error.response?.data?.message || error.message || '알 수 없는 오류가 발생했습니다.'}`);
+        }
+      }
+    },
+    handleModalClose() {
+      this.showSimilarityModal = false;
+    },
+    handleModalAction(level) {
+      // 모달 액션 처리 - 점수 레벨에 관계없이 미션 리스트로 이동
+      this.showSimilarityModal = false;
+      
+      // 현재 플레이스로 돌아가기 (MissionList에서 온 경우)
+      const currentPlaceId = this.$route.params.placeId;
+      if (currentPlaceId) {
+        this.$router.push(`/mission-list/${currentPlaceId}`);
+      } else {
+        // 기본적으로 미션 리스트로 이동
+        this.$router.push('/mission-list');
       }
     },
   },
-  mounted() {
-    this.loadMissionDetails();
+  async mounted() {
+    // 사용자 정보와 미션 정보를 병렬로 로드
+    try {
+      const [userInfo] = await Promise.all([
+        getMyInfo(),
+        this.loadMissionDetails()
+      ]);
+      
+      this.memberId = userInfo.data?.data?.memberId;
+    } catch (error) {
+      console.error('초기 데이터 로드 중 오류 발생:', error);
+      // 미션 정보 로드는 loadMissionDetails에서 처리
+      this.loadMissionDetails();
+    }
   },
 };
 </script>
