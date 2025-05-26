@@ -42,7 +42,15 @@
         <div class="image-wrapper">
           <h4>미션 사진</h4>
           <div class="image-container">
-            <img :src="mission.referenceUrl" :alt="mission.title + ' 예시'" />
+            <img 
+              :src="mission.exampleImage || mission.referenceUrl" 
+              :alt="mission.title + ' 예시'" 
+              @error="handleImageError"
+              @load="handleImageLoad"
+            />
+            <div v-if="imageLoadError" class="image-error">
+              <p>이미지를 불러올 수 없습니다.</p>
+            </div>
           </div>
         </div>
 
@@ -81,6 +89,18 @@
         </div>
       </div>
     </div>
+
+    <!-- SimilarityScoreModal -->
+    <SimilarityScoreModal
+      :isOpen="showSimilarityModal"
+      :similarityScore="similarityScore"
+      :useOpenAI="false"
+      :uploadedImageUrl="uploadedImageUrls.original"
+      :missionImageUrl="mission.exampleImage"
+      :placeId="currentPlaceId"
+      @close="handleModalClose"
+      @action="handleModalAction"
+    />
   </div>
 </template>
 
@@ -91,11 +111,14 @@ import { getMissionById } from "@/api/mission";
 import { addPointToMember } from "../api/member";
 import ImageUploader from "@/components/ImageUploader.vue";
 import { ImageErrorMixin } from "@/script";
+import SimilarityScoreModal from '@/components/SimilarityScoreModal.vue';
+import axios from 'axios';
 
 export default {
   name: "MissionDetail",
   components: {
     ImageUploader,
+    SimilarityScoreModal
   },
   mixins: [ImageErrorMixin],
   data() {
@@ -110,6 +133,7 @@ export default {
         tips: [],
         referenceUrl: "",
         exampleImage: "",
+        placeId: null,
       },
       uploadedImageUrls: {
         original: "",
@@ -118,7 +142,19 @@ export default {
       comment: "",
       uploadError: "",
       isLoading: true,
+      apiBaseUrl: process.env.VUE_APP_API_URL || 'http://localhost:8081',
+      // SimilarityScoreModal 관련 데이터
+      showSimilarityModal: false,
+      similarityScore: 0,
+      memberId: null,
+      imageLoadError: false
     };
+  },
+  computed: {
+    currentPlaceId() {
+      // 라우트에서 placeId를 가져오거나, mission 데이터에서 가져오거나, 기본값 사용
+      return this.$route.params.placeId || this.mission.placeId || '1';
+    }
   },
   methods: {
     handleUploadSuccess(imageUrls) {
@@ -129,14 +165,99 @@ export default {
     handleUploadError(error) {
       this.uploadError = "이미지 업로드 중 오류가 발생했습니다.";
       console.error("이미지 업로드 실패:", error);
+      
+      // 개발 환경에서 임시 해결책: 샘플 이미지 URL 사용
+      if (process.env.NODE_ENV === 'development') {
+        console.log('개발 환경에서 샘플 이미지 URL 사용');
+        this.uploadedImageUrls = {
+          original: "https://via.placeholder.com/400x300?text=업로드된+이미지+샘플",
+          thumbnail: "https://via.placeholder.com/200x150?text=썸네일+샘플"
+        };
+        this.uploadError = ""; // 에러 메시지 제거
+      }
     },
     async loadMissionDetails() {
+      console.log('loadMissionDetails 시작');
       this.isLoading = true;
       const missionId = this.$route.params.id;
-
+      console.log('추출된 미션 ID:', missionId);
+      if (!missionId) {
+        console.error('미션 ID가 없습니다');
+        return;
+      }
+      
       try {
-        const res = await getMissionById(missionId); // ⬅️ 실제 API 호출 함수 사용
-        this.mission = res.data.data;
+        // 실제 API 호출 먼저 시도
+        if (!(process.env.NODE_ENV === 'development' && !this.apiBaseUrl.includes('localhost'))) {
+          try {
+            const response = await axios.get(`${this.apiBaseUrl}/api/missions/${missionId}`);
+            console.log('미션 API 전체 응답:', response.data);
+            const missionData = response.data.data; // 실제 미션 데이터는 data 속성에 있음
+            console.log('미션 데이터:', missionData);
+            console.log('referenceUrl 값:', missionData.referenceUrl);
+            console.log('referenceUrl 타입:', typeof missionData.referenceUrl);
+            
+            // API 응답 데이터를 템플릿에서 사용하는 구조로 매핑
+            this.mission = {
+              id: missionData.missionId,
+              title: missionData.title,
+              location: "장소 정보", // API에서 장소 정보가 없어서 기본값 설정
+              address: "",
+              points: missionData.score,
+              description: missionData.description,
+              tips: [], // API에서 팁 정보가 없어서 빈 배열로 설정
+              referenceUrl: missionData.referenceUrl,
+              exampleImage: missionData.referenceUrl,
+              placeId: missionData.placeId || '1' // API에서 placeId 가져오기, 없으면 기본값
+            };
+            
+            console.log('매핑된 미션 데이터:', this.mission);
+            console.log('최종 이미지 URL:', this.mission.exampleImage);
+            
+            // 예시 이미지 URL이 상대 경로인 경우 서명된 URL로 변환
+            if (this.mission.exampleImage && !this.mission.exampleImage.startsWith('http')) {
+              console.log('상대 경로 이미지 URL 감지, 서명된 URL 요청:', this.mission.exampleImage);
+              const imageResponse = await axios.post(`${this.apiBaseUrl}/api/signed-url`, {
+                objectKey: this.mission.exampleImage
+              });
+              console.log('서명된 URL 응답:', imageResponse.data);
+              if (imageResponse.data.signedUrl) {
+                this.mission.exampleImage = imageResponse.data.signedUrl;
+                this.mission.referenceUrl = imageResponse.data.signedUrl;
+                console.log('서명된 URL로 업데이트됨:', this.mission.exampleImage);
+              }
+            }
+            
+            this.isLoading = false;
+            return;
+          } catch (apiError) {
+            console.error('미션 정보 API 호출 실패, 샘플 데이터를 사용합니다:', apiError);
+            // API 호출 실패 시 샘플 데이터로 폴백
+          }
+        }
+        
+        // 개발 환경이거나 API 호출 실패 시 샘플 데이터 사용
+        // 시뮬레이션된 지연
+        await new Promise(resolve => setTimeout(resolve, 300));
+        
+        // 샘플 데이터 설정
+        this.mission = {
+          id: missionId,
+          title: "숨겨진 동궁과 후원 찾기",
+          location: "경복궁",
+          address: "서울 종로구",
+          points: 200,
+          description:
+            "경복궁에서 가장 아름다운 영역 중 하나인 동궁과 후원의 풍경을 담아보세요. 조선시대 왕세자가 거처했던 이곳은 연못과 정자가 조화롭게 어우러져 있습니다.",
+          tips: [
+            "동궁과 후원 전체 모습이 담긴 사진을 촬영하세요",
+            "연못 주변의 계절감이 느껴지는 사진을 찍어보세요",
+            "왕실의 풍경을 현대적 시각으로 담아보세요",
+          ],
+          referenceUrl: "https://via.placeholder.com/320x180?text=동궁과+후원+예시",
+          exampleImage: "https://via.placeholder.com/320x180?text=동궁과+후원+예시",
+          placeId: '1' // 샘플 데이터에서 placeId 설정
+        };
       } catch (error) {
         console.error("미션 정보 로드 중 오류 발생:", error);
         alert("미션 정보를 불러오는 데 실패했습니다.");
@@ -151,34 +272,102 @@ export default {
       }
 
       try {
-        const me = await getMyInfo();
-        const memberId = me.data?.data.memberId;
+        // 사용자 정보 가져오기 (memberId가 없는 경우)
+        if (!this.memberId) {
+          const userInfo = await getMyInfo();
+          this.memberId = userInfo.data?.data?.memberId;
+        }
 
-        const boardData = {
-          missionId: this.mission.missionId,
+        if (!this.memberId) {
+          alert("사용자 정보를 가져올 수 없습니다.");
+          return;
+        }
+
+        // 게시물 생성 API 호출
+        const requestData = {
+          memberId: this.memberId,
+          missionId: this.mission.id,
           imageUrl: this.uploadedImageUrls.original,
-          title: this.comment || `${this.mission.title} 후기`,
-          memberId,
+          title: this.comment || `${this.mission.title} 미션 완료`
         };
 
-        await createBoard(boardData);
-
-        await addPointToMember(memberId, this.mission.score);
-
-        alert("미션이 성공적으로 제출되었습니다!");
-        this.$router.push(`/mission-list/${this.mission.placeId}`);
+        const response = await axios.post(`${this.apiBaseUrl}/api/boards?useOpenAI=false`, requestData);
+        
+        if (response.data.success) {
+          const boardData = response.data.data;
+          
+          // 유사도 점수 설정
+          this.similarityScore = boardData.similarityScore || 0;
+          
+          // SimilarityScoreModal 띄우기
+          this.showSimilarityModal = true;
+        } else {
+          alert("미션 제출에 실패했습니다.");
+        }
       } catch (error) {
-        console.error("미션 제출 중 오류 발생:", error);
-        alert(
-          `미션 제출 실패: ${
-            error.response?.data?.message || error.message || "알 수 없는 오류"
-          }`
-        );
+        console.error('미션 제출 중 오류 발생:', error);
+        
+        // 개발 환경에서는 항상 모달을 띄워서 테스트할 수 있도록 함
+        if (process.env.NODE_ENV === 'development') {
+          console.log('개발 환경: 샘플 유사도 점수로 모달 표시');
+          this.similarityScore = 0.75 + Math.random() * 0.2; // 0.75-0.95 사이 랜덤 점수
+          this.showSimilarityModal = true;
+        } else {
+          alert(`미션 제출 실패: ${error.response?.data?.message || error.message || '알 수 없는 오류가 발생했습니다.'}`);
+        }
       }
     },
+    handleModalClose() {
+      this.showSimilarityModal = false;
+    },
+    handleModalAction(level) {
+      // 모든 점수에서 동일하게 처리 - 모달에서 직접 이동 처리
+      this.showSimilarityModal = false;
+      console.log('모달 액션 완료 - 모달에서 이동 처리됨:', level);
+    },
+    handleImageError(event) {
+      console.error('이미지 로드 실패:', {
+        src: event.target.src,
+        alt: event.target.alt,
+        naturalWidth: event.target.naturalWidth,
+        naturalHeight: event.target.naturalHeight,
+        complete: event.target.complete
+      });
+      this.imageLoadError = true;
+    },
+    handleImageLoad() {
+      this.imageLoadError = false;
+    }
   },
-  mounted() {
-    this.loadMissionDetails();
+  async mounted() {
+    console.log('MissionDetail 컴포넌트 마운트됨');
+    console.log('현재 라우트:', this.$route);
+    console.log('미션 ID:', this.$route.params.id);
+    
+    // CloudFront 인증 쿠키 설정
+    try {
+      const response = await axios.get(`${this.apiBaseUrl}/api/auth/cloudfront`, {
+        withCredentials: true,
+      });
+      console.log('CloudFront 인증 쿠키 설정 완료:', response.data);
+    } catch (error) {
+      console.error('CloudFront 인증 쿠키 설정 실패:', error);
+    }
+    
+    // 사용자 정보와 미션 정보를 병렬로 로드
+    try {
+      const [userInfo] = await Promise.all([
+        getMyInfo(),
+        this.loadMissionDetails()
+      ]);
+      
+      this.memberId = userInfo.data?.data?.memberId;
+      console.log('사용자 ID:', this.memberId);
+    } catch (error) {
+      console.error('초기 데이터 로드 중 오류 발생:', error);
+      // 미션 정보 로드는 loadMissionDetails에서 처리
+      this.loadMissionDetails();
+    }
   },
 };
 </script>
@@ -235,4 +424,40 @@ export default {
 }
 
 /* 나머지 스타일은 전역 CSS에서 처리 */
+
+.image-container {
+  position: relative;
+  width: 100%;
+  min-height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.image-container img {
+  width: 100%;
+  height: auto;
+  max-height: 300px;
+  object-fit: cover;
+}
+
+.image-error {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: #666;
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.image-error p {
+  margin: 0;
+  font-size: 14px;
+}
 </style>

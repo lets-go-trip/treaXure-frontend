@@ -315,3 +315,4 @@ src/config.js
 ### env ###
 .env
 .env.*
+*.pem

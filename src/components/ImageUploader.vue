@@ -54,7 +54,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import axios from "@/plugins/axios";
 
 export default {
   name: "ImageUploader",
@@ -85,39 +85,23 @@ export default {
       uploadedImageUrl: "",
       uploadedThumbnailUrl: "",
       currentFolder: this.folder,
-      // 백엔드 API 설정
       apiBaseUrl: process.env.VUE_APP_API_URL || "http://localhost:8081",
-      // 폴링 관련 설정
       pollingInterval: null,
       maxPollingAttempts: 10,
       pollingCount: 0,
-      // CloudFront 설정
       cloudFrontDomain:
         process.env.VUE_APP_CLOUDFRONT_DOMAIN || "d8h3hut1jkl2n.cloudfront.net",
-      // 사용자 정보
-      userNickname: "user", // 나중에 사용자 정보에서 가져오도록 수정 필요
-      // 객체 키 저장
+      userNickname: "user",
       originalObjectKey: "",
       thumbnailObjectKey: "",
     };
   },
   created() {
-    // CloudFront 인증 쿠키 얻기
     this.getCloudFrontCookies();
   },
   methods: {
-    // CloudFront 인증 쿠키 얻기
     async getCloudFrontCookies() {
       try {
-        // 개발 환경에서는 백엔드가 준비되지 않았을 수 있으므로 요청을 건너뛰거나 처리합니다
-        if (
-          process.env.NODE_ENV === "development" &&
-          !this.apiBaseUrl.includes("localhost")
-        ) {
-          console.log("개발 환경: CloudFront 인증 쿠키 요청을 건너뜁니다.");
-          return;
-        }
-
         const response = await axios.get(
           `${this.apiBaseUrl}/api/auth/cloudfront`,
           {
@@ -131,19 +115,7 @@ export default {
         );
       } catch (error) {
         console.error("CloudFront 인증 쿠키 설정 실패:", error);
-        // 실패해도 계속 진행하도록 오류를 무시합니다
       }
-    },
-
-    // 썸네일 URL 생성 함수
-    createThumbnailUrl(originalUrl) {
-      const urlParts = originalUrl.split("/");
-      const imagesIndex = urlParts.indexOf("images");
-      if (imagesIndex !== -1) {
-        urlParts.splice(imagesIndex + 1, 0, "thumb");
-        return urlParts.join("/");
-      }
-      return originalUrl;
     },
 
     triggerFileInput() {
@@ -161,7 +133,7 @@ export default {
       this.validateAndProcessFile(file).then(() => this.uploadImage());
     },
 
-    // 파일 → WebP 변환 헬퍼
+    // 파일 → WebP 변환
     async convertToWebp(file) {
       return new Promise((resolve, reject) => {
         const img = new Image();
@@ -171,11 +143,9 @@ export default {
           canvas.height = img.height;
           const ctx = canvas.getContext("2d");
           ctx.drawImage(img, 0, 0);
-          // 품질 0.9 설정
           canvas.toBlob(
             (blob) => {
               if (!blob) return reject(new Error("WebP 변환 실패"));
-              // 원래 파일명(.jpg, .png 등)을 .webp 로 바꿔서 새로운 File 생성
               const webpFile = new File(
                 [blob],
                 file.name.replace(/\.\w+$/, ".webp"),
@@ -210,7 +180,6 @@ export default {
       }
 
       try {
-        // WebP 변환 후 this.selectedFile 에 할당
         const webp = await this.convertToWebp(file);
         this.selectedFile = webp;
         this.createPreview(webp);
@@ -235,46 +204,16 @@ export default {
       }
 
       this.isUploading = true;
-      this.$emit("upload-start"); // 업로드 시작 시점에 emit 추가
+      this.$emit("upload-start");
 
       this.uploadProgress = 0;
       this.error = "";
 
       try {
-        // 백엔드 API가 준비되지 않았으므로 로컬 미리보기 URL 사용
-        if (
-          process.env.NODE_ENV === "development" &&
-          !this.apiBaseUrl.includes("localhost")
-        ) {
-          // 시뮬레이션된 업로드 진행
-          this.uploadProgress = 30;
-          await new Promise((resolve) => setTimeout(resolve, 500));
-          this.uploadProgress = 60;
-          await new Promise((resolve) => setTimeout(resolve, 500));
-          this.uploadProgress = 100;
-
-          // 로컬 파일 URL 생성 (실제 업로드는 아님)
-          const localImageUrl = URL.createObjectURL(this.selectedFile);
-          this.uploadedImageUrl = localImageUrl;
-          this.uploadedThumbnailUrl = this.createThumbnailUrl(localImageUrl);
-
-          // 업로드 성공 이벤트 (개발용)
-          this.$emit("upload-success", {
-            original: localImageUrl.split("?")[0],
-            thumbnail: this.uploadedThumbnailUrl.split("?")[0],
-          });
-
-          this.isUploading = false;
-          this.$emit("upload-end");
-          return;
-        }
-
-        // 파일 타입 확인 및 정규화
         const contentType = this.selectedFile.type || "image/jpeg";
 
-        // API 명세에 맞는 요청 객체 구성
         const requestData = {
-          userNickname: this.userNickname || "user123", // 유저 닉네임이 없을 경우 기본값 제공
+          userNickname: this.userNickname || "user",
           fileName: this.selectedFile.name,
           contentType: contentType,
         };
@@ -287,24 +226,28 @@ export default {
           requestData
         );
 
-        // API 응답 데이터 추출
+        console.log("백엔드 응답 전체:", presignedResponse.data);
+
         const { presignedUrl, originalObjectKey, thumbnailObjectKey } =
           presignedResponse.data;
 
-        // 객체 키 저장
+        console.log("받은 ObjectKey들:", {
+          originalObjectKey,
+          thumbnailObjectKey,
+          presignedUrl
+        });
+
         this.originalObjectKey = originalObjectKey;
         this.thumbnailObjectKey = thumbnailObjectKey;
 
-        // S3에 직접 업로드
-        // 인증 헤더 충돌을 방지하기 위해 새 axios 인스턴스 생성
         const axiosInstance = axios.create();
-        delete axiosInstance.defaults.headers.common["Authorization"]; // 인증 헤더 제거
+        delete axiosInstance.defaults.headers.common["Authorization"];
 
         await axiosInstance.put(presignedUrl, this.selectedFile, {
           headers: {
             "Content-Type": contentType,
           },
-          withCredentials: false, // 쿠키 전송 비활성화
+          withCredentials: false,
           onUploadProgress: (progressEvent) => {
             this.uploadProgress = Math.round(
               (progressEvent.loaded / progressEvent.total) * 100
@@ -320,53 +263,20 @@ export default {
           }
         );
 
+        console.log("원본 이미지 서명된 URL 응답:", originalSignedResponse.data);
+        console.log("최종 업로드된 이미지 URL:", originalSignedResponse.data.signedUrl);
+
         this.uploadedImageUrl = originalSignedResponse.data.signedUrl;
 
-        // 썸네일 생성 확인을 위한 폴링 시작
         this.startPollingForThumbnail();
       } catch (error) {
         console.error("업로드 오류:", error);
 
-        // 개발 환경에서는 백엔드 오류시 로컬 시뮬레이션으로 대체
-        if (
-          process.env.NODE_ENV === "development" &&
-          error.response &&
-          error.response.status === 500
-        ) {
-          console.log(
-            "개발 환경: 백엔드 오류로 로컬 업로드 시뮬레이션으로 전환합니다."
-          );
-
-          // 시뮬레이션된 업로드 진행
-          this.uploadProgress = 30;
-          await new Promise((resolve) => setTimeout(resolve, 500));
-          this.uploadProgress = 60;
-          await new Promise((resolve) => setTimeout(resolve, 500));
-          this.uploadProgress = 100;
-
-          // 로컬 파일 URL 생성 (실제 업로드는 아님)
-          const localImageUrl = URL.createObjectURL(this.selectedFile);
-          this.uploadedImageUrl = localImageUrl;
-          this.uploadedThumbnailUrl = this.createThumbnailUrl(localImageUrl);
-
-          // 업로드 성공 이벤트 (개발용)
-          this.$emit("upload-success", {
-            original: localImageUrl.split("?")[0],
-            thumbnail: this.uploadedThumbnailUrl.split("?")[0],
-          });
-
-          this.isUploading = false;
-          this.$emit("upload-end"); // 성공 시 종료 emit
-          return;
-        }
-
-        // 더 자세한 오류 정보 출력
         if (error.response) {
           console.error("오류 응답 데이터:", error.response.data);
           console.error("오류 상태 코드:", error.response.status);
           console.error("오류 헤더:", error.response.headers);
 
-          // 백엔드 API 오류인 경우
           if (error.response.status === 500) {
             if (error.response.data && error.response.data.message) {
               this.error = `서버 오류: ${error.response.data.message}`;
@@ -375,7 +285,6 @@ export default {
                 "서버 내부 오류가 발생했습니다. 잠시 후 다시 시도해주세요.";
             }
           }
-          // S3 XML 오류 메시지가 있는 경우 파싱
           else if (
             typeof error.response.data === "string" &&
             error.response.data.includes("<?xml")
@@ -389,7 +298,6 @@ export default {
               const errorCode = codeMatch[1];
               const errorMessage = messageMatch[1];
 
-              // 사용자 친화적인 오류 메시지
               if (errorCode === "AccessDenied") {
                 this.error = "접근이 거부되었습니다. 권한을 확인해주세요.";
               } else if (errorCode === "InvalidArgument") {
@@ -420,7 +328,7 @@ export default {
 
         this.$emit("upload-error", error);
         this.isUploading = false;
-        this.$emit("upload-end"); // 실패 시에도 종료 emit
+        this.$emit("upload-end");
       }
     },
 
@@ -428,42 +336,16 @@ export default {
     startPollingForThumbnail() {
       this.pollingCount = 0;
 
-      // 이전 폴링 인터벌이 있다면 정리
       if (this.pollingInterval) {
         clearInterval(this.pollingInterval);
       }
 
-      // 개발 환경에서 Lambda 오류가 있을 경우 원본 이미지로 대체
-      if (process.env.NODE_ENV === "development") {
-        // 짧은 시간만 기다린 후 원본 이미지를 썸네일로 사용
-        setTimeout(() => {
-          console.log("개발 환경: 원본 이미지를 썸네일로 사용합니다.");
-          this.uploadedThumbnailUrl = this.createThumbnailUrl(
-            this.uploadedImageUrl
-          );
-          this.isUploading = false;
-
-          // 업로드 성공 이벤트 발생
-          this.$emit("upload-success", {
-            original: this.uploadedImageUrl.split("?")[0],
-            thumbnail: this.uploadedThumbnailUrl.split("?")[0],
-          });
-
-          this.$emit("upload-end");
-        }, 1500);
-
-        return;
-      }
-
-      // 정기적으로 썸네일 URL 획득 시도
       this.pollingInterval = setInterval(async () => {
         this.pollingCount++;
 
         try {
-          // 썸네일 서명된 URL 요청 (인증 헤더 문제 해결)
-          // 새 axios 인스턴스 생성
           const thumbnailApi = axios.create();
-          delete thumbnailApi.defaults.headers.common["Authorization"]; // 인증 헤더 제거
+          delete thumbnailApi.defaults.headers.common["Authorization"];
 
           const thumbnailSignedResponse = await thumbnailApi.post(
             `${this.apiBaseUrl}/api/signed-url`,
@@ -473,43 +355,36 @@ export default {
           );
 
           if (thumbnailSignedResponse.data.signedUrl) {
-            // 썸네일 URL 획득 성공
             this.uploadedThumbnailUrl = thumbnailSignedResponse.data.signedUrl;
             clearInterval(this.pollingInterval);
             this.isUploading = false;
 
-            // 업로드 성공 이벤트 발생
             this.$emit("upload-success", {
               original: this.uploadedImageUrl.split("?")[0],
               thumbnail: this.uploadedThumbnailUrl.split("?")[0],
             });
 
-            this.$emit("upload-end"); // 썸네일까지 업로드 완료 시점에 emit
+            this.$emit("upload-end");
           }
         } catch (error) {
-          // 아직 썸네일이 생성되지 않음
           console.log(
             `썸네일 확인 시도 ${this.pollingCount}/${this.maxPollingAttempts}`
           );
 
           if (this.pollingCount >= this.maxPollingAttempts) {
             console.warn("썸네일 생성 시간 초과, 원본 이미지만 사용합니다.");
-            // 최대 시도 횟수 초과, 썸네일 없이 완료
             clearInterval(this.pollingInterval);
             this.isUploading = false;
 
-            // 원본 이미지 URL만 전달 (원본을 썸네일로도 사용)
             this.$emit("upload-success", {
               original: this.uploadedImageUrl.split("?")[0],
-              thumbnail: this.createThumbnailUrl(this.uploadedImageUrl).split(
-                "?"
-              )[0], // 람다 오류가 있을 경우 원본 이미지 기반 썸네일 URL 생성
+              thumbnail: this.uploadedImageUrl.split("?")[0],
             });
 
-            this.$emit("upload-end"); // 폴링 실패 시에도 종료 emit
+            this.$emit("upload-end");
           }
         }
-      }, 2000); // 2초마다 확인 (시간 증가)
+      }, 2000);
     },
 
     removeImage() {
