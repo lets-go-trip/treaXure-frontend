@@ -105,37 +105,64 @@ export default {
   },
   async mounted() {
     try {
-      const userRes = await getMyInfo();
-      this.memberId = userRes.data?.data?.memberId;
+      // 먼저 인증 상태 확인
+      let userRes;
+      try {
+        userRes = await getMyInfo();
+        this.memberId = userRes.data?.data?.memberId;
+      } catch (authError) {
+        console.warn("인증 정보 가져오기 실패:", authError);
+        // 인증 실패 시 로그인 페이지로 리다이렉트
+        if (authError.message === 'Authentication required' || 
+            authError.response?.status === 401 ||
+            authError.code === 'ERR_NETWORK') {
+          this.$router.push('/signin');
+          return;
+        }
+        // 다른 에러의 경우 계속 진행 (게스트 모드)
+        this.memberId = null;
+      }
 
-      const [placeRes, statusRes] = await Promise.all([
-        getAllPlaces(),
-        getMissionStatusByPlace(this.memberId),
-      ]);
+      // 장소 데이터 로드
+      try {
+        const [placeRes, statusRes] = await Promise.all([
+          getAllPlaces(),
+          this.memberId ? getMissionStatusByPlace(this.memberId) : Promise.resolve({ data: { data: [] } }),
+        ]);
 
-      const places = placeRes.data?.data || [];
-      const statuses = statusRes.data?.data || [];
+        const places = placeRes.data?.data || [];
+        const statuses = statusRes.data?.data || [];
 
-      // 장소별 미션 완료 상태 병합
-      this.placeData = places.map((place) => {
-        const status = statuses.find((s) => s.placeId === place.placeId);
-        return {
-          ...place,
-          missionStatus: status || {
-            totalMissions: 0,
-            completedMissions: 0,
-            allCompleted: false,
-          },
-        };
-      });
+        // 장소별 미션 완료 상태 병합
+        this.placeData = places.map((place) => {
+          const status = statuses.find((s) => s.placeId === place.placeId);
+          return {
+            ...place,
+            missionStatus: status || {
+              totalMissions: 0,
+              completedMissions: 0,
+              allCompleted: false,
+            },
+          };
+        });
 
-      if (this.$refs.kakaoMap) {
-        await this.initMap(this.$refs.kakaoMap);
-        window.addEventListener("placeSelected", this.handlePlaceSelected);
-        window.addEventListener("clearSelectedPlace", this.clearSelectedPlace);
+        // 카카오맵 초기화
+        if (this.$refs.kakaoMap) {
+          await this.initMap(this.$refs.kakaoMap);
+          window.addEventListener("placeSelected", this.handlePlaceSelected);
+          window.addEventListener("clearSelectedPlace", this.clearSelectedPlace);
+        }
+      } catch (dataError) {
+        console.error("장소 데이터 로딩 실패:", dataError);
+        // 데이터 로딩 실패 시에도 맵은 표시
+        if (this.$refs.kakaoMap) {
+          await this.initMap(this.$refs.kakaoMap);
+          window.addEventListener("placeSelected", this.handlePlaceSelected);
+          window.addEventListener("clearSelectedPlace", this.clearSelectedPlace);
+        }
       }
     } catch (err) {
-      console.error("장소 로딩 실패", err);
+      console.error("전체 초기화 실패:", err);
     }
   },
   beforeUnmount() {

@@ -54,7 +54,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import axios from "@/plugins/axios";
 
 export default {
   name: "ImageUploader",
@@ -220,18 +220,8 @@ export default {
 
         console.log("프리사인드 URL 요청 데이터:", requestData);
 
-        const api = axios.create();
-
-        if (
-          api.defaults.headers.common["Authorization"] === "Bearer undefined" ||
-          api.defaults.headers.common["Authorization"] === undefined
-        ) {
-          delete api.defaults.headers.common["Authorization"];
-        }
-
         // 실제 백엔드 API 호출
         const presignedResponse = await axios.post(
-        const presignedResponse = await api.post(
           `${this.apiBaseUrl}/api/presigned-upload`,
           requestData
         );
@@ -267,7 +257,6 @@ export default {
 
         // 원본 이미지 서명된 URL 획득 (인증 헤더 문제 해결)
         const originalSignedResponse = await axios.post(
-        const originalSignedResponse = await api.post(
           `${this.apiBaseUrl}/api/signed-url`,
           {
             objectKey: this.originalObjectKey,

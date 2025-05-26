@@ -42,7 +42,15 @@
         <div class="image-wrapper">
           <h4>미션 사진</h4>
           <div class="image-container">
-            <img :src="mission.referenceUrl" :alt="mission.title + ' 예시'" />
+            <img 
+              :src="mission.exampleImage || mission.referenceUrl" 
+              :alt="mission.title + ' 예시'" 
+              @error="handleImageError"
+              @load="handleImageLoad"
+            />
+            <div v-if="imageLoadError" class="image-error">
+              <p>이미지를 불러올 수 없습니다.</p>
+            </div>
           </div>
         </div>
 
@@ -102,9 +110,7 @@ import { getMissionById } from "@/api/mission";
 import { addPointToMember } from "../api/member";
 import ImageUploader from "@/components/ImageUploader.vue";
 import { ImageErrorMixin } from "@/script";
-import ImageUploader from '@/components/ImageUploader.vue';
 import SimilarityScoreModal from '@/components/SimilarityScoreModal.vue';
-import { getMyInfo } from "@/api/auth";
 import axios from 'axios';
 
 export default {
@@ -138,7 +144,8 @@ export default {
       // SimilarityScoreModal 관련 데이터
       showSimilarityModal: false,
       similarityScore: 0,
-      memberId: null
+      memberId: null,
+      imageLoadError: false
     };
   },
   methods: {
@@ -150,20 +157,37 @@ export default {
     handleUploadError(error) {
       this.uploadError = "이미지 업로드 중 오류가 발생했습니다.";
       console.error("이미지 업로드 실패:", error);
+      
+      // 개발 환경에서 임시 해결책: 샘플 이미지 URL 사용
+      if (process.env.NODE_ENV === 'development') {
+        console.log('개발 환경에서 샘플 이미지 URL 사용');
+        this.uploadedImageUrls = {
+          original: "https://via.placeholder.com/400x300?text=업로드된+이미지+샘플",
+          thumbnail: "https://via.placeholder.com/200x150?text=썸네일+샘플"
+        };
+        this.uploadError = ""; // 에러 메시지 제거
+      }
     },
     async loadMissionDetails() {
+      console.log('loadMissionDetails 시작');
       this.isLoading = true;
       const missionId = this.$route.params.id;
-      if (!missionId) return;
-      
-      this.isLoading = true;
+      console.log('추출된 미션 ID:', missionId);
+      if (!missionId) {
+        console.error('미션 ID가 없습니다');
+        return;
+      }
       
       try {
         // 실제 API 호출 먼저 시도
         if (!(process.env.NODE_ENV === 'development' && !this.apiBaseUrl.includes('localhost'))) {
           try {
             const response = await axios.get(`${this.apiBaseUrl}/api/missions/${missionId}`);
+            console.log('미션 API 전체 응답:', response.data);
             const missionData = response.data.data; // 실제 미션 데이터는 data 속성에 있음
+            console.log('미션 데이터:', missionData);
+            console.log('referenceUrl 값:', missionData.referenceUrl);
+            console.log('referenceUrl 타입:', typeof missionData.referenceUrl);
             
             // API 응답 데이터를 템플릿에서 사용하는 구조로 매핑
             this.mission = {
@@ -174,16 +198,24 @@ export default {
               points: missionData.score,
               description: missionData.description,
               tips: [], // API에서 팁 정보가 없어서 빈 배열로 설정
+              referenceUrl: missionData.referenceUrl,
               exampleImage: missionData.referenceUrl
             };
             
+            console.log('매핑된 미션 데이터:', this.mission);
+            console.log('최종 이미지 URL:', this.mission.exampleImage);
+            
             // 예시 이미지 URL이 상대 경로인 경우 서명된 URL로 변환
             if (this.mission.exampleImage && !this.mission.exampleImage.startsWith('http')) {
+              console.log('상대 경로 이미지 URL 감지, 서명된 URL 요청:', this.mission.exampleImage);
               const imageResponse = await axios.post(`${this.apiBaseUrl}/api/signed-url`, {
                 objectKey: this.mission.exampleImage
               });
+              console.log('서명된 URL 응답:', imageResponse.data);
               if (imageResponse.data.signedUrl) {
                 this.mission.exampleImage = imageResponse.data.signedUrl;
+                this.mission.referenceUrl = imageResponse.data.signedUrl;
+                console.log('서명된 URL로 업데이트됨:', this.mission.exampleImage);
               }
             }
             
@@ -213,8 +245,8 @@ export default {
             "연못 주변의 계절감이 느껴지는 사진을 찍어보세요",
             "왕실의 풍경을 현대적 시각으로 담아보세요",
           ],
-          exampleImage:
-            "https://via.placeholder.com/320x180?text=동궁과+후원+예시",
+          referenceUrl: "https://via.placeholder.com/320x180?text=동궁과+후원+예시",
+          exampleImage: "https://via.placeholder.com/320x180?text=동궁과+후원+예시",
         };
       } catch (error) {
         console.error("미션 정보 로드 중 오류 발생:", error);
@@ -290,8 +322,35 @@ export default {
         this.$router.push('/mission-list');
       }
     },
+    handleImageError(event) {
+      console.error('이미지 로드 실패:', {
+        src: event.target.src,
+        alt: event.target.alt,
+        naturalWidth: event.target.naturalWidth,
+        naturalHeight: event.target.naturalHeight,
+        complete: event.target.complete
+      });
+      this.imageLoadError = true;
+    },
+    handleImageLoad() {
+      this.imageLoadError = false;
+    }
   },
   async mounted() {
+    console.log('MissionDetail 컴포넌트 마운트됨');
+    console.log('현재 라우트:', this.$route);
+    console.log('미션 ID:', this.$route.params.id);
+    
+    // CloudFront 인증 쿠키 설정
+    try {
+      const response = await axios.get(`${this.apiBaseUrl}/api/auth/cloudfront`, {
+        withCredentials: true,
+      });
+      console.log('CloudFront 인증 쿠키 설정 완료:', response.data);
+    } catch (error) {
+      console.error('CloudFront 인증 쿠키 설정 실패:', error);
+    }
+    
     // 사용자 정보와 미션 정보를 병렬로 로드
     try {
       const [userInfo] = await Promise.all([
@@ -300,6 +359,7 @@ export default {
       ]);
       
       this.memberId = userInfo.data?.data?.memberId;
+      console.log('사용자 ID:', this.memberId);
     } catch (error) {
       console.error('초기 데이터 로드 중 오류 발생:', error);
       // 미션 정보 로드는 loadMissionDetails에서 처리
@@ -361,4 +421,40 @@ export default {
 }
 
 /* 나머지 스타일은 전역 CSS에서 처리 */
+
+.image-container {
+  position: relative;
+  width: 100%;
+  min-height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.image-container img {
+  width: 100%;
+  height: auto;
+  max-height: 300px;
+  object-fit: cover;
+}
+
+.image-error {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: #666;
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.image-error p {
+  margin: 0;
+  font-size: 14px;
+}
 </style>

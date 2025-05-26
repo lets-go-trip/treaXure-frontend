@@ -70,16 +70,51 @@ export default {
           email: this.email,
           password: this.password,
         });
-        // ApiResponseDto<String> 구조: { data: "<accessToken>" }
-        const token = res.data.data;
-        // 1. 토큰 저장
-        localStorage.setItem("jwtToken", token);
-        // refreshToken은 백엔드에서 HttpOnly Cookie로 설정 (프론트에서는 저장 X)
-
-        // 2. 로그인 성공 후 /treasure로 이동
-        this.$router.push("/");
+        
+        console.log("로그인 응답:", res.data);
+        
+        // 응답 구조 확인 및 토큰 추출
+        let accessToken = null;
+        let refreshToken = null;
+        
+        // 다양한 응답 구조에 대응
+        if (res.data.data) {
+          // ApiResponseDto<AuthResponseDto> 구조인 경우
+          if (typeof res.data.data === 'object') {
+            accessToken = res.data.data.accessToken || res.data.data.jwtToken;
+            refreshToken = res.data.data.refreshToken;
+          } else {
+            // ApiResponseDto<String> 구조인 경우 (현재 코드)
+            accessToken = res.data.data;
+          }
+        } else if (res.data.accessToken) {
+          // 직접 토큰이 있는 경우
+          accessToken = res.data.accessToken;
+          refreshToken = res.data.refreshToken;
+        }
+        
+        console.log("추출된 토큰:", { accessToken, refreshToken });
+        
+        if (accessToken) {
+          // 1. JWT 토큰 저장
+          localStorage.setItem("jwtToken", accessToken);
+          console.log("JWT 토큰 저장됨:", accessToken);
+          
+          // 2. Refresh 토큰이 있다면 쿠키로 저장 (HttpOnly가 아닌 경우)
+          if (refreshToken) {
+            // 쿠키로만 저장 (7일 만료) - localStorage에는 저장하지 않음 (보안상 이유)
+            document.cookie = `refreshToken=${refreshToken}; path=/; max-age=${7 * 24 * 60 * 60}; SameSite=Lax`;
+            console.log("Refresh 토큰 쿠키로 저장됨");
+          }
+          
+          // 3. 로그인 성공 후 /treasure로 이동
+          this.$router.push("/");
+        } else {
+          throw new Error("토큰을 찾을 수 없습니다.");
+        }
       } catch (e) {
-        alert(e.response?.data?.message || "로그인 실패");
+        console.error("로그인 실패:", e);
+        alert(e.response?.data?.message || e.message || "로그인 실패");
       }
     },
 

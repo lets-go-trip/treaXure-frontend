@@ -240,12 +240,20 @@ export default {
       if (btn == "signout") {
         try {
           await signout();
+          // JWT 토큰만 localStorage에서 제거
           localStorage.removeItem("jwtToken");
+          // 쿠키 삭제
+          document.cookie = "refreshToken=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
           document.cookie = "recentPlaceId=; path=/; max-age=0";
+          console.log("로그아웃 완료 - 모든 토큰 삭제됨");
           this.$router.push("/signin");
         } catch (error) {
           console.error("로그아웃 실패", error);
-          alert("로그아웃에 실패했습니다.");
+          // 로그아웃 API 실패해도 클라이언트 토큰은 삭제
+          localStorage.removeItem("jwtToken");
+          document.cookie = "refreshToken=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+          document.cookie = "recentPlaceId=; path=/; max-age=0";
+          this.$router.push("/signin");
         }
       } else if (btn == "withdraw") {
         // 계정 비활성화 API 호출
@@ -256,7 +264,10 @@ export default {
         try {
           await deactivateAccount();
           await signout();
+          // JWT 토큰만 localStorage에서 제거
           localStorage.removeItem("jwtToken");
+          // 쿠키 삭제
+          document.cookie = "refreshToken=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
           alert("회원 탈퇴가 완료되었습니다. 이용해 주셔서 감사합니다.");
           this.$router.push("/main");
         } catch (error) {
