@@ -498,7 +498,6 @@ export default {
   emits: ["close", "action"],
   data() {
     return {
-      isTicking: false,
       currentStep: 'comparison', // 'comparison' | 'overlay' | 'scanning' | 'result'
       scanProgress: 0,
       scanInterval: null,
@@ -575,9 +574,8 @@ export default {
       }
     },
     actionText() {
-      if (this.scoreLevel === 'high') return "미션 목록으로 이동";
-      if (this.scoreLevel === 'medium') return "미션 목록으로 이동";
-      return "다시 시도하기";
+      // 모든 점수에서 동일한 액션 텍스트 사용
+      return "미션 목록으로 이동";
     },
     overlayStepText() {
       if (this.overlayProgress < 25) return "이미지 정렬 중...";
@@ -599,21 +597,9 @@ export default {
     isOpen(newVal) {
       if (newVal) {
         this.startComparison();
-        // 마우스 호버 효과 제거 - 결과 단계에서는 적용하지 않음
-        // this.$nextTick(() => {
-        //   const c = this.$refs.container;
-        //   if (c) {
-        //     c.addEventListener("mousemove", this.handleMouseMove);
-        //     c.addEventListener("mouseout", this.handleMouseOut);
-        //   }
-        // });
+        // 마우스 호버 효과 관련 코드 제거됨
       } else {
         this.resetModal();
-        // const c = this.$refs.container;
-        // if (c) {
-        //   c.removeEventListener("mousemove", this.handleMouseMove);
-        //   c.removeEventListener("mouseout", this.handleMouseOut);
-        // }
       }
     }
   },
@@ -793,60 +779,10 @@ export default {
     },
     
     handleAction() {
-      const targetPlaceId = this.placeId || '1'; // placeId가 없으면 기본값 사용
+      // 모든 점수에서 동일하게 미션 목록으로 이동
+      const targetPlaceId = this.placeId || '1';
       console.log('이동할 placeId:', targetPlaceId);
       this.$router.push(`/mission-list/${targetPlaceId}`);
-    },
-    
-    handleMouseMove(e) {
-      // 마우스 호버 효과 비활성화
-      return;
-      
-      if (this.isTicking || this.currentStep !== 'result') return;
-      this.isTicking = true;
-
-      requestAnimationFrame(() => {
-        const container = this.$refs.container;
-        const overlay = this.$refs.overlay;
-        
-        if (!container || !overlay) {
-          this.isTicking = false;
-          return;
-        }
-
-        const rect = container.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        
-        const centerX = rect.width / 2;
-        const centerY = rect.height / 2;
-        
-        const moveX = (x - centerX) / centerX;
-        const moveY = (y - centerY) / centerY;
-        
-        const rotateY = moveX * 4;
-        const rotateX = -moveY * 4;
-        
-        container.style.transform = `perspective(1200px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1, 1, 1)`;
-        overlay.style.backgroundPosition = `${50 + moveX * 10}% ${50 + moveY * 10}%`;
-        
-        this.isTicking = false;
-      });
-    },
-    
-    handleMouseOut() {
-      // 마우스 호버 효과 비활성화
-      return;
-      
-      if (this.currentStep !== 'result') return;
-      
-      const container = this.$refs.container;
-      const overlay = this.$refs.overlay;
-      
-      if (!container || !overlay) return;
-      
-      container.style.transform = 'perspective(1200px) rotateX(0) rotateY(0) scale3d(1, 1, 1)';
-      overlay.style.backgroundPosition = '50% 50%';
     }
   },
   

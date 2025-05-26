@@ -321,17 +321,9 @@ export default {
       this.showSimilarityModal = false;
     },
     handleModalAction(level) {
-      // 모달에서 직접 이동 처리하므로 단순화
+      // 모든 점수에서 동일하게 처리 - 모달에서 직접 이동 처리
       this.showSimilarityModal = false;
-      
-      if (level === 'low') {
-        // 낮은 점수의 경우에만 다시 시도 (페이지 새로고침)
-        console.log('낮은 점수 - 다시 시도');
-        window.location.reload();
-      } else {
-        // 높은/중간 점수는 모달에서 직접 Explorer로 이동 처리
-        console.log('높은/중간 점수 - 모달에서 이동 처리됨:', level);
-      }
+      console.log('모달 액션 완료 - 모달에서 이동 처리됨:', level);
     },
     handleImageError(event) {
       console.error('이미지 로드 실패:', {
