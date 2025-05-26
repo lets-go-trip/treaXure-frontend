@@ -9,7 +9,7 @@
     <!-- 헤더 -->
     <div class="header">
       <div class="header-back">
-        <router-link to="/mission-list" class="icon-btn">
+        <router-link :to="'/mission-list/' + mission.placeId" class="icon-btn">
           <svg
             width="24"
             height="24"
@@ -30,60 +30,54 @@
 
     <!-- 미션 상세 컨테이너 -->
     <div v-if="!isLoading" class="mission-content-wrapper">
-      <div class="mission-header">
-        <h2>{{ mission.title }}</h2>
-        <div class="badge">{{ mission.points }} 포인트</div>
+      <div class="mission-header-wrapper">
+        <div class="mission-header">
+          <h2 class="mission-name">{{ mission.title }}</h2>
+          <div class="badge">{{ mission.score }}점</div>
+        </div>
+        <div class="mission-description">{{ mission.description }}</div>
       </div>
 
       <div class="mission-content">
-        <div class="mission-desc">
-          <p>{{ mission.description }}</p>
-          <ul>
-            <li v-for="(tip, index) in mission.tips" :key="index">{{ tip }}</li>
-          </ul>
-        </div>
-
-        <div class="example-image">
-          <h4>예시 사진</h4>
+        <div class="image-wrapper">
+          <h4>미션 사진</h4>
           <div class="image-container">
-            <img :src="mission.exampleImage" :alt="mission.title + ' 예시'" />
+            <img :src="mission.referenceUrl" :alt="mission.title + ' 예시'" />
           </div>
         </div>
 
-        <div class="upload-section">
+        <div class="upload-wrapper">
           <h4>사진 업로드</h4>
-          <p>
-            미션에 맞는 사진을 업로드하세요. 높은 점수를 받으면 주간 베스트
-            사진으로 선정될 수 있습니다!
-          </p>
-
-          <ImageUploader 
-            folder="images/missions/" 
-            @upload-success="handleUploadSuccess" 
+          <ImageUploader
+            folder="images/missions/"
+            @upload-success="handleUploadSuccess"
             @upload-error="handleUploadError"
           />
+        </div>
 
-          <div v-if="uploadedImageUrls.original" class="uploaded-image-preview">
-            <h4>업로드된 사진</h4>
-            <div class="image-container">
-              <img :src="uploadedImageUrls.original" alt="업로드된 사진" />
-            </div>
-          </div>
-
-          <div class="comment-box">
-            <h4>코멘트 남기기</h4>
-            <textarea
-              v-model="comment"
-              placeholder="사진에 대한 간단한 설명이나 코멘트를 남겨주세요."
-              rows="3"
-            >
-            </textarea>
-          </div>
+        <div class="comment-wrapper">
+          <h4>코멘트 남기기</h4>
+          <textarea
+            v-model="comment"
+            placeholder="사진에 대한 간단한 설명이나 코멘트를 남겨주세요."
+            rows="3"
+          >
+          </textarea>
         </div>
 
         <div class="action-buttons">
-          <router-link to="/mission-list" class="btn-outline">취소</router-link>
-          <button class="btn" @click="submitMission" :disabled="!uploadedImageUrls.original">미션 제출하기</button>
+          <button
+            class="btn"
+            @click="submitMission"
+            :disabled="!uploadedImageUrls.original"
+          >
+            미션 제출하기
+          </button>
+          <router-link
+            :to="'/mission-list/' + mission.placeId"
+            class="btn cancel-btn"
+            >취소</router-link
+          >
         </div>
       </div>
     </div>
@@ -102,6 +96,11 @@
 </template>
 
 <script>
+import { getMyInfo } from "@/api/auth";
+import { createBoard } from "@/api/board";
+import { getMissionById } from "@/api/mission";
+import { addPointToMember } from "../api/member";
+import ImageUploader from "@/components/ImageUploader.vue";
 import { ImageErrorMixin } from "@/script";
 import ImageUploader from '@/components/ImageUploader.vue';
 import SimilarityScoreModal from '@/components/SimilarityScoreModal.vue';
@@ -125,11 +124,12 @@ export default {
         points: 0,
         description: "",
         tips: [],
-        exampleImage: ""
+        referenceUrl: "",
+        exampleImage: "",
       },
       uploadedImageUrls: {
-        original: '',
-        thumbnail: ''
+        original: "",
+        thumbnail: "",
       },
       comment: "",
       uploadError: "",
@@ -144,14 +144,15 @@ export default {
   methods: {
     handleUploadSuccess(imageUrls) {
       this.uploadedImageUrls = imageUrls;
-      this.uploadError = '';
-      console.log('이미지 업로드 성공:', imageUrls);
+      this.uploadError = "";
+      console.log("이미지 업로드 성공:", imageUrls);
     },
     handleUploadError(error) {
-      this.uploadError = '이미지 업로드 중 오류가 발생했습니다.';
-      console.error('이미지 업로드 실패:', error);
+      this.uploadError = "이미지 업로드 중 오류가 발생했습니다.";
+      console.error("이미지 업로드 실패:", error);
     },
     async loadMissionDetails() {
+      this.isLoading = true;
       const missionId = this.$route.params.id;
       if (!missionId) return;
       
@@ -216,8 +217,8 @@ export default {
             "https://via.placeholder.com/320x180?text=동궁과+후원+예시",
         };
       } catch (error) {
-        console.error('미션 정보 로드 중 오류 발생:', error);
-        // 오류 처리, 예: 오류 메시지 표시
+        console.error("미션 정보 로드 중 오류 발생:", error);
+        alert("미션 정보를 불러오는 데 실패했습니다.");
       } finally {
         this.isLoading = false;
       }
@@ -325,7 +326,7 @@ export default {
 
 .loading-spinner {
   border: 4px solid #f3f3f3;
-  border-top: 4px solid #4CAF50;
+  border-top: 4px solid #4caf50;
   border-radius: 50%;
   width: 40px;
   height: 40px;
@@ -334,8 +335,12 @@ export default {
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .mission-content-wrapper {
@@ -343,24 +348,16 @@ export default {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .uploaded-image-preview {
   margin-top: 20px;
-}
-
-.image-container {
-  border-radius: 8px;
-  overflow: hidden;
-  margin-top: 8px;
-}
-
-.image-container img {
-  width: 100%;
-  height: auto;
-  display: block;
 }
 
 /* 나머지 스타일은 전역 CSS에서 처리 */

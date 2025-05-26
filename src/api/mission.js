@@ -20,3 +20,7 @@ export function createMission(payload) {
 export function deleteMission(id) {
   return axios.delete(`/api/missions/${id}`);
 }
+
+export function getMissionStatusByPlace(memberId) {
+  return axios.get(`/api/missions/place-status/${memberId}`);
+}

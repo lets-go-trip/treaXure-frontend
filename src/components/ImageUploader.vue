@@ -229,6 +229,8 @@ export default {
           delete api.defaults.headers.common["Authorization"];
         }
 
+        // 실제 백엔드 API 호출
+        const presignedResponse = await axios.post(
         const presignedResponse = await api.post(
           `${this.apiBaseUrl}/api/presigned-upload`,
           requestData
@@ -263,6 +265,8 @@ export default {
           },
         });
 
+        // 원본 이미지 서명된 URL 획득 (인증 헤더 문제 해결)
+        const originalSignedResponse = await axios.post(
         const originalSignedResponse = await api.post(
           `${this.apiBaseUrl}/api/signed-url`,
           {
@@ -411,14 +415,13 @@ export default {
 <style scoped>
 .image-uploader {
   width: 100%;
-  max-width: 500px;
+  /* max-width: 500px; */
   margin: 0 auto;
 }
 
 .upload-area {
   border: 2px dashed #ccc;
-  border-radius: 8px;
-  padding: 20px;
+  border-radius: var(--spacing-md);
   text-align: center;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -467,18 +470,21 @@ export default {
   position: relative;
   width: 100%;
   height: 100%;
+  font-size: 0;
 }
 
 .preview-image {
-  max-width: 100%;
-  max-height: 300px;
+  border-radius: var(--spacing-md);
+  height: fit-content;
+  /* max-width: 100%; */
+  /* max-height: 300px; */
   object-fit: contain;
 }
 
 .remove-button {
   position: absolute;
-  top: -10px;
-  right: -10px;
+  top: 10px;
+  right: 10px;
   padding: 10px;
   background: #ff4444;
   color: white;

@@ -179,7 +179,24 @@
               class="modal-img"
               :class="{ completed: selectedMission.completed }"
             />
-            <div class="modal-points">🍀 {{ selectedMission.points }}</div>
+            <div class="modal-wrapper">
+              <!-- 게시글이 있는 경우: favoriteCount, similarityScore 표시 -->
+              <template v-if="selectedMission.completed">
+                <div class="modal-favorites">
+                  💗 {{ selectedMission.favoriteCount }}
+                </div>
+                <div class="modal-points">
+                  🍀
+                  {{ Math.floor(selectedMission.similarityScore * 100) }}
+                </div>
+              </template>
+
+              <!-- 게시글이 없는 경우: score만 표시 -->
+              <template v-else>
+                <div class="modal-points">🍀 {{ selectedMission.points }}</div>
+              </template>
+            </div>
+
             <div class="modal-title">{{ selectedMission.title }}</div>
             <div class="modal-description">
               {{ selectedMission.description }}
@@ -298,6 +315,8 @@ export default {
             description: matchingBoard
               ? matchingBoard.title
               : mission.description,
+            favoriteCount: matchingBoard?.favoriteCount ?? null,
+            similarityScore: matchingBoard?.similarityScore ?? null,
           };
         });
 

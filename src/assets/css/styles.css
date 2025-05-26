@@ -183,6 +183,7 @@ button,
   /* hue-rotate 애니메이션 */
   /* animation: hue-cycle 5s linear infinite; */
   border-radius: 10px;
+  cursor: pointer;
 }
 
 /* ::before로 그라디언트 레이어 생성 */
@@ -195,12 +196,14 @@ button,
   /* 초기엔 투명 */
   transition: opacity var(--transition-slow);
   z-index: -1;
-  background: linear-gradient(90deg,
-      var(--primary-light) 0%,
-      var(--primary) 15%,
-      var(--secondary) 50%,
-      var(--primary) 85%,
-      var(--primary-light) 100%);
+  background: linear-gradient(
+    90deg,
+    var(--primary-light) 0%,
+    var(--primary) 15%,
+    var(--secondary) 50%,
+    var(--primary) 85%,
+    var(--primary-light) 100%
+  );
   /* 2) 가로로 500% 늘려서 색이 흘러갈 공간 확보 */
   background-size: 1000% 100%;
   /* 3) 부드럽게 흐르는 애니메이션 */
@@ -248,10 +251,10 @@ button,
 
 /****************************** 콘텐츠 영역 공통 스타일 ******************************/
 .mypage,
-.quest-screen,
+.mission-screen,
 .all-missions,
 .mission-detail,
-.weekly-best {
+.ranking {
   flex: 1;
   overflow-y: auto;
   padding-bottom: 64px;
@@ -363,6 +366,7 @@ button,
   font-weight: 500;
   transition: all var(--transition-fast);
   text-decoration: none;
+  cursor: pointer;
 }
 
 .nav-item.active {
@@ -394,7 +398,6 @@ button,
 
 /* 중요한 애니메이션 효과 추가 */
 @keyframes nav-bounce {
-
   0%,
   100% {
     transform: translateY(0);
@@ -521,13 +524,15 @@ button,
   transform-style: preserve-3d;
 
   border-radius: 50%;
-  background: linear-gradient(90deg,
-      var(--primary-light) 0%,
-      var(--secondary-light) 15%,
-      var(--text-deep-light) 40%,
-      var(--text-deep-light) 60%,
-      var(--secondary-light) 85%,
-      var(--primary-light) 100%);
+  background: linear-gradient(
+    90deg,
+    var(--primary-light) 0%,
+    var(--secondary-light) 15%,
+    var(--text-deep-light) 40%,
+    var(--text-deep-light) 60%,
+    var(--secondary-light) 85%,
+    var(--primary-light) 100%
+  );
   /* background: var(--secondary); */
   /* 2) 가로로 500% 늘려서 색이 흘러갈 공간 확보 */
   background-size: 1000% 100%;
@@ -541,13 +546,15 @@ button,
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  background: linear-gradient(90deg,
-      rgba(64, 201, 150, 0.2) 0%,
-      rgba(255, 248, 179, 0.5) 15%,
-      rgba(0, 0, 0, 0) 40%,
-      rgba(0, 0, 0, 0) 60%,
-      rgba(255, 248, 179, 0.2) 85%,
-      rgba(64, 201, 150, 0.2) 100%);
+  background: linear-gradient(
+    90deg,
+    rgba(64, 201, 150, 0.2) 0%,
+    rgba(255, 248, 179, 0.5) 15%,
+    rgba(0, 0, 0, 0) 40%,
+    rgba(0, 0, 0, 0) 60%,
+    rgba(255, 248, 179, 0.2) 85%,
+    rgba(64, 201, 150, 0.2) 100%
+  );
   /* background: var(--secondary); */
   /* 2) 가로로 500% 늘려서 색이 흘러갈 공간 확보 */
   background-size: 1000% 100%;
@@ -627,7 +634,7 @@ button,
 }
 
 /* info-card가 hover 되었을 때 blur-box에 브러 효과 적용 */
-.info-card:hover~.blur-box {
+.info-card:hover ~ .blur-box {
   backdrop-filter: blur(3px);
   background: rgba(0, 0, 0, 0.3);
 }
@@ -727,12 +734,14 @@ button,
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg,
-      var(--primary-light) 0%,
-      var(--primary) 15%,
-      var(--secondary) 50%,
-      var(--primary) 85%,
-      var(--primary-light) 100%);
+  background: linear-gradient(
+    90deg,
+    var(--primary-light) 0%,
+    var(--primary) 15%,
+    var(--secondary) 50%,
+    var(--primary) 85%,
+    var(--primary-light) 100%
+  );
   background-size: 1000% 100%;
   animation: btn-gradient-slide 20s linear infinite;
 }
@@ -776,12 +785,14 @@ button,
   /* 초기엔 투명 */
   transition: opacity var(--transition-slow);
   z-index: -1;
-  background: linear-gradient(90deg,
-      var(--tertiary) 0%,
-      var(--tertiary-light) 25%,
-      var(--tertiary) 50%,
-      var(--tertiary-light) 75%,
-      var(--tertiary) 100%);
+  background: linear-gradient(
+    90deg,
+    var(--tertiary) 0%,
+    var(--tertiary-light) 25%,
+    var(--tertiary) 50%,
+    var(--tertiary-light) 75%,
+    var(--tertiary) 100%
+  );
   /* 2) 가로로 500% 늘려서 색이 흘러갈 공간 확보 */
   background-size: 1000% 100%;
   /* 3) 부드럽게 흐르는 애니메이션 */
@@ -968,12 +979,14 @@ button,
 .location-group:hover .location-header,
 .location-header.highlighted {
   border: 1px solid rgba(0, 0, 0, 0);
-  background: linear-gradient(90deg,
-      var(--primary-light) 0%,
-      var(--primary) 15%,
-      var(--secondary) 50%,
-      var(--primary) 85%,
-      var(--primary-light) 100%);
+  background: linear-gradient(
+    90deg,
+    var(--primary-light) 0%,
+    var(--primary) 15%,
+    var(--secondary) 50%,
+    var(--primary) 85%,
+    var(--primary-light) 100%
+  );
   background-size: 1000% 100%;
   animation: btn-gradient-slide 20s linear infinite;
 }
@@ -1036,7 +1049,6 @@ button,
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 8px;
-  /* 카드 간 여백 */
 }
 
 .mission-img-card {
@@ -1081,7 +1093,7 @@ button,
   backface-visibility: hidden;
 }
 
-.modal-container>* {
+.modal-container > * {
   pointer-events: none;
 }
 
@@ -1094,11 +1106,13 @@ button,
   z-index: 2000;
   border-radius: 8px;
   background-color: var(--primary);
-  background: linear-gradient(105deg,
-      transparent 40%,
-      var(--primary-light) 45%,
-      var(--secondary-light) 50%,
-      transparent 54%);
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    var(--primary-light) 45%,
+    var(--secondary-light) 50%,
+    transparent 54%
+  );
   filter: brightness(1.1) opacity(0.5);
   mix-blend-mode: color-dodge;
   background-size: 150% 150%;
@@ -1121,7 +1135,6 @@ button,
   background: var(--text-deep-light);
   padding: 36px 24px;
   max-width: 90vw;
-  max-height: 582px;
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
@@ -1153,12 +1166,73 @@ button,
   text-align: start;
 }
 
+.modal-wrapper {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.modal-favorites {
+  width: fit-content;
+  color: var(--tertiary);
+  font-size: 12px;
+  font-weight: 500;
+}
+
 .modal-points {
   width: fit-content;
   color: var(--primary);
   font-size: 12px;
   font-weight: 500;
-  margin-left: auto;
+}
+
+/****************************** Exeplorer 페이지 스타일 ******************************/
+
+.photo-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+}
+
+.photo-item {
+  display: contents;
+}
+
+.photo-item img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  cursor: pointer;
+}
+
+.modal-favorites {
+  cursor: pointer;
+}
+
+.modal-description {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.modal-avatar {
+  width: 35px;
+  height: 35px;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.modal-info-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-info {
+  display: flex;
+  gap: 10px;
+  font-size: 12px;
+  color: var(--text-dark);
 }
 
 /****************************** Ranking 페이지 스타일 ******************************/
@@ -1201,20 +1275,33 @@ button,
   padding: 0;
 }
 
-.mission-header {
+.mission-header-wrapper {
   display: flex;
   padding: var(--spacing-md);
-  background: var(--bg-secondary);
+  /* background: var(--bg-secondary); */
   border-bottom: var(--border-light);
   flex-direction: column;
-  align-items: flex-start;
+  /* align-items: flex-start; */
   gap: var(--spacing-md);
 }
 
-.mission-header h2 {
+.mission-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mission-name {
+  font-weight: 600;
   font-size: 26px;
-  font-weight: 700;
   color: var(--text-deep-dark);
+}
+
+.mission-description {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-dark);
 }
 
 .mission-location {
@@ -1223,41 +1310,24 @@ button,
 }
 
 .mission-content {
-  padding: 16px;
+  padding: var(--spacing-md);
 }
 
-.mission-desc {
-  margin-bottom: 24px;
+.image-wrapper,
+.upload-wrapper,
+.comment-wrapper,
+.uploaded-image-preview {
+  display: flex;
+  margin-bottom: var(--spacing-xl);
+  flex-direction: column;
+  gap: var(--spacing-md);
 }
 
-.mission-desc p {
-  font-size: 15px;
-  line-height: 1.6;
-  margin-bottom: 16px;
-  color: var(--text-dark);
-}
-
-.mission-desc ul {
-  padding-left: 20px;
-  margin-bottom: 16px;
-}
-
-.mission-desc li {
-  font-size: 14px;
-  color: var(--text-medium);
-  margin-bottom: 8px;
-  line-height: 1.5;
-}
-
-.example-image {
-  margin-bottom: 24px;
-}
-
-.example-image h4,
-.upload-section h4 {
+.image-wrapper h4,
+.upload-wrapper h4,
+.comment-wrapper h4 {
   font-size: 16px;
   font-weight: 600;
-  margin-bottom: 12px;
   color: var(--primary);
 }
 
@@ -1274,11 +1344,7 @@ button,
   display: block;
 }
 
-.upload-section {
-  margin-bottom: 24px;
-}
-
-.upload-section p {
+.upload-wrapper p {
   font-size: 14px;
   color: var(--text-medium);
   margin-bottom: 16px;
@@ -1318,34 +1384,43 @@ button,
   font-weight: 500;
 }
 
-.comment-box {
-  margin-top: 24px;
-}
-
-.comment-box textarea {
+.comment-wrapper textarea {
   width: 100%;
-  border: 1px solid var(--primary-light);
+  border: 1px solid var(--primary);
   border-radius: var(--radius-sm);
-  padding: 12px;
+  padding: var(--spacing-md);
   font-size: 14px;
   resize: none;
   font-family: "Noto Sans KR", sans-serif;
 }
 
-.comment-box textarea:focus {
+.comment-wrapper textarea::placeholder {
+  color: var(--text-medium);
+}
+
+.comment-wrapper textarea:focus {
   outline: none;
-  border-color: var(--primary);
+  border-color: var(--primary-light);
 }
 
 .action-buttons {
   display: flex;
+  flex-direction: column;
   gap: 12px;
-  margin-top: 24px;
 }
 
 .action-buttons button {
-  flex: 1;
   padding: 12px 0;
+}
+
+.cancel-btn {
+  background-color: var(--tertiary);
+  text-decoration: none;
+}
+
+.cancel-btn:hover {
+  background-color: var(--tertiary);
+  filter: brightness(80%);
 }
 
 /****************************** MyPage 페이지 스타일 ******************************/
@@ -1497,48 +1572,7 @@ button,
   filter: brightness(90%);
 }
 
-/* 주간 베스트 페이지 */
-.weekly-best {
-  padding: 0;
-}
-
-.date-selector {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 14px 16px;
-  background: var(--bg-secondary);
-  border-bottom: var(--border-light);
-}
-
-.date-display {
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--primary);
-}
-
-.date-nav {
-  background: transparent;
-  border: none;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  color: var(--primary);
-  transition: all var(--transition-fast) ease;
-}
-
-.date-nav:hover {
-  background: rgba(0, 0, 0, 0.05);
-}
-
-.best-content {
-  padding: 16px;
-}
-
+/****************************** Ranking 페이지 스타일 ******************************/
 .best-photo {
   position: relative;
   margin-bottom: 24px;
