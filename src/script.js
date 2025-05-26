@@ -78,8 +78,8 @@ export const KakaoMapMixin = {
       circle: null,
       marker: null,
       mapLoadError: false,
-      placeMarkers: [], // 궁궐 마커 배열
-      placeCircles: [], // 궁궐 반경 원 배열
+      placeMarkers: [],
+      placeCircles: [],
       isMapScriptLoaded: false,
     };
   },
@@ -169,6 +169,12 @@ export const KakaoMapMixin = {
         // 장소 마커 추가
         this.addPlaceMarkers();
 
+        // 경계 바깥 어둡게
+        this.addSeoulBoundaryMask();
+
+        // 서울시 외곽 테두리 폴리곤 추가
+        this.addSeoulBoundaryPolygon();
+
         // 반응형 마커 기능
         window.kakao.maps.event.addListener(this.map, "zoom_changed", () => {
           const level = this.map.getLevel();
@@ -230,6 +236,86 @@ export const KakaoMapMixin = {
         console.error("지도 초기화 중 오류 발생:", error);
         this.showMapLoadError(mapContainer);
       }
+    },
+
+    addSeoulBoundaryMask() {
+      if (!this.map || !window.kakao) return;
+
+      fetch("/seoul.json")
+        .then((res) => res.json())
+        .then((geojson) => {
+          if (!geojson || !Array.isArray(geojson.features)) {
+            console.error("GeoJSON 데이터가 올바르지 않습니다.");
+            return;
+          }
+
+          // 1. 바깥 외곽 사각형
+          const outerCoords = [
+            new kakao.maps.LatLng(38.8, 124.6),
+            new kakao.maps.LatLng(38.8, 131.0),
+            new kakao.maps.LatLng(33.0, 131.0),
+            new kakao.maps.LatLng(33.0, 124.6),
+          ];
+
+          // 2. 각 자치구의 경계를 개별 innerCoords로 처리
+          const innerPaths = geojson.features.map((feature) => {
+            return feature.geometry.coordinates[0]
+              .map(([lng, lat]) => new kakao.maps.LatLng(lat, lng))
+              .reverse(); // 반시계 방향으로
+          });
+
+          // 3. 전체 마스크 경로 설정: 외곽 1개 + 내부 hole 여러 개
+          const maskPath = [outerCoords, ...innerPaths];
+
+          const mask = new kakao.maps.Polygon({
+            path: maskPath,
+            strokeWeight: 0,
+            strokeOpacity: 0,
+            fillColor: "#000000",
+            fillOpacity: 0.4,
+          });
+
+          mask.setMap(this.map);
+        })
+        .catch((error) => {
+          console.error("서울시 마스크 로딩 실패:", error);
+        });
+    },
+
+    addSeoulBoundaryPolygon() {
+      if (!this.map || !window.kakao) return;
+
+      fetch("/seoul.json")
+        .then((res) => res.json())
+        .then((geojson) => {
+          if (!geojson || !Array.isArray(geojson.features)) {
+            console.error("GeoJSON 데이터가 올바르지 않습니다.");
+            return;
+          }
+
+          geojson.features.forEach((feature) => {
+            const coords = feature.geometry.coordinates[0]; // 첫 번째 폴리곤
+
+            // 좌표를 kakao.maps.LatLng로 변환
+            const path = coords.map(
+              ([lng, lat]) => new kakao.maps.LatLng(lat, lng)
+            );
+
+            const polygon = new kakao.maps.Polygon({
+              path,
+              strokeWeight: 2,
+              strokeColor: "#40c996",
+              strokeOpacity: 0.2,
+              fillColor: "#a5f5de",
+              fillOpacity: 0.05,
+            });
+
+            polygon.setMap(this.map);
+          });
+        })
+        .catch((error) => {
+          console.error("서울시 경계 GeoJSON 로드 실패:", error);
+        });
     },
 
     // 지도 로드 오류 메시지 표시
